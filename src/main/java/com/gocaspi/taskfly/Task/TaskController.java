@@ -40,9 +40,11 @@ public class TaskController {
         for (int j = 0; j < tasks.size(); j++){
             if(Arrays.stream(taskArr[j].userIds).anyMatch( id ::equals)){
               Task[]  arr = Arrays.copyOf(taskArr, taskArr.length);
+              arr[j]=taskArr[j];
+                tasksOfUser = arr;
             }
         }
-        return new Gson().toJson(tasks);
+        return new Gson().toJson(tasksOfUser);
     }
     @DeleteMapping("/{id}")
     public void deletePerson(@PathVariable String id){
