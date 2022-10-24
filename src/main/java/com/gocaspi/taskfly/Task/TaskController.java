@@ -39,7 +39,7 @@ public class TaskController {
         Task[] tasksOfUser = new Task[taskArr.length];
         for (int j = 0; j < tasks.size(); j++){
             if(Arrays.stream(taskArr[j].userIds).anyMatch( id ::equals)){
-              Task[]  arr = Arrays.copyOf(taskArr, taskArr.length);
+              Task[]  arr = Arrays.copyOf(tasksOfUser, taskArr.length);
               arr[j]=taskArr[j];
                 tasksOfUser = arr;
             }
