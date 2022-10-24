@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.google.gson.Gson;
 import com.gocaspi.taskfly.User.User;
 
-
 @RestController
 @ResponseBody
 @RequestMapping("/user")
