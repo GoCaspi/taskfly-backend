@@ -24,6 +24,11 @@ public class TaskController {
     @Autowired
     private TaskRepository repository;
 
+   public TaskController (TaskRepository repository){
+       super();
+       this.repository = repository;
+   }
+
     @PostMapping
     public void postPerson(@RequestBody String body){
         Task task = new Gson().fromJson(body, Task.class);
