@@ -70,7 +70,6 @@ public class TaskController {
                 list.add(t);
             }
         }
-
         return list.toArray(new Task[list.size()]);
     }
 }
