@@ -26,35 +26,6 @@ public class TaskControllerTest {
 	@Resource
 	private TaskController testedController;
 
-	@Before
-	public void setUp() throws Exception {
-		// Initialize mocks created above
-		MockitoAnnotations.initMocks(this);
-		// Change behaviour of `resource`
-	//	when(testedController.getSomething()).thenReturn("Foo");
-	}
-/*
-	@MockBean
-	private TaskRepository repository;
-
-	@Before
-	public void init() {
-		String[] mockUserIds =new String[] {"1", "2", "3"};
-		String mockListId = new String("1");
-		String mockTopic = new String("topic1");
-		String mockTeam = new String("team1");
-		String mockPrio = new String("prio1");
-		String mockDesc = new String("desc1");
-		String mockDeadline = new String("11-11-2022");
-		Task mockTask = new Task(mockUserIds,mockListId, mockTopic,mockTeam,mockPrio,mockDesc,mockDeadline);
-
-		//error, can't resolve method thenReturn(book)?
-		when(repository.findAll()).thenReturn((List<Task>) mockTask);
-
-	}
-
- */
-
 	@Test
 	public void getAllTasks() {
 		TaskRepository mockRepo = mock(TaskRepository.class);
