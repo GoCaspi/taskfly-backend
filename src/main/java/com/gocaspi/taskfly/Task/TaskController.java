@@ -37,7 +37,7 @@ public class TaskController {
     @GetMapping("/{id}")
     public String getAllTasks(@PathVariable String id){
         List<Task> tasks = repository.findAll();
-        Task[] taskArr= new Task[tasks.size() + 1];
+        Task[] taskArr= new Task[tasks.size()];
         for (int i = 0; i < tasks.size(); i++){
             taskArr[i] = tasks.get(i);
         }

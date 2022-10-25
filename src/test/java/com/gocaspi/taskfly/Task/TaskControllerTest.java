@@ -45,7 +45,7 @@ public class TaskControllerTest {
 
 
 		String id = "1"; // TODO Replace default value.
-		Task[] expected = new Task[]{mockTask,mockTask,null};; // TODO Replace default value.
+		Task[] expected = mockTaskArr;; // TODO Replace default value.
 		String expectedOutput= new Gson().toJson(expected);
 		String actual = t.getAllTasks(id);
 
