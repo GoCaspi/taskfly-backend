@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.google.gson.Gson;
 import com.gocaspi.taskfly.User.User;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,23 +37,40 @@ public class TaskController {
     }
     @GetMapping("/{id}")
     public String getAllTasks(@PathVariable String id){
+       // fetch all Tasks from the mongoDB via accessing the TaskRepository
         List<Task> tasks = repository.findAll();
+        // copy the task-list to an array
         Task[] taskArr= new Task[tasks.size()];
         for (int i = 0; i < tasks.size(); i++){
             taskArr[i] = tasks.get(i);
         }
+        // check if the userId from the request is contained by the userIds-Array in the taskArr
+        // if true, add that task in the tasksOfUser Array, which contains only tasks assigned to that user
         Task[] tasksOfUser = new Task[taskArr.length];
         for (int j = 0; j < tasks.size(); j++){
-            if(Arrays.stream(taskArr[j].userIds).anyMatch( id ::equals)){
+            if(Arrays.stream(taskArr[j].userIds).anyMatch(id ::equals)){
               Task[]  arr = Arrays.copyOf(tasksOfUser, taskArr.length);
               arr[j]=taskArr[j];
                 tasksOfUser = arr;
             }
         }
-        return new Gson().toJson(tasksOfUser);
+        Task[] response = RemoveNullElements(tasksOfUser);
+        return new Gson().toJson(response);
     }
     @DeleteMapping("/{id}")
     public void deletePerson(@PathVariable String id){
         repository.deleteById(id);
+    }
+
+    public Task[] RemoveNullElements(Task[] arr){
+        List<Task> list = new ArrayList<Task>();
+
+        for(Task t : arr) {
+            if(t != null) {
+                list.add(t);
+            }
+        }
+
+        return list.toArray(new Task[list.size()]);
     }
 }
