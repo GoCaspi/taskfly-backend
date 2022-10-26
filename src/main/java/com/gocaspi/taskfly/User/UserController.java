@@ -20,19 +20,25 @@ import com.gocaspi.taskfly.User.User;
 public class UserController {
     @Autowired
     private UserRepository repository;
+    public UserController(UserRepository repository){
+        super();
+        this.repository=repository;
+    }
 
     @PostMapping
-    public void postPerson(@RequestBody String body){
+    public void creatUser(@RequestBody String body){
         User user = new Gson().fromJson(body, User.class);
         repository.insert(user);
     }
     @GetMapping("/{id}")
-    public String getPerson(@PathVariable String id){
+    public String getUser(@PathVariable String id){
+
         User user = repository.findById(id).get();
         return new Gson().toJson(user);
     }
     @DeleteMapping("/{id}")
-    public void deletePerson(@PathVariable String id){
+    public void deleteUser(@PathVariable String id){
+
         repository.deleteById(id);
     }
 }

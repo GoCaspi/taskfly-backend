@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "a5b2426c-bda8-46f0-9fe5-303e17becc06",
+		"_postman_id": "f2ee1d05-55f2-4fb9-abac-2425f50991a6",
 		"name": "TaskFly",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21612803"
+		"_exporter_id": "21778639"
 	},
 	"item": [
 		{
@@ -69,6 +69,14 @@
 						"635259196e80350bfca37240"
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "Getalluser",
+			"request": {
+				"method": "GET",
+				"header": []
 			},
 			"response": []
 		}
