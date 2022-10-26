@@ -48,7 +48,7 @@ public class TaskController {
      */
     public boolean validateTaskFields(String jsonPayload){
         Task task = new Gson().fromJson(jsonPayload, Task.class);
-       if(Objects.equals(task.userIds, null) || Objects.equals(task.listId,"") || Objects.equals(task.topic,"") || Objects.equals(task.description,"")){
+       if(Objects.equals(task.userIds, null) || Objects.equals(task.listId,null) || Objects.equals(task.topic,null) || Objects.equals(task.description,null)){
            return false;
        }
        return true;
@@ -86,6 +86,11 @@ public class TaskController {
         repository.deleteById(id);
     }
 
+    /**
+     * Removes all Tasks that equals null from a Task-Array. Then returns the null-safe array
+     * @param arr, array of tasks that may contain null elements
+     * @return
+     */
     public Task[] RemoveNullElements(Task[] arr){
         List<Task> list = new ArrayList<Task>();
 
