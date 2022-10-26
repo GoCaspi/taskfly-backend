@@ -35,6 +35,12 @@ public class TaskController {
         Task task = new Gson().fromJson(body, Task.class);
         repository.insert(task);
     }
+
+    /**
+     * Finds all Tasks from the database and copies all Tasks that have the provided userID in their userIds information. Then that array is returned as json.
+     * @param id userID
+     * @return Json of a task array, that contain all tasks assigned to the given userID id
+     */
     @GetMapping("/{id}")
     public String getAllTasks(@PathVariable String id){
        // fetch all Tasks from the mongoDB via accessing the TaskRepository

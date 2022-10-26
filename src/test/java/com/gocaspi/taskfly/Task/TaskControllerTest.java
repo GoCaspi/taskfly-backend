@@ -42,6 +42,7 @@ public class TaskControllerTest {
 				new Testcase("1",mockTaskArr,mockTaskArr),
 				new Testcase("2",mockTaskArr,mockTaskArr),
 				new Testcase("3",mockTaskArr,mockTaskArr),
+				new Testcase("4",mockTaskArr,new Task[0]),
 		 };
 
 		 for (Testcase tc : testcases){
