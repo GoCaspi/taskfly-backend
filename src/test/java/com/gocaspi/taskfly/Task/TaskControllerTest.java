@@ -6,6 +6,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 
 
@@ -26,26 +28,26 @@ public class TaskControllerTest {
 	@Test
 	public void getAllTasks() {
 
-		class Testcase{
-			String id ;
-			Task[] mockTasks ;
-			Task[] expected ;
- 	public Testcase(String id,Task[] mockTasks, Task[] expected){
-		 this.id = id;
-		 this.mockTasks = mockTasks;
-		 this.expected = expected;
+		class Testcase {
+			String id;
+			Task[] mockTasks;
+			Task[] expected;
+			public Testcase(String id, Task[] mockTasks, Task[] expected) {
+				this.id = id;
+				this.mockTasks = mockTasks;
+				this.expected = expected;
 			}
 		}
 
 
-		Testcase[] testcases = new Testcase[] {
-				new Testcase("1",mockTaskArr,mockTaskArr),
-				new Testcase("2",mockTaskArr,mockTaskArr),
-				new Testcase("3",mockTaskArr,mockTaskArr),
-				new Testcase("4",mockTaskArr,new Task[0]),
-		 };
+		Testcase[] testcases = new Testcase[] { 
+		  new Testcase("1", mockTaskArr, mockTaskArr), 
+		  new Testcase("2", mockTaskArr, mockTaskArr), 
+		  new Testcase("3", mockTaskArr, mockTaskArr), 
+		  new Testcase("4", mockTaskArr, new Task[0]) };
 
-		 for (Testcase tc : testcases){
+
+		 for (Testcase tc : testcases) {
 			 when(mockRepo.findAll()).thenReturn(List.of(tc.mockTasks));
 			 TaskController t = new TaskController(mockRepo);
 
@@ -67,6 +69,29 @@ public class TaskControllerTest {
 		String actualString = new Gson().toJson(actual);
 
 		assertEquals(expectedOutput, actualString);
+	}
+
+	@Test
+	public void validateTaskFields() {
+		TaskController t = new TaskController(mockRepo); // TODO Replace default value.
+		class Testcase {
+			Task taskInput;
+			boolean expected;
+
+			public Testcase(Task testTask, boolean expected){
+				this.taskInput = testTask;
+				this.expected = expected;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[] {
+				new Testcase(mockTask,true),
+			};
+		for (Testcase tc : testcases){
+			boolean actualOut = t.validateTaskFields(new Gson().toJson(tc.taskInput));
+			assertEquals(tc.expected, actualOut);
+		}
+
 	}
 
 }

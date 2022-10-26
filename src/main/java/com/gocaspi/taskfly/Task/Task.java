@@ -6,11 +6,11 @@ public class Task {
 
     public String[] userIds;
     public String listId;
-    private String topic;
-    private String team;
-    private String priority;
-    private String description;
-    private String deadline;
+    public String topic;
+    public String team;
+    public String priority;
+    public String description;
+    public String deadline;
 
 
     public Task(String[] userIds, String listId,String topic, String team, String priority, String description, String deadline){

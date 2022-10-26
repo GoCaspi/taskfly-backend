@@ -16,6 +16,7 @@ import com.gocaspi.taskfly.User.User;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 
 @RestController
@@ -34,6 +35,19 @@ public class TaskController {
     public void postPerson(@RequestBody String body){
         Task task = new Gson().fromJson(body, Task.class);
         repository.insert(task);
+    }
+
+    /**
+     * given a requestbody (Json of a Task) the method checks if all fields are null-safe with the exception of the fields: priority and deadline, which must not be set.
+     * @param jsonPayload
+     * @return true if the mentioned criteria holds for that Task-payload, else return false
+     */
+    public boolean validateTaskFields(String jsonPayload){
+        Task task = new Gson().fromJson(jsonPayload, Task.class);
+       if(Objects.equals(task.userIds, new String[0]) || Objects.equals(task.listId,"") || Objects.equals(task.topic,"") || Objects.equals(task.description,"")){
+           return false;
+       }
+       return true;
     }
 
     /**
