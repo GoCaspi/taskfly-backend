@@ -22,17 +22,37 @@ public class TaskControllerTest {
 	Task[] mockTaskArr = new Task[]{ mockTask, mockTask };
 
 
+
 	@Test
 	public void getAllTasks() {
-		when(mockRepo.findAll()).thenReturn(List.of(mockTaskArr));
-		TaskController t = new TaskController(mockRepo); 
 
-		String id = "1";
-		Task[] expected = mockTaskArr;
-		String expectedOutput = new Gson().toJson(expected);
-		String actual = t.getAllTasks(id);
+		class Testcase{
+			String id ;
+			Task[] mockTasks ;
+			Task[] expected ;
+ 	public Testcase(String id,Task[] mockTasks, Task[] expected){
+		 this.id = id;
+		 this.mockTasks = mockTasks;
+		 this.expected = expected;
+			}
+		}
 
-		assertEquals(expectedOutput, actual);
+
+		Testcase[] testcases = new Testcase[] {
+				new Testcase("1",mockTaskArr,mockTaskArr),
+				new Testcase("2",mockTaskArr,mockTaskArr),
+				new Testcase("3",mockTaskArr,mockTaskArr),
+		 };
+
+		 for (Testcase tc : testcases){
+			 when(mockRepo.findAll()).thenReturn(List.of(tc.mockTasks));
+			 TaskController t = new TaskController(mockRepo);
+
+			 String expectedOut = new Gson().toJson(tc.expected);
+			 String actualOut = t.getAllTasks(tc.id);
+
+			 assertEquals(expectedOut, actualOut);
+		 }
 	}
 
 	@Test
