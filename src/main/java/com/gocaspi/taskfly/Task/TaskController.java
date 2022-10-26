@@ -1,23 +1,16 @@
 package com.gocaspi.taskfly.Task;
 
+import com.google.gson.JsonParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import com.google.gson.Gson;
-import com.gocaspi.taskfly.User.User;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
 
 @RestController
 @ResponseBody
@@ -31,10 +24,21 @@ public class TaskController {
        this.repository = repository;
    }
 
+    /**
+     * given a request body this endpoint converts the body to a Task and validates the input Data against set criteria (see method below)
+     * If criteria are matched returns status 200 OK, else throws an exception
+     * @param body, request body
+     */
     @PostMapping
-    public void postPerson(@RequestBody String body){
+    public void createNewTask(@RequestBody String body){
         Task task = new Gson().fromJson(body, Task.class);
-        repository.insert(task);
+        if(validateTaskFields(body)){
+            repository.insert(task);
+            return;
+        }
+        else{
+                throw new JsonParseException("invalid Payload");
+        }
     }
 
     /**
@@ -44,7 +48,7 @@ public class TaskController {
      */
     public boolean validateTaskFields(String jsonPayload){
         Task task = new Gson().fromJson(jsonPayload, Task.class);
-       if(Objects.equals(task.userIds, new String[0]) || Objects.equals(task.listId,"") || Objects.equals(task.topic,"") || Objects.equals(task.description,"")){
+       if(Objects.equals(task.userIds, null) || Objects.equals(task.listId,"") || Objects.equals(task.topic,"") || Objects.equals(task.description,"")){
            return false;
        }
        return true;
