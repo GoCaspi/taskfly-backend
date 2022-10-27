@@ -3,14 +3,12 @@ package com.gocaspi.taskfly.Task;
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-
 
 public class TaskControllerTest {
 	TaskRepository mockRepo = mock(TaskRepository.class);
@@ -25,43 +23,12 @@ public class TaskControllerTest {
 	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
 	Task[] mockTaskArr = new Task[]{ mockTask, mockTask };
 
-	// null-cases! + edgecases + 3-4 usecases
 
-	@Test
-	public void getAllTasks() {
-
-		class Testcase {
-			final String id;
-			final Task[] mockTasks;
-			final Task[] expected;
-			public Testcase(String id, Task[] mockTasks, Task[] expected) {
-				this.id = id;
-				this.mockTasks = mockTasks;
-				this.expected = expected;
-			}
-		}
-
-		Testcase[] testcases = new Testcase[] { 
-		  new Testcase("1", mockTaskArr, mockTaskArr), 
-		  new Testcase("2", mockTaskArr, mockTaskArr), 
-		  new Testcase("3", mockTaskArr, mockTaskArr), 
-		  new Testcase("4", mockTaskArr, new Task[0]) };
-	// nicht über object-kopien iterieren sondern über das object selbst (siehe . operator) !call by reference/value
-		 for (Testcase tc : testcases) {
-			 when(mockRepo.findAll()).thenReturn(List.of(tc.mockTasks));
-			 TaskController t = new TaskController(mockRepo);
-
-			 String expectedOut = new Gson().toJson(tc.expected);
-			 String actualOut = t.getAllTasks(tc.id);
-
-			 assertEquals(expectedOut, actualOut);
-		 }
-	}
 
 	@Test
 	public void updateTask() {
 		TaskController t = new TaskController(mockRepo); // TODO Replace default value.
-		Task mockUpdate = new Task(mockUserIds, mockListId, mockTopic+"updated", mockTeam+"updated", mockPrio, mockDesc+"updated", mockDeadline, mockObjectId);
+		Task mockUpdate = new Task(mockUserIds, mockListId, mockTopic + "updated", mockTeam + "updated", mockPrio, mockDesc + "updated", mockDeadline, mockObjectId);
 
 		class Testcase {
 			final String mockId;
@@ -70,7 +37,7 @@ public class TaskControllerTest {
 			final Task updateForTask;
 			final boolean expectSuccess;
 
-			public Testcase(String mockId,boolean idFoundInDb, Task taskFromDb,Task updateForTask, boolean expectSuccess){
+			public Testcase(String mockId, boolean idFoundInDb, Task taskFromDb, Task updateForTask, boolean expectSuccess) {
 				this.mockId = mockId;
 				this.idFoundInDb = idFoundInDb;
 				this.taskFromDb = taskFromDb;
@@ -79,43 +46,31 @@ public class TaskControllerTest {
 			}
 		}
 
-		Testcase[] testcases = new Testcase[] {
-				new Testcase("123",true,mockTask,mockUpdate, true) };
+		Testcase[] testcases = new Testcase[] { 
+		  new Testcase("123", true, mockTask, mockUpdate, true) };
 
-		for (Testcase tc : testcases){
+		for (Testcase tc : testcases) {
 			when(mockRepo.existsById(tc.mockId)).thenReturn(tc.idFoundInDb);
-			if(tc.idFoundInDb){
+			if (tc.idFoundInDb) {
 				when(mockRepo.findById(tc.mockId)).thenReturn(Optional.ofNullable(tc.taskFromDb));
-			}
-			else{
+			} else 
+			    {
 				when(mockRepo.findById(tc.mockId)).thenReturn(null);
 			}
 
-			if(tc.expectSuccess){
+			if (tc.expectSuccess) {
 				String successMsg = "task was updated";
-				String actualOut = t.updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
+				String actualOut = t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
 				assertEquals(successMsg, actualOut);
-			}
-			else {
+			} else 
+			     {
 				String notFoundMsg = "could not find matching Task to the provided id";
-				String actualOut = t.updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
+				String actualOut = t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
 				assertEquals(notFoundMsg, actualOut);
 			}
 		}
 	}
 
-	@Test
-	public void RemoveNullElements() {
-		TaskController t = new TaskController(mockRepo);
-
-		Task[] arr = mockTaskArr;
-		Task[] expected = mockTaskArr;
-		String expectedOutput = new Gson().toJson(expected);
-		Task[] actual = t.RemoveNullElements(arr);
-		String actualString = new Gson().toJson(actual);
-
-		assertEquals(expectedOutput, actualString);
-	}
 
 	@Test
 	public void validateTaskFields() {
@@ -137,6 +92,49 @@ public class TaskControllerTest {
 			boolean actualOut = t.validateTaskFields(new Gson().toJson(tc.taskInput));
 			assertEquals(tc.expected, actualOut);
 		}
+	}
+
+	@Test
+	public void getAllTasksDB() {
+		TaskController t =  new TaskController(mockRepo); // TODO Replace default value.
+		String id = "123"; // TODO Replace default value.
+		ArrayList<Task> mockList = new ArrayList<Task>();
+		for(Task task: mockTaskArr){
+			mockList.add(task);
+		}
+		class Testcase {
+			final String userId;
+			final boolean dbReturnSize0;
+			final ArrayList<Task> mockArrayList;
+			final  String expectedOutput;
+
+		public 	Testcase(String userId, boolean dbReturnSize0, ArrayList<Task> mockArrayList, String expectedOutput) {
+				this.userId = userId;
+				this.dbReturnSize0 = dbReturnSize0;
+				this.mockArrayList = mockArrayList;
+				this.expectedOutput = expectedOutput;
+		}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+			new Testcase("123",false, mockList, new Gson().toJson(mockList)),
+				new Testcase("123",true, new ArrayList<Task>(), "no tasks were found to the provided id"),
+				new Testcase(null,true, new ArrayList<Task>(), "no tasks were found to the provided id"),
+				new Testcase("",true, new ArrayList<Task>(), "no tasks were found to the provided id"),
+				new Testcase(null,false, new ArrayList<Task>(), "no tasks were found to the provided id")
+		};
+		for (Testcase tc : testcases){
+			if (tc.dbReturnSize0){
+				when(mockRepo.getAllTasksById(id)).thenReturn(tc.mockArrayList);
+			}
+			else {
+				when(mockRepo.getAllTasksById(id)).thenReturn(tc.mockArrayList);
+			}
+
+			String actual1 = t.Handle_getAllTasks(tc.userId);
+			assertEquals(actual1,tc.expectedOutput);
+		}
+
 	}
 
 }

@@ -27,61 +27,39 @@ public class TaskController {
      * @param body, request body
      */
     @PostMapping
-    public void createNewTask(@RequestBody String body){
-        Task task = new Gson().fromJson(body, Task.class);
-        if(validateTaskFields(body)){
-            repository.insert(task);
+    public void Handle_createNewTask(@RequestBody String body){
+        Task task = jsonToTask(body);
+        if(!validateTaskFields(body)){
+            throw new JsonParseException("invalid Payload");
         }
-        else{
-                throw new JsonParseException("invalid Payload");
-        }
+        repository.insert(task);
     }
-
 
     /**
-     * Finds all Tasks from the database and copies all Tasks that have the provided userID in their userIds information. Then that array is returned as json.
-     * @param id userID
-     * @return Json of a task array, that contain all tasks assigned to the given userID id
+     *
+     * @param id
+     * @return
      */
-    @GetMapping("/{id}")
-    public String getAllTasks(@PathVariable String id){
-       // fetch all Tasks from the mongoDB via accessing the TaskRepository
-        List<Task> tasks = repository.findAll();
-        // better Array list (nicht statisch shiehe vereinfachungen) !!
-        // copy the task-list to an array
-        Task[] taskArr= new Task[tasks.size()];
-        for (int i = 0; i < tasks.size(); i++){
-            taskArr[i] = tasks.get(i);
-        }
-        // check if the userId from the request is contained by the userIds-Array in the taskArr
-        // if true, add that task in the tasksOfUser Array, which contains only tasks assigned to that user
-
-        //!! see above
-        Task[] tasksOfUser = new Task[taskArr.length];
-        for (int j = 0; j < tasks.size(); j++){
-            if(Arrays.stream(taskArr[j].getUserIds()).anyMatch(id ::equals)){
-              Task[]  arr = Arrays.copyOf(tasksOfUser, taskArr.length);
-              arr[j]=taskArr[j];
-                tasksOfUser = arr;
-            }
-        }
-        Task[] response = RemoveNullElements(tasksOfUser);
-        return new Gson().toJson(response);
+    @GetMapping("/v3/{id}")
+    public String Handle_getAllTasks(@PathVariable String id){
+        List<Task> tasks = repository.getAllTasksById(id);
+        if(tasks.size() == 0){ return "no tasks were found to the provided id";}
+        return new Gson().toJson(tasks);
     }
+
+
 
     /**
      * if there is a task to the provided id (path variable) then that task is removed from the mongoDB, else an exception is thrown
      * @param id, identifier of the task of intereset
      */
     @DeleteMapping("/{id}")
-    public String deleteTask(@PathVariable String id){
-        if(repository.existsById(id)){
-            repository.deleteById(id);
-            return "Deleted "+id+" successfully";
+    public String Handle_deleteTask(@PathVariable String id){
+        if(!repository.existsById(id)){
+            return "no task to the provided id was found";
         }
-        else {
-            return "could not find matching Task to the provided id";
-        }
+        repository.deleteById(id);
+        return "Deleted "+id+" successfully";
     }
 
     /**
@@ -94,12 +72,12 @@ public class TaskController {
      * @return String, message if update process was successfull
      */
     @PutMapping("/{id}")
-    public String updateTask(@PathVariable String id,@RequestBody String body){
+    public String Handle_updateTask(@PathVariable String id,@RequestBody String body){
         if(!repository.existsById(id)){
             return "could not find matching Task to the provided id";
         }
       Optional<Task> task =  repository.findById(id);
-        Task update = new Gson().fromJson(body, Task.class);
+        Task update = jsonToTask(body);
 
         if(update.getDescription() != null){task.ifPresent(t -> t.setDescription(update.getDescription()));}
         if(update.getUserIds() != null){task.ifPresent(t -> t.addUserIdToTask(update.getUserIds()));}
@@ -111,20 +89,6 @@ public class TaskController {
         return "task was updated";
     }
 
-    /**
-     * Removes all Tasks that equals null from a Task-Array. Then returns the null-safe array
-     * @param arr, array of tasks that may contain null elements
-     * @return array, array of tasks which is null-safe
-     */
-    public Task[] RemoveNullElements(Task[] arr){
-        // null elements gar nicht erst screiben
-        List<Task> list = new ArrayList<Task>();
-
-        for(Task t : arr) {
-            if(t != null) { list.add(t); }
-        }
-        return list.toArray(new Task[list.size()]);
-    }
 
     /**
      * given a requestbody (Json of a Task) the method checks if all fields are null-safe with the exception of the fields: priority and deadline, which must not be set.
@@ -132,8 +96,12 @@ public class TaskController {
      * @return true if the mentioned criteria holds for that Task-payload, else return false
      */
     public boolean validateTaskFields(String jsonPayload){
-        Task task = new Gson().fromJson(jsonPayload, Task.class);
+        Task task = jsonToTask(jsonPayload);
         return !Objects.equals(task.getUserIds(), null) && !Objects.equals(task.getListId(), null) && !Objects.equals(task.getTopic(), null) && !Objects.equals(task.getDescription(), null);
     }
+
+    public Task jsonToTask(String jsonPayload){ return new Gson().fromJson(jsonPayload, Task.class);}
+
+    public String taskToJson(Task t){return new Gson().toJson(t);}
 
 }
