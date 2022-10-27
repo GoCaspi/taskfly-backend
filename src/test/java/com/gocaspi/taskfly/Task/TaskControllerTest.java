@@ -25,7 +25,7 @@ public class TaskControllerTest {
 	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
 	Task[] mockTaskArr = new Task[]{ mockTask, mockTask };
 
-
+	// null-cases! + edgecases + 3-4 usecases
 
 	@Test
 	public void getAllTasks() {
@@ -46,7 +46,7 @@ public class TaskControllerTest {
 		  new Testcase("2", mockTaskArr, mockTaskArr), 
 		  new Testcase("3", mockTaskArr, mockTaskArr), 
 		  new Testcase("4", mockTaskArr, new Task[0]) };
-
+	// nicht über object-kopien iterieren sondern über das object selbst (siehe . operator) !call by reference/value
 		 for (Testcase tc : testcases) {
 			 when(mockRepo.findAll()).thenReturn(List.of(tc.mockTasks));
 			 TaskController t = new TaskController(mockRepo);

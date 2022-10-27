@@ -47,6 +47,7 @@ public class TaskController {
     public String getAllTasks(@PathVariable String id){
        // fetch all Tasks from the mongoDB via accessing the TaskRepository
         List<Task> tasks = repository.findAll();
+        // better Array list (nicht statisch shiehe vereinfachungen) !!
         // copy the task-list to an array
         Task[] taskArr= new Task[tasks.size()];
         for (int i = 0; i < tasks.size(); i++){
@@ -54,6 +55,8 @@ public class TaskController {
         }
         // check if the userId from the request is contained by the userIds-Array in the taskArr
         // if true, add that task in the tasksOfUser Array, which contains only tasks assigned to that user
+
+        //!! see above
         Task[] tasksOfUser = new Task[taskArr.length];
         for (int j = 0; j < tasks.size(); j++){
             if(Arrays.stream(taskArr[j].userIds).anyMatch(id ::equals)){
@@ -114,6 +117,7 @@ public class TaskController {
      * @return array, array of tasks which is null-safe
      */
     public Task[] RemoveNullElements(Task[] arr){
+        // null elements gar nicht erst screiben
         List<Task> list = new ArrayList<Task>();
 
         for(Task t : arr) {

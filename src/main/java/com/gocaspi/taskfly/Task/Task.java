@@ -4,7 +4,7 @@ import org.bson.types.ObjectId;
 
 
 public class Task {
-
+    // private felder und zugriff durch public setter und getter methoden
     public String[] userIds;
     public String listId;
     public String topic;
@@ -15,7 +15,6 @@ public class Task {
     public ObjectId _id;
 
     public String taskId;
-
 
 
     public Task(String[] userIds, String listId,String topic, String team, String priority, String description, String deadline, ObjectId _id){
