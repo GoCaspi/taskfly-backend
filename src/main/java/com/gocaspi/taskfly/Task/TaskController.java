@@ -36,9 +36,10 @@ public class TaskController {
     }
 
     /**
-     *
-     * @param id
-     * @return
+     * calls the db via TaskRepository interface. If no tasks are assigned to the provided id an exception is thrown,
+     * else return an ArrayList with all tasks to that id as a json
+     * @param id of the user
+     * @return String, json of all tasks or err
      */
     @GetMapping("/v3/{id}")
     public String Handle_getAllTasks(@PathVariable String id){
@@ -100,6 +101,11 @@ public class TaskController {
         return !Objects.equals(task.getUserIds(), null) && !Objects.equals(task.getListId(), null) && !Objects.equals(task.getTopic(), null) && !Objects.equals(task.getDescription(), null);
     }
 
+    /**
+     * returns a Task from a json String
+     * @param jsonPayload String
+     * @return Task
+     */
     public Task jsonToTask(String jsonPayload){ return new Gson().fromJson(jsonPayload, Task.class);}
 
     public String taskToJson(Task t){return new Gson().toJson(t);}
