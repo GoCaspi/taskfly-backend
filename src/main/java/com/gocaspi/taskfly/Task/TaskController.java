@@ -81,9 +81,21 @@ public class TaskController {
         Task[] response = RemoveNullElements(tasksOfUser);
         return new Gson().toJson(response);
     }
+
+    /**
+     *
+     * @param id
+     */
     @DeleteMapping("/{id}")
-    public void deletePerson(@PathVariable String id){
-        repository.deleteById(id);
+    public String deleteTask(@PathVariable String id){
+        if(repository.existsById(id)){
+            repository.deleteById(id);
+            return new String("Deleted "+id+" successfully");
+        }
+        else {
+            return new String("could not find matching Task to the provided id");
+        }
+
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.gocaspi.taskfly.Task;
 
 import com.google.gson.Gson;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,7 +18,8 @@ public class TaskControllerTest {
 	String mockPrio = new String("prio1");
 	String mockDesc = new String("desc1");
 	String mockDeadline = new String("11-11-2022");
-	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline);
+	ObjectId mockObjectId = new ObjectId();
+	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
 	Task[] mockTaskArr = new Task[]{ mockTask, mockTask };
 
 
