@@ -129,10 +129,7 @@ public class TaskController {
      */
     public boolean validateTaskFields(String jsonPayload){
         Task task = new Gson().fromJson(jsonPayload, Task.class);
-        if(Objects.equals(task.userIds, null) || Objects.equals(task.listId,null) || Objects.equals(task.topic,null) || Objects.equals(task.description,null)){
-            return false;
-        }
-        return true;
+        return !Objects.equals(task.userIds, null) && !Objects.equals(task.listId, null) && !Objects.equals(task.topic, null) && !Objects.equals(task.description, null);
     }
 
 }
