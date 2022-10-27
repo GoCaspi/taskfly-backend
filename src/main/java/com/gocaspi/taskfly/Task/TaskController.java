@@ -59,7 +59,7 @@ public class TaskController {
         //!! see above
         Task[] tasksOfUser = new Task[taskArr.length];
         for (int j = 0; j < tasks.size(); j++){
-            if(Arrays.stream(taskArr[j].userIds).anyMatch(id ::equals)){
+            if(Arrays.stream(taskArr[j].getUserIds()).anyMatch(id ::equals)){
               Task[]  arr = Arrays.copyOf(tasksOfUser, taskArr.length);
               arr[j]=taskArr[j];
                 tasksOfUser = arr;
@@ -101,11 +101,11 @@ public class TaskController {
       Optional<Task> task =  repository.findById(id);
         Task update = new Gson().fromJson(body, Task.class);
 
-        if(update.description != null){task.ifPresent(t -> t.setDescription(update.description));}
-        if(update.userIds != null){task.ifPresent(t -> t.addUserIdToTask(update.userIds));}
-        if(update.topic != null){task.ifPresent(t -> t.setTopic(update.topic));}
-        if(update.team != null){task.ifPresent(t -> t.setTeam(update.team));}
-        if(update.deadline != null){task.ifPresent(t -> t.setDeadline(update.deadline));}
+        if(update.getDescription() != null){task.ifPresent(t -> t.setDescription(update.getDescription()));}
+        if(update.getUserIds() != null){task.ifPresent(t -> t.addUserIdToTask(update.getUserIds()));}
+        if(update.getTopic() != null){task.ifPresent(t -> t.setTopic(update.getTopic()));}
+        if(update.getTeam() != null){task.ifPresent(t -> t.setTeam(update.getTeam()));}
+        if(update.getDeadline() != null){task.ifPresent(t -> t.setDeadline(update.getDeadline()));}
 
         task.ifPresent(t -> repository.save(t));
         return "task was updated";
@@ -133,7 +133,7 @@ public class TaskController {
      */
     public boolean validateTaskFields(String jsonPayload){
         Task task = new Gson().fromJson(jsonPayload, Task.class);
-        return !Objects.equals(task.userIds, null) && !Objects.equals(task.listId, null) && !Objects.equals(task.topic, null) && !Objects.equals(task.description, null);
+        return !Objects.equals(task.getUserIds(), null) && !Objects.equals(task.getListId(), null) && !Objects.equals(task.getTopic(), null) && !Objects.equals(task.getDescription(), null);
     }
 
 }
