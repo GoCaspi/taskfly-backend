@@ -53,4 +53,28 @@ public class Task {
     public void addUserIdToTask(String[] newUserIds){
         this.userIds = newUserIds;
     }
+
+    /**
+     * sets the topic of a task to a new topic (topic)
+     * @param topic, new topic of the task
+     */
+    public void setTopic(String topic){
+        this.topic = topic;
+    }
+
+    /**
+     * sets the team of a task to a new team (team)
+     * @param team, new value of the task-field: team
+     */
+    public void setTeam(String team){
+        this.team = team;
+    }
+
+    /**
+     * sets the deadline of a task to a new deadline
+     * @param deadline, new value of task-field: deadline
+     */
+    public void setDeadline(String deadline){
+        this.deadline = deadline;
+    }
 }

@@ -37,18 +37,6 @@ public class TaskController {
         }
     }
 
-    /**
-     * given a requestbody (Json of a Task) the method checks if all fields are null-safe with the exception of the fields: priority and deadline, which must not be set.
-     * @param jsonPayload, request body
-     * @return true if the mentioned criteria holds for that Task-payload, else return false
-     */
-    public boolean validateTaskFields(String jsonPayload){
-        Task task = new Gson().fromJson(jsonPayload, Task.class);
-       if(Objects.equals(task.userIds, null) || Objects.equals(task.listId,null) || Objects.equals(task.topic,null) || Objects.equals(task.description,null)){
-           return false;
-       }
-       return true;
-    }
 
     /**
      * Finds all Tasks from the database and copies all Tasks that have the provided userID in their userIds information. Then that array is returned as json.
@@ -93,7 +81,15 @@ public class TaskController {
         }
     }
 
-
+    /**
+     * to a given path-variable id , search the injected repository if there is a task to that provided id.
+     * If that holds true, checks which fields of the request-body (body) are not null and therefore should be updated, then saves
+     * the updated task to the repository.
+     * Else throws an exception.
+     * @param id, id of the task that should be updated
+     * @param body, update for the task with the id id
+     * @return String, message if update process was successfull
+     */
     @PutMapping("/{id}")
     public String updateTask(@PathVariable String id,@RequestBody String body){
         if(!repository.existsById(id)){
@@ -102,18 +98,14 @@ public class TaskController {
       Optional<Task> task =  repository.findById(id);
         Task update = new Gson().fromJson(body, Task.class);
 
-        if(update.description != null){
-            task.ifPresent(t -> t.setDescription(update.description) );
-            task.ifPresent(t -> repository.save(t));
-            return "updated description";
-        }
-        if(update.userIds != null){
-            task.ifPresent(t -> t.addUserIdToTask(update.userIds) );
-            task.ifPresent(t -> repository.save(t));
-            return "updated userIds";
-        }
+        if(update.description != null){task.ifPresent(t -> t.setDescription(update.description));}
+        if(update.userIds != null){task.ifPresent(t -> t.addUserIdToTask(update.userIds));}
+        if(update.topic != null){task.ifPresent(t -> t.setTopic(update.topic));}
+        if(update.team != null){task.ifPresent(t -> t.setTeam(update.team));}
+        if(update.deadline != null){task.ifPresent(t -> t.setDeadline(update.deadline));}
 
-        return "no operations were made";
+        task.ifPresent(t -> repository.save(t));
+        return "task was updated";
     }
 
     /**
@@ -125,10 +117,22 @@ public class TaskController {
         List<Task> list = new ArrayList<Task>();
 
         for(Task t : arr) {
-            if(t != null) {
-                list.add(t);
-            }
+            if(t != null) { list.add(t); }
         }
         return list.toArray(new Task[list.size()]);
     }
+
+    /**
+     * given a requestbody (Json of a Task) the method checks if all fields are null-safe with the exception of the fields: priority and deadline, which must not be set.
+     * @param jsonPayload, request body
+     * @return true if the mentioned criteria holds for that Task-payload, else return false
+     */
+    public boolean validateTaskFields(String jsonPayload){
+        Task task = new Gson().fromJson(jsonPayload, Task.class);
+        if(Objects.equals(task.userIds, null) || Objects.equals(task.listId,null) || Objects.equals(task.topic,null) || Objects.equals(task.description,null)){
+            return false;
+        }
+        return true;
+    }
+
 }
