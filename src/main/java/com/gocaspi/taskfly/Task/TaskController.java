@@ -31,7 +31,6 @@ public class TaskController {
         Task task = new Gson().fromJson(body, Task.class);
         if(validateTaskFields(body)){
             repository.insert(task);
-            return;
         }
         else{
                 throw new JsonParseException("invalid Payload");
@@ -40,7 +39,7 @@ public class TaskController {
 
     /**
      * given a requestbody (Json of a Task) the method checks if all fields are null-safe with the exception of the fields: priority and deadline, which must not be set.
-     * @param jsonPayload
+     * @param jsonPayload, request body
      * @return true if the mentioned criteria holds for that Task-payload, else return false
      */
     public boolean validateTaskFields(String jsonPayload){
@@ -80,17 +79,17 @@ public class TaskController {
     }
 
     /**
-     *
-     * @param id
+     * if there is a task to the provided id (path variable) then that task is removed from the mongoDB, else an exception is thrown
+     * @param id, identifier of the task of intereset
      */
     @DeleteMapping("/{id}")
     public String deleteTask(@PathVariable String id){
         if(repository.existsById(id)){
             repository.deleteById(id);
-            return new String("Deleted "+id+" successfully");
+            return "Deleted "+id+" successfully";
         }
         else {
-            return new String("could not find matching Task to the provided id");
+            return "could not find matching Task to the provided id";
         }
     }
 
@@ -98,7 +97,7 @@ public class TaskController {
     @PutMapping("/{id}")
     public String updateTask(@PathVariable String id,@RequestBody String body){
         if(!repository.existsById(id)){
-            return new String("could not find matching Task to the provided id");
+            return "could not find matching Task to the provided id";
         }
       Optional<Task> task =  repository.findById(id);
         Task update = new Gson().fromJson(body, Task.class);
@@ -106,15 +105,21 @@ public class TaskController {
         if(update.description != null){
             task.ifPresent(t -> t.setDescription(update.description) );
             task.ifPresent(t -> repository.save(t));
-            return new String("updated");
+            return "updated description";
         }
-        return new String("no operations were made");
+        if(update.userIds != null){
+            task.ifPresent(t -> t.addUserIdToTask(update.userIds) );
+            task.ifPresent(t -> repository.save(t));
+            return "updated userIds";
+        }
+
+        return "no operations were made";
     }
 
     /**
      * Removes all Tasks that equals null from a Task-Array. Then returns the null-safe array
      * @param arr, array of tasks that may contain null elements
-     * @return
+     * @return array, array of tasks which is null-safe
      */
     public Task[] RemoveNullElements(Task[] arr){
         List<Task> list = new ArrayList<Task>();

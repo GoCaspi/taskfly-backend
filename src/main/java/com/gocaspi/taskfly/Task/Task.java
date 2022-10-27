@@ -1,7 +1,7 @@
 package com.gocaspi.taskfly.Task;
 
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
+
 
 public class Task {
 
@@ -30,11 +30,27 @@ public class Task {
         this.taskId = getTaskIdString();
     }
 
+    /**
+     * returns the id string of the ObjectId of the task
+     * @return String, id string of the ObjectId _id
+     */
     public String getTaskIdString(){
         return this._id.toString();
     }
 
+    /**
+     * sets the description of the task to a provided string (text)
+     * @param text, new description of the task
+     */
     public void setDescription(String text){
         this.description = text;
+    }
+
+    /**
+     * sets the userIDs array of a task to the provided String-array (newUserIds)
+     * @param newUserIds, new UserIds array of the task
+     */
+    public void addUserIdToTask(String[] newUserIds){
+        this.userIds = newUserIds;
     }
 }
