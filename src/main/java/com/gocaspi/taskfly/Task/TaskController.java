@@ -48,8 +48,6 @@ public class TaskController {
         return new Gson().toJson(tasks);
     }
 
-
-
     /**
      * if there is a task to the provided id (path variable) then that task is removed from the mongoDB, else an exception is thrown
      * @param id, identifier of the task of intereset
@@ -90,7 +88,6 @@ public class TaskController {
         return "task was updated";
     }
 
-
     /**
      * given a requestbody (Json of a Task) the method checks if all fields are null-safe with the exception of the fields: priority and deadline, which must not be set.
      * @param jsonPayload, request body
@@ -107,7 +104,5 @@ public class TaskController {
      * @return Task
      */
     public Task jsonToTask(String jsonPayload){ return new Gson().fromJson(jsonPayload, Task.class);}
-
-    public String taskToJson(Task t){return new Gson().toJson(t);}
 
 }
