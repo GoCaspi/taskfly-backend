@@ -33,4 +33,8 @@ public class Task {
     public String getTaskIdString(){
         return this._id.toString();
     }
+
+    public void setDescription(String text){
+        this.description = text;
+    }
 }

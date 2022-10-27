@@ -7,10 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @ResponseBody
@@ -95,7 +92,23 @@ public class TaskController {
         else {
             return new String("could not find matching Task to the provided id");
         }
+    }
 
+
+    @PutMapping("/{id}")
+    public String updateTask(@PathVariable String id,@RequestBody String body){
+        if(!repository.existsById(id)){
+            return new String("could not find matching Task to the provided id");
+        }
+      Optional<Task> task =  repository.findById(id);
+        Task update = new Gson().fromJson(body, Task.class);
+
+        if(update.description != null){
+            task.ifPresent(t -> t.setDescription(update.description) );
+            task.ifPresent(t -> repository.save(t));
+            return new String("updated");
+        }
+        return new String("no operations were made");
     }
 
     /**
