@@ -51,9 +51,15 @@ public class UserController {
         return new Gson().toJson(users);
 
     }
-    @PatchMapping()
+    @PatchMapping("/{id}")
     public String updateUser(@PathVariable String id){
-        List<User> users =repository.findAll();
-        return new Gson().toJson(users);
+        if(repository.existsById(id)){
+            User user = repository.findById(id).get();
+            return new Gson().toJson(user);
+        }
+        else {
+            return "User Id Not Existing";
+        }
+
     }
 }
