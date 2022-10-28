@@ -7,7 +7,11 @@ import java.util.List;
 
 
 public interface TaskRepository extends MongoRepository<Task, String> {
-
+    /**
+     * returns all tasks that have the provided id contained in their userIds array
+     * @param id String
+     * @return ArrayList of all tasks assigned to id
+     */
     default ArrayList<Task> getAllTasksById(String id){
         List<Task> tasks = this.findAll();
         ArrayList<Task> tasksToId = new ArrayList<Task>() ;
