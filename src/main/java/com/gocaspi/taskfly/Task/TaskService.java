@@ -67,6 +67,7 @@ public class TaskService {
             if(update.getTopic() != null){t.setTopic(update.getTopic());}
             if(update.getTeam() != null){t.setTeam(update.getTeam());}
             if(update.getDeadline() != null){t.setDeadline(update.getDeadline());}
+            if(update.getListId() != null){t.setListId(update.getListId());}
             getRepo().save(t);
                 });
     }
