@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TaskTest {
 	String[] mockUserIds = new String[0]; String mockListId = ""; String mockTopic = ""; String mockTeam = "";
@@ -21,7 +20,9 @@ public class TaskTest {
 	}
 
 	Testcase_setString[] testcases = new Testcase_setString[]{
-			new Testcase_setString("abc")
+			new Testcase_setString("abc"),
+			new Testcase_setString(null),
+			new Testcase_setString(""),
 	};
 
 	@Test
