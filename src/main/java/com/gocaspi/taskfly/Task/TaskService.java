@@ -1,4 +1,4 @@
-package com.gocaspi.taskfly.services;
+package com.gocaspi.taskfly.Task;
 
 import com.gocaspi.taskfly.Task.Task;
 import com.gocaspi.taskfly.Task.TaskRepository;
@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Objects;
 
-public class taskService {
+public class TaskService {
     @Autowired
     private TaskRepository repo;
 
-    public taskService (TaskRepository repo){
-    this.repo = repo;
+    public TaskService (TaskRepository repo){
+        this.repo = repo;
     }
 
     public TaskRepository getRepo() {
@@ -42,3 +42,4 @@ public class taskService {
      */
     public Task jsonToTask(String jsonPayload){ return new Gson().fromJson(jsonPayload, Task.class);}
 }
+
