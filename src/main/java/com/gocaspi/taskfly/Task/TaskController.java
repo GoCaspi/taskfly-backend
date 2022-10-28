@@ -1,5 +1,6 @@
 package com.gocaspi.taskfly.Task;
 
+import com.gocaspi.taskfly.services.taskService;
 import com.google.gson.JsonParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,24 +16,48 @@ import java.util.*;
 public class TaskController {
     @Autowired
     private TaskRepository repository;
+    private taskService service;
 
    public TaskController (TaskRepository repository){
        super();
        this.repository = repository;
+       this.service = new taskService(repository);
+
    }
+
+    public TaskRepository getRepository() {
+        return repository;
+    }
+
+    public taskService getService() {
+        return this.service;
+    }
 
     /**
      * given a request body this endpoint converts the body to a Task and validates the input Data against set criteria (see method below)
      * If criteria are matched returns status 200 OK, else throws an exception
      * @param body, request body
      */
+    /*
     @PostMapping
-    public void Handle_createNewTask(@RequestBody String body){
+    public void Handle_createNewTask1(@RequestBody String body){
         Task task = jsonToTask(body);
         if(!validateTaskFields(body)){
             throw new JsonParseException("invalid Payload");
         }
         repository.insert(task);
+    }
+
+     */
+    @PostMapping
+    public void Handle_createNewTask(@RequestBody String body){
+        Task task = jsonToTask(body);
+        try{
+            getService().postService(task);
+        }
+       catch (RuntimeException r){
+            throw r;
+       }
     }
 
     /**
