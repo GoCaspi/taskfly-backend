@@ -24,10 +24,6 @@ public class TaskController {
 
    }
 
-    public TaskRepository getRepository() {
-        return repository;
-    }
-
     public TaskService getService() {
         return this.service;
     }
@@ -57,7 +53,7 @@ public class TaskController {
      */
     @GetMapping("/v3/{id}")
     public String Handle_getAllTasks(@PathVariable String id){
-        List<Task> tasks = repository.getAllTasksById(id);
+        List<Task> tasks = getService().getService_AllTasksOfUser(id);
         if(tasks.size() == 0){ return "no tasks were found to the provided id";}
         return new Gson().toJson(tasks);
     }

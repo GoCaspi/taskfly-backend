@@ -1,10 +1,11 @@
 package com.gocaspi.taskfly.Task;
 
-import com.gocaspi.taskfly.Task.Task;
-import com.gocaspi.taskfly.Task.TaskRepository;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class TaskService {
@@ -24,6 +25,18 @@ public class TaskService {
             throw new RuntimeException("not all neccassary fields are provided");
         }
         return getRepo().insert(t);
+    }
+
+    public ArrayList<Task> getService_AllTasksOfUser(String id){
+        List<Task> tasks = getRepo().findAll();
+        ArrayList<Task> tasksToId = new ArrayList<Task>() ;
+        for(Task t : tasks){
+            if (Arrays.stream(t.getUserIds()).toList().contains(id)){
+                tasksToId.add(t);
+            }
+        }
+
+        return tasksToId;
     }
     /**
      * given a requestbody (Json of a Task) the method checks if all fields are null-safe with the exception of the fields: priority and deadline, which must not be set.
