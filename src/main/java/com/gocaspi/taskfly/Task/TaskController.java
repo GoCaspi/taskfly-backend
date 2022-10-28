@@ -3,10 +3,7 @@ package com.gocaspi.taskfly.Task;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import com.google.gson.Gson;
-
-
 import java.util.*;
 
 @RestController
@@ -15,13 +12,12 @@ import java.util.*;
 public class TaskController {
     @Autowired
     private TaskRepository repository;
-    private TaskService service;
+    private final TaskService service;
 
    public TaskController (TaskRepository repository){
        super();
        this.repository = repository;
        this.service = new TaskService(repository);
-
    }
 
     public TaskService getService() {
@@ -35,7 +31,7 @@ public class TaskController {
      * @param body, request body
      */
     @PostMapping
-    public void Handle_createNewTask(@RequestBody String body){
+    public void Handle_createNewTask(@RequestBody String body) throws RuntimeException{
         Task task = jsonToTask(body);
         try{
             getService().postService(task);
@@ -52,9 +48,9 @@ public class TaskController {
      * @return String, json of all tasks or err
      */
     @GetMapping("/v3/{id}")
-    public String Handle_getAllTasks(@PathVariable String id){
+    public String Handle_getAllTasks(@PathVariable String id) throws RuntimeException {
         List<Task> tasks = getService().getService_AllTasksOfUser(id);
-        if(tasks.size() == 0){ return "no tasks were found to the provided id";}
+        if(tasks.size() == 0){ throw new RuntimeException("no tasks are assigned to the provided id");}
         return new Gson().toJson(tasks);
     }
 
@@ -63,12 +59,9 @@ public class TaskController {
      * @param id, identifier of the task of intereset
      */
     @DeleteMapping("/{id}")
-    public String Handle_deleteTask(@PathVariable String id){
-        if(!repository.existsById(id)){
-            return "no task to the provided id was found";
-        }
-        repository.deleteById(id);
-        return "Deleted "+id+" successfully";
+    public void Handle_deleteTask(@PathVariable String id) throws RuntimeException{
+       try { getService().deleteService(id); }
+       catch (RuntimeException r){ throw r; }
     }
 
     /**
@@ -81,21 +74,15 @@ public class TaskController {
      * @return String, message if update process was successfull
      */
     @PutMapping("/{id}")
-    public String Handle_updateTask(@PathVariable String id,@RequestBody String body){
-        if(!repository.existsById(id)){
-            return "could not find matching Task to the provided id";
-        }
-      Optional<Task> task =  repository.findById(id);
+    public void Handle_updateTask(@PathVariable String id,@RequestBody String body){
+
         Task update = jsonToTask(body);
-
-        if(update.getDescription() != null){task.ifPresent(t -> t.setDescription(update.getDescription()));}
-        if(update.getUserIds() != null){task.ifPresent(t -> t.addUserIdToTask(update.getUserIds()));}
-        if(update.getTopic() != null){task.ifPresent(t -> t.setTopic(update.getTopic()));}
-        if(update.getTeam() != null){task.ifPresent(t -> t.setTeam(update.getTeam()));}
-        if(update.getDeadline() != null){task.ifPresent(t -> t.setDeadline(update.getDeadline()));}
-
-        task.ifPresent(t -> repository.save(t));
-        return "task was updated";
+        try {
+            getService().updateService(id,update);
+        }
+        catch (RuntimeException r){
+            throw r;
+        }
     }
 
     /**
