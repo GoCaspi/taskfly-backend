@@ -56,6 +56,12 @@ public class TaskService {
         return tasksToId;
     }
 
+    public Task getService_TaskById(String id) throws ChangeSetPersister.NotFoundException {
+        if(!getRepo().existsById(id)){ throw new ChangeSetPersister.NotFoundException(); }
+      Task task = getRepo().findById(id).get();
+        return task;
+    }
+
     public void deleteService(String id) throws ChangeSetPersister.NotFoundException {
         if(!getRepo().existsById(id)){ throw new ChangeSetPersister.NotFoundException(); }
         getRepo().deleteById(id);

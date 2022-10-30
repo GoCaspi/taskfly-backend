@@ -59,6 +59,17 @@ public class TaskController {
         return new ResponseEntity<List<Task>>(tasks,HttpStatus.OK);
     }
 
+    @GetMapping("/taskId/{id}")
+    public ResponseEntity<Task> Handle_getTaskById(@PathVariable String id) throws ChangeSetPersister.NotFoundException {
+        try {
+            Task task = getService().getService_TaskById(id);
+            return new ResponseEntity<Task>(task,HttpStatus.OK);
+        }
+        catch (ChangeSetPersister.NotFoundException nan){
+            throw nan;
+        }
+    }
+
     /**
      * if there is a task to the provided id (path variable) then that task is removed from the mongoDB, else an exception is thrown
      * @param id, identifier of the task of intereset
