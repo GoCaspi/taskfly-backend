@@ -4,7 +4,7 @@ import org.bson.types.ObjectId;
 
 
 public class Task {
-    private String[] userIds;
+    private String userId;
     private String listId;
     private String topic;
     private String team;
@@ -16,8 +16,8 @@ public class Task {
     private String taskId;
 
 
-    public Task(String[] userIds, String listId,String topic, String team, String priority, String description, String deadline, ObjectId _id){
-        this.userIds = userIds;
+    public Task(String userId, String listId,String topic, String team, String priority, String description, String deadline, ObjectId _id){
+        this.userId = userId;
         this.listId = listId;
         this.topic = topic;
         this.team = team;
@@ -52,17 +52,17 @@ public class Task {
 
     /**
      * sets the userIDs array of a task to the provided String-array (newUserIds)
-     * @param newUserIds, new UserIds array of the task
+     * @param newUserId, new UserIds array of the task
      */
-    public void addUserIdToTask(String[] newUserIds){
-        this.userIds = newUserIds;
+    public void setUserId(String newUserId){
+        this.userId = newUserId;
     }
 
     /**
      * returns an array of user ids that are assigned to that task
      * @return String[], userIds that are assigned to that task
      */
-    public String[] getUserIds(){ return this.userIds; }
+    public String getUserId(){ return this.userId; }
 
     /**
      * sets the topic of a task to a new topic (topic)

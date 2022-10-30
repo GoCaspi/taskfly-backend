@@ -40,15 +40,14 @@ public class TaskService {
      * @param id of the user
      * @return ArrayList containing the tasks of the user with the id id
      */
-    public ArrayList<Task> getService_AllTasksOfUser(String id){
+    public List<Task> getService_AllTasksOfUser(String id){
         List<Task> tasks = getRepo().findAll();
-        ArrayList<Task> tasksToId = new ArrayList<Task>() ;
+        List<Task> tasksToId = new ArrayList<Task>();
         for(Task t : tasks){
-            if (Arrays.stream(t.getUserIds()).toList().contains(id)){
+            if (Objects.equals(t.getUserId(), id)){
                 tasksToId.add(t);
             }
         }
-
         return tasksToId;
     }
 
@@ -63,7 +62,7 @@ public class TaskService {
         if(!getRepo().existsById(id)){ throw new RuntimeException(); }
         task.ifPresent( t->{
             if(update.getDescription() != null){t.setDescription(update.getDescription());}
-            if(update.getUserIds() != null){t.addUserIdToTask(update.getUserIds());}
+            if(update.getUserId() != null){t.setUserId(update.getUserId());}
             if(update.getTopic() != null){t.setTopic(update.getTopic());}
             if(update.getTeam() != null){t.setTeam(update.getTeam());}
             if(update.getDeadline() != null){t.setDeadline(update.getDeadline());}
@@ -79,7 +78,7 @@ public class TaskService {
      */
     public boolean validateTaskFields(String jsonPayload){
         Task task = jsonToTask(jsonPayload);
-        return !Objects.equals(task.getUserIds(), null) && !Objects.equals(task.getListId(), null) && !Objects.equals(task.getTopic(), null) && !Objects.equals(task.getDescription(), null);
+        return !Objects.equals(task.getUserId(), null) && !Objects.equals(task.getListId(), null) && !Objects.equals(task.getTopic(), null) && !Objects.equals(task.getDescription(), null);
     }
 
     /**
