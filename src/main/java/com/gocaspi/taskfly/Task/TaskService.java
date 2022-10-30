@@ -2,7 +2,12 @@ package com.gocaspi.taskfly.Task;
 
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.MethodParameter;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.server.MethodNotAllowedException;
 
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class TaskService {
@@ -27,9 +32,9 @@ public class TaskService {
      * @param t task to get validated and saved
      * @throws RuntimeException
      */
-    public void postService(Task t) throws RuntimeException{
+    public void postService(Task t) throws ChangeSetPersister.NotFoundException {
         if(!validateTaskFields(new Gson().toJson(t))){
-            throw new RuntimeException("not all neccassary fields are provided");
+            throw new ChangeSetPersister.NotFoundException();
         }
          getRepo().insert(t);
     }
@@ -51,15 +56,15 @@ public class TaskService {
         return tasksToId;
     }
 
-    public void deleteService(String id) throws RuntimeException{
-        if(!getRepo().existsById(id)){ throw new RuntimeException(); }
+    public void deleteService(String id) throws ChangeSetPersister.NotFoundException {
+        if(!getRepo().existsById(id)){ throw new ChangeSetPersister.NotFoundException(); }
         getRepo().deleteById(id);
     }
 
-    public void updateService(String id,Task update) throws RuntimeException{
+    public void updateService(String id,Task update) throws ChangeSetPersister.NotFoundException {
         Optional<Task> task =  getRepo().findById(id);
 
-        if(!getRepo().existsById(id)){ throw new RuntimeException(); }
+        if(!getRepo().existsById(id)){ throw new ChangeSetPersister.NotFoundException(); }
         task.ifPresent( t->{
             if(update.getDescription() != null){t.setDescription(update.getDescription());}
             if(update.getUserId() != null){t.setUserId(update.getUserId());}

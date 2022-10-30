@@ -2,6 +2,7 @@ package com.gocaspi.taskfly.Task;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class TaskController {
      * @param body, request body
      */
     @PostMapping
-    public ResponseEntity<String> Handle_createNewTask(@RequestBody String body) throws RuntimeException{
+    public ResponseEntity<String> Handle_createNewTask(@RequestBody String body) throws ChangeSetPersister.NotFoundException {
         Task task = jsonToTask(body);
         try{
             getService().postService(task);
@@ -52,11 +53,10 @@ public class TaskController {
      * @return String, json of all tasks or err
      */
     @GetMapping("/v3/{id}")
-    public ResponseEntity<String> Handle_getAllTasks(@PathVariable String id) throws RuntimeException {
+    public ResponseEntity<List<Task>> Handle_getAllTasks(@PathVariable String id) throws ChangeSetPersister.NotFoundException {
         List<Task> tasks = getService().getService_AllTasksOfUser(id);
-        if(tasks.size() == 0){ throw new RuntimeException("no tasks are assigned to the provided id");}
-     //   return new Gson().toJson(tasks);
-        return new ResponseEntity<String>(new Gson().toJson(tasks),HttpStatus.OK);
+        if(tasks.size() == 0){ throw new ChangeSetPersister.NotFoundException();}
+        return new ResponseEntity<List<Task>>(tasks,HttpStatus.OK);
     }
 
     /**
@@ -64,7 +64,7 @@ public class TaskController {
      * @param id, identifier of the task of intereset
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> Handle_deleteTask(@PathVariable String id) throws RuntimeException{
+    public ResponseEntity<String> Handle_deleteTask(@PathVariable String id) throws ChangeSetPersister.NotFoundException {
        try {
            getService().deleteService(id);
            String msg = "successfully deleted task with id: "+id;
@@ -83,7 +83,7 @@ public class TaskController {
      * @return String, message if update process was successfull
      */
     @PutMapping("/{id}")
-    public ResponseEntity<String> Handle_updateTask(@PathVariable String id,@RequestBody String body){
+    public ResponseEntity<String> Handle_updateTask(@PathVariable String id,@RequestBody String body) throws ChangeSetPersister.NotFoundException {
 
         Task update = jsonToTask(body);
         try {
@@ -91,7 +91,7 @@ public class TaskController {
             String msg = "successfully updated task with id: "+id;
             return new ResponseEntity<String>(msg,HttpStatus.ACCEPTED);
         }
-        catch (RuntimeException r){
+        catch (ChangeSetPersister.NotFoundException r){
             throw r;
         }
     }
