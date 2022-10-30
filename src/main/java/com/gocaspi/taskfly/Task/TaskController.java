@@ -2,6 +2,8 @@ package com.gocaspi.taskfly.Task;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import java.util.*;
@@ -31,10 +33,12 @@ public class TaskController {
      * @param body, request body
      */
     @PostMapping
-    public void Handle_createNewTask(@RequestBody String body) throws RuntimeException{
+    public ResponseEntity<String> Handle_createNewTask(@RequestBody String body) throws RuntimeException{
         Task task = jsonToTask(body);
         try{
             getService().postService(task);
+            String msg = "successfully created task with id: " + task.getTaskIdString();
+            return new ResponseEntity<String>(msg,HttpStatus.ACCEPTED);
         }
         catch (RuntimeException r){
             throw r;
@@ -48,10 +52,11 @@ public class TaskController {
      * @return String, json of all tasks or err
      */
     @GetMapping("/v3/{id}")
-    public String Handle_getAllTasks(@PathVariable String id) throws RuntimeException {
+    public ResponseEntity<String> Handle_getAllTasks(@PathVariable String id) throws RuntimeException {
         List<Task> tasks = getService().getService_AllTasksOfUser(id);
         if(tasks.size() == 0){ throw new RuntimeException("no tasks are assigned to the provided id");}
-        return new Gson().toJson(tasks);
+     //   return new Gson().toJson(tasks);
+        return new ResponseEntity<String>(new Gson().toJson(tasks),HttpStatus.OK);
     }
 
     /**
@@ -59,8 +64,12 @@ public class TaskController {
      * @param id, identifier of the task of intereset
      */
     @DeleteMapping("/{id}")
-    public void Handle_deleteTask(@PathVariable String id) throws RuntimeException{
-       try { getService().deleteService(id); }
+    public ResponseEntity<String> Handle_deleteTask(@PathVariable String id) throws RuntimeException{
+       try {
+           getService().deleteService(id);
+           String msg = "successfully deleted task with id: "+id;
+           return new ResponseEntity<String>(msg,HttpStatus.ACCEPTED);
+       }
        catch (RuntimeException r){ throw r; }
     }
 
@@ -74,11 +83,13 @@ public class TaskController {
      * @return String, message if update process was successfull
      */
     @PutMapping("/{id}")
-    public void Handle_updateTask(@PathVariable String id,@RequestBody String body){
+    public ResponseEntity<String> Handle_updateTask(@PathVariable String id,@RequestBody String body){
 
         Task update = jsonToTask(body);
         try {
             getService().updateService(id,update);
+            String msg = "successfully updated task with id: "+id;
+            return new ResponseEntity<String>(msg,HttpStatus.ACCEPTED);
         }
         catch (RuntimeException r){
             throw r;

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 
 public class TaskTest {
-	String[] mockUserIds = new String[0]; String mockListId = ""; String mockTopic = ""; String mockTeam = "";
+	String mockUserIds = "1"; String mockListId = ""; String mockTopic = ""; String mockTeam = "";
 	String mockPrio = ""; String mockDesc = ""; String mockDeadline = ""; ObjectId mockObjectId = new ObjectId();
 	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
 

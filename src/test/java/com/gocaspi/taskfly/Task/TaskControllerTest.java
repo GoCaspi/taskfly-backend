@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 
 public class TaskControllerTest {
 	TaskRepository mockRepo = mock(TaskRepository.class);
-	String[] mockUserIds = new String[]{ "1", "2", "3" };
+	String mockUserIds = "1";
 	String mockListId = "1";
 	String mockTopic = "topic1";
 	String mockTeam = "team1";
