@@ -3,10 +3,15 @@ package com.gocaspi.taskfly.Task;
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -47,7 +52,9 @@ public class TaskControllerTest {
 		}
 
 		Testcase[] testcases = new Testcase[] { 
-		  new Testcase("123", true, mockTask, mockUpdate, true) };
+		  new Testcase("123", true, mockTask, mockUpdate, true),
+				new Testcase("123", false, mockTask, mockUpdate, false)
+		};
 
 		for (Testcase tc : testcases) {
 			when(mockRepo.existsById(tc.mockId)).thenReturn(tc.idFoundInDb);
@@ -60,13 +67,25 @@ public class TaskControllerTest {
 
 			if (tc.expectSuccess) {
 				String successMsg = "task was updated";
-				String actualOut = t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
-				assertEquals(successMsg, actualOut);
+				ResponseEntity expected = new ResponseEntity("successfully updated task with id: "+tc.mockId, HttpStatus.ACCEPTED);
+				try {
+					ResponseEntity actual = t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
+					assertEquals(expected, actual);
+				} catch (ChangeSetPersister.NotFoundException e) {throw new RuntimeException(e);}
+
 			} else 
 			     {
-				String notFoundMsg = "could not find matching Task to the provided id";
-				String actualOut = t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
-				assertEquals(notFoundMsg, actualOut);
+			//	String notFoundMsg = "could not find matching Task to the provided id";
+			//	String actualOut = t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
+				try {
+					ResponseEntity actual = t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
+				} catch (ChangeSetPersister.NotFoundException e) {
+					String message = null;
+					var expectedException =
+							assertThrows(ChangeSetPersister.NotFoundException.class, () -> {throw new ChangeSetPersister.NotFoundException();});
+					assertEquals(message, expectedException.getMessage());
+				}
+				//	 assertEquals(notFoundMsg, actualOut);
 			}
 		}
 	}
@@ -94,6 +113,7 @@ public class TaskControllerTest {
 		}
 	}
 
+	/*
 	@Test
 	public void getAllTasksDB() {
 		TaskController t =  new TaskController(mockRepo); // TODO Replace default value.
@@ -136,5 +156,7 @@ public class TaskControllerTest {
 		}
 
 	}
+
+	 */
 
 }
