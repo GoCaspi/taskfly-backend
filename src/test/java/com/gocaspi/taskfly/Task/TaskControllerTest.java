@@ -8,15 +8,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class TaskControllerTest {
 	TaskRepository mockRepo = mock(TaskRepository.class);
+//	TaskService mockService = mock(TaskService.class);
 	String mockUserIds = "1";
 	String mockListId = "1";
 	String mockTopic = "topic1";
@@ -32,7 +34,7 @@ public class TaskControllerTest {
 
 	@Test
 	public void updateTask() {
-		TaskController t = new TaskController(mockRepo); // TODO Replace default value.
+		TaskController t = new TaskController(mockRepo);
 		Task mockUpdate = new Task(mockUserIds, mockListId, mockTopic + "updated", mockTeam + "updated", mockPrio, mockDesc + "updated", mockDeadline, mockObjectId);
 
 		class Testcase {
@@ -53,39 +55,31 @@ public class TaskControllerTest {
 
 		Testcase[] testcases = new Testcase[] { 
 		  new Testcase("123", true, mockTask, mockUpdate, true),
-				new Testcase("123", false, mockTask, mockUpdate, false)
+		  new Testcase("123", false, mockTask, mockUpdate, false),
+		  new Testcase(null, false, mockTask, mockUpdate, false),
+
 		};
 
 		for (Testcase tc : testcases) {
 			when(mockRepo.existsById(tc.mockId)).thenReturn(tc.idFoundInDb);
-			if (tc.idFoundInDb) {
-				when(mockRepo.findById(tc.mockId)).thenReturn(Optional.ofNullable(tc.taskFromDb));
-			} else 
-			    {
-				when(mockRepo.findById(tc.mockId)).thenReturn(null);
-			}
+			if (tc.idFoundInDb) { when(mockRepo.findById(tc.mockId)).thenReturn(Optional.ofNullable(tc.taskFromDb)); }
+			else { when(mockRepo.findById(tc.mockId)).thenReturn(null); }
 
 			if (tc.expectSuccess) {
-				String successMsg = "task was updated";
-				ResponseEntity expected = new ResponseEntity("successfully updated task with id: "+tc.mockId, HttpStatus.ACCEPTED);
+				ResponseEntity<String> expected = new ResponseEntity<String>("successfully updated task with id: "+tc.mockId, HttpStatus.ACCEPTED);
 				try {
-					ResponseEntity actual = t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
+					ResponseEntity<String> actual = t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
 					assertEquals(expected, actual);
 				} catch (ChangeSetPersister.NotFoundException e) {throw new RuntimeException(e);}
 
-			} else 
-			     {
-			//	String notFoundMsg = "could not find matching Task to the provided id";
-			//	String actualOut = t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
+			} else {
 				try {
-					ResponseEntity actual = t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
+					t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
 				} catch (ChangeSetPersister.NotFoundException e) {
-					String message = null;
-					var expectedException =
-							assertThrows(ChangeSetPersister.NotFoundException.class, () -> {throw new ChangeSetPersister.NotFoundException();});
-					assertEquals(message, expectedException.getMessage());
+					var expectedException = assertThrows(ChangeSetPersister.NotFoundException.class, () -> {throw new ChangeSetPersister.NotFoundException();});
+					assertEquals(e.getClass(), expectedException.getClass());
+		//			assertTrue(e instanceof ChangeSetPersister.NotFoundException);
 				}
-				//	 assertEquals(notFoundMsg, actualOut);
 			}
 		}
 	}
@@ -113,11 +107,10 @@ public class TaskControllerTest {
 		}
 	}
 
-	/*
+
 	@Test
 	public void getAllTasksDB() {
-		TaskController t =  new TaskController(mockRepo); // TODO Replace default value.
-		String id = "123"; // TODO Replace default value.
+		TaskController t =  new TaskController(mockRepo);
 		ArrayList<Task> mockList = new ArrayList<Task>();
 		for(Task task: mockTaskArr){
 			mockList.add(task);
@@ -137,26 +130,70 @@ public class TaskControllerTest {
 		}
 
 		Testcase[] testcases = new Testcase[]{
-			new Testcase("123",false, mockList, new Gson().toJson(mockList)),
-				new Testcase("123",true, new ArrayList<Task>(), "no tasks were found to the provided id"),
-				new Testcase(null,true, new ArrayList<Task>(), "no tasks were found to the provided id"),
-				new Testcase("",true, new ArrayList<Task>(), "no tasks were found to the provided id"),
-				new Testcase(null,false, new ArrayList<Task>(), "no tasks were found to the provided id")
+			new Testcase("1",false, mockList, new Gson().toJson(mockList)),
+			new Testcase("1",true, new ArrayList<>(), "no tasks were found to the provided id"),
+			new Testcase(null,true, new ArrayList<>(), "no tasks were found to the provided id"),
+			new Testcase("",true, new ArrayList<>(), "no tasks were found to the provided id"),
+			new Testcase(null,false, new ArrayList<>(), "no tasks were found to the provided id")
 		};
 		for (Testcase tc : testcases){
-			if (tc.dbReturnSize0){
-				when(mockRepo.getAllTasksById(id)).thenReturn(tc.mockArrayList);
-			}
-			else {
-				when(mockRepo.getAllTasksById(id)).thenReturn(tc.mockArrayList);
-			}
+			if (tc.dbReturnSize0){ when(mockRepo.findAll()).thenReturn(new ArrayList<>()); }
+			else { when(mockRepo.findAll()).thenReturn(tc.mockArrayList); }
 
-			String actual1 = t.Handle_getAllTasks(tc.userId);
-			assertEquals(actual1,tc.expectedOutput);
+			try {
+				ResponseEntity<List<Task>> expected = new ResponseEntity<List<Task>>(Arrays.asList(mockTask),HttpStatus.OK);
+				ResponseEntity<List<Task>> actual1 = t.Handle_getAllTasks(tc.userId);
+				assertEquals(actual1.getStatusCode(),expected.getStatusCode());
+			} catch (ChangeSetPersister.NotFoundException e) {
+				var expectedException = assertThrows(ChangeSetPersister.NotFoundException.class, () -> {throw new ChangeSetPersister.NotFoundException();});
+				assertEquals(e.getClass(), expectedException.getClass());
+	//			assertTrue(e instanceof ChangeSetPersister.NotFoundException);
+			}
 		}
-
 	}
 
-	 */
+
+	@Test
+	public void getAllTasksById() throws ChangeSetPersister.NotFoundException {
+		TaskController t =  new TaskController(mockRepo);
+
+		class Testcase {
+			final String userId;
+			final boolean dbReturnSize0;
+			final Task mockTask;
+			final  String expectedOutput;
+
+			public 	Testcase(String userId, boolean dbReturnSize0, Task mockTask, String expectedOutput) {
+				this.userId = userId;
+				this.dbReturnSize0 = dbReturnSize0;
+				this.mockTask = mockTask;
+				this.expectedOutput = expectedOutput;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase("1",false, mockTask, ""),
+				new Testcase("1",true, mockTask, "no tasks were found to the provided id"),
+				new Testcase(null,true, mockTask, "no tasks were found to the provided id"),
+				new Testcase("",true, mockTask, "no tasks were found to the provided id"),
+				new Testcase(null,false, mockTask, "no tasks were found to the provided id")
+		};
+		for (Testcase tc : testcases){
+			if (tc.dbReturnSize0){ when(mockRepo.existsById(tc.userId)).thenReturn(false); }
+			else { when(mockRepo.existsById(tc.userId)).thenReturn(true);
+					when(mockRepo.findById(tc.userId)).thenReturn(Optional.ofNullable(mockTask));
+			}
+
+			try {
+				ResponseEntity<Task> expected = new ResponseEntity<Task>(tc.mockTask,HttpStatus.OK);
+				ResponseEntity<Task> actual1 = t.Handle_getTaskById(tc.userId);
+				assertEquals(actual1.getStatusCode(),expected.getStatusCode());
+			} catch (ChangeSetPersister.NotFoundException e) {
+				var expectedException = assertThrows(ChangeSetPersister.NotFoundException.class, () -> {throw new ChangeSetPersister.NotFoundException();});
+				assertEquals(e.getClass(), expectedException.getClass());
+	//			assertTrue(e instanceof ChangeSetPersister.NotFoundException);
+			}
+		}
+	}
 
 }

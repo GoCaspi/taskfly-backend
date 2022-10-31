@@ -36,14 +36,9 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<String> Handle_createNewTask(@RequestBody String body) throws ChangeSetPersister.NotFoundException {
         Task task = jsonToTask(body);
-        try{
-            getService().postService(task);
-            String msg = "successfully created task with id: " + task.getTaskIdString();
-            return new ResponseEntity<String>(msg,HttpStatus.ACCEPTED);
-        }
-        catch (RuntimeException r){
-            throw r;
-        }
+        getService().postService(task);
+        String msg = "successfully created task with id: " + task.getTaskIdString();
+        return new ResponseEntity<String>(msg,HttpStatus.ACCEPTED);
     }
 
     /**
@@ -52,22 +47,17 @@ public class TaskController {
      * @param id of the user
      * @return String, json of all tasks or err
      */
-    @GetMapping("/v3/{id}")
+    @GetMapping("/userId/{id}")
     public ResponseEntity<List<Task>> Handle_getAllTasks(@PathVariable String id) throws ChangeSetPersister.NotFoundException {
         List<Task> tasks = getService().getService_AllTasksOfUser(id);
         if(tasks.size() == 0){ throw new ChangeSetPersister.NotFoundException();}
-        return new ResponseEntity<List<Task>>(tasks,HttpStatus.OK);
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
     @GetMapping("/taskId/{id}")
     public ResponseEntity<Task> Handle_getTaskById(@PathVariable String id) throws ChangeSetPersister.NotFoundException {
-        try {
-            Task task = getService().getService_TaskById(id);
-            return new ResponseEntity<Task>(task,HttpStatus.OK);
-        }
-        catch (ChangeSetPersister.NotFoundException nan){
-            throw nan;
-        }
+        Task task = getService().getService_TaskById(id);
+        return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
     /**
@@ -76,12 +66,9 @@ public class TaskController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> Handle_deleteTask(@PathVariable String id) throws ChangeSetPersister.NotFoundException {
-       try {
-           getService().deleteService(id);
-           String msg = "successfully deleted task with id: "+id;
-           return new ResponseEntity<String>(msg,HttpStatus.ACCEPTED);
-       }
-       catch (RuntimeException r){ throw r; }
+        getService().deleteService(id);
+        String msg = "successfully deleted task with id: "+id;
+        return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
     /**
@@ -97,14 +84,9 @@ public class TaskController {
     public ResponseEntity<String> Handle_updateTask(@PathVariable String id,@RequestBody String body) throws ChangeSetPersister.NotFoundException {
 
         Task update = jsonToTask(body);
-        try {
-            getService().updateService(id,update);
-            String msg = "successfully updated task with id: "+id;
-            return new ResponseEntity<String>(msg,HttpStatus.ACCEPTED);
-        }
-        catch (ChangeSetPersister.NotFoundException r){
-            throw r;
-        }
+        getService().updateService(id,update);
+        String msg = "successfully updated task with id: "+id;
+        return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
     /**

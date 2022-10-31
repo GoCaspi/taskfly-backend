@@ -2,12 +2,7 @@ package com.gocaspi.taskfly.Task;
 
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.MethodParameter;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.server.MethodNotAllowedException;
-
-import java.lang.reflect.Method;
 import java.util.*;
 
 public class TaskService {
@@ -73,7 +68,6 @@ public class TaskService {
         if(!getRepo().existsById(id)){ throw new ChangeSetPersister.NotFoundException(); }
         task.ifPresent( t->{
             if(update.getDescription() != null){t.setDescription(update.getDescription());}
-            if(update.getUserId() != null){t.setUserId(update.getUserId());}
             if(update.getTopic() != null){t.setTopic(update.getTopic());}
             if(update.getTeam() != null){t.setTeam(update.getTeam());}
             if(update.getDeadline() != null){t.setDeadline(update.getDeadline());}
