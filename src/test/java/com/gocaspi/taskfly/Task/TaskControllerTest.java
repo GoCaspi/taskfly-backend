@@ -93,7 +93,7 @@ public class TaskControllerTest {
 
 	@Test
 	public void validateTaskFields() {
-		TaskController t = new TaskController(mockRepo); // TODO Replace default value.
+		TaskController t = new TaskController(mockRepo);
 		class Testcase {
 			final Task taskInput;
 			final boolean expected;
@@ -158,7 +158,6 @@ public class TaskControllerTest {
 					throw new ChangeSetPersister.NotFoundException();
 				});
 				assertEquals(e.getClass(), expectedException.getClass());
-				//			assertTrue(e instanceof ChangeSetPersister.NotFoundException);
 			}
 		}
 	}
@@ -206,7 +205,6 @@ public class TaskControllerTest {
 					throw new ChangeSetPersister.NotFoundException();
 				});
 				assertEquals(e.getClass(), expectedException.getClass());
-				//			assertTrue(e instanceof ChangeSetPersister.NotFoundException);
 			}
 		}
 	}
@@ -254,7 +252,6 @@ public class TaskControllerTest {
 					throw new ChangeSetPersister.NotFoundException();
 				});
 				assertEquals(e.getClass(), expectedException.getClass());
-				//			assertTrue(e instanceof ChangeSetPersister.NotFoundException);
 			}
 		}
 
@@ -302,7 +299,6 @@ public class TaskControllerTest {
 					throw new ChangeSetPersister.NotFoundException();
 				});
 				assertEquals(e.getClass(), expectedException.getClass());
-				//			assertTrue(e instanceof ChangeSetPersister.NotFoundException);
 			}
 		}
 	}
