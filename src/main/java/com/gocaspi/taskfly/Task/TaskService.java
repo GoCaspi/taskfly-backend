@@ -3,13 +3,20 @@ package com.gocaspi.taskfly.Task;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
+
 import java.util.*;
 
 public class TaskService {
     @Autowired
     private TaskRepository repo;
+    private final HttpClientErrorException exception_notFound;
+    private final HttpClientErrorException exception_badRequest;
     public TaskService (TaskRepository repo){
         this.repo = repo;
+        this.exception_notFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", null, null, null);
+        this.exception_badRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
     }
 
     /**
@@ -27,9 +34,9 @@ public class TaskService {
      * @param t task to get validated and saved
      * @throws RuntimeException
      */
-    public void postService(Task t) throws ChangeSetPersister.NotFoundException {
+    public void postService(Task t) throws HttpClientErrorException {
         if(!validateTaskFields(new Gson().toJson(t))){
-            throw new ChangeSetPersister.NotFoundException();
+            throw exception_badRequest;
         }
          getRepo().insert(t);
     }
@@ -51,21 +58,21 @@ public class TaskService {
         return tasksToId;
     }
 
-    public Task getService_TaskById(String id) throws ChangeSetPersister.NotFoundException {
-        if(!getRepo().existsById(id)){ throw new ChangeSetPersister.NotFoundException(); }
+    public Task getService_TaskById(String id) throws HttpClientErrorException.NotFound {
+        if(!getRepo().existsById(id)){ throw exception_notFound; }
       Task task = getRepo().findById(id).get();
         return task;
     }
 
-    public void deleteService(String id) throws ChangeSetPersister.NotFoundException {
-        if(!getRepo().existsById(id)){ throw new ChangeSetPersister.NotFoundException(); }
+    public void deleteService(String id) throws HttpClientErrorException {
+        if(!getRepo().existsById(id)){ throw exception_notFound; }
         getRepo().deleteById(id);
     }
 
-    public void updateService(String id,Task update) throws ChangeSetPersister.NotFoundException {
+    public void updateService(String id,Task update) throws HttpClientErrorException {
         Optional<Task> task =  getRepo().findById(id);
 
-        if(!getRepo().existsById(id)){ throw new ChangeSetPersister.NotFoundException(); }
+        if(!getRepo().existsById(id)){ throw exception_notFound; }
         task.ifPresent( t->{
             if(update.getDescription() != null){t.setDescription(update.getDescription());}
             if(update.getTopic() != null){t.setTopic(update.getTopic());}

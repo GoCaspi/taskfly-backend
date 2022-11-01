@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
+import org.springframework.web.client.HttpClientErrorException;
+
 import java.util.*;
 
 @RestController
@@ -38,10 +40,10 @@ public class TaskController {
      *
      * @param body json of the task that should be created
      * @return ResponseEntity containing a success message along with the http status code
-     * @throws ChangeSetPersister.NotFoundException Exception if no task to the id was found
+     * @throws HttpClientErrorException.BadRequest Exception if the provided requestbody is missing fields
      */
     @PostMapping
-    public ResponseEntity<String> Handle_createNewTask(@RequestBody String body) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<String> Handle_createNewTask(@RequestBody String body) throws HttpClientErrorException.BadRequest {
         Task task = jsonToTask(body);
         getService().postService(task);
         String msg = "successfully created task with id: " + task.getTaskIdString();
@@ -55,12 +57,12 @@ public class TaskController {
      *
      * @param id id of the user that want to fetch all his tasks
      * @return ResponseEntity containing the list with all tasks to the given id along with the http status code
-     * @throws ChangeSetPersister.NotFoundException Exception if no task to the id was found
+     * @throws HttpClientErrorException.NotFound Exception if no task to the id was found
      */
     @GetMapping("/userId/{id}")
-    public ResponseEntity<List<Task>> Handle_getAllTasks(@PathVariable String id) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<List<Task>> Handle_getAllTasks(@PathVariable String id) throws HttpClientErrorException.NotFound {
         List<Task> tasks = getService().getService_AllTasksOfUser(id);
-        if(tasks.size() == 0){ throw new ChangeSetPersister.NotFoundException();}
+        if(tasks.size() == 0){ throw HttpClientErrorException.create(HttpStatus.NOT_FOUND, "no tasks are assigned to the provided userId", null, null, null);}
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
@@ -70,10 +72,10 @@ public class TaskController {
      *
      * @param id id of the task
      * @return ResponseEntity, containing the task from the db and the http status code
-     * @throws ChangeSetPersister.NotFoundException Exception if no task to the id was found
+     * @throws HttpClientErrorException.NotFound Exception if no task to the id was found
      */
     @GetMapping("/taskId/{id}")
-    public ResponseEntity<Task> Handle_getTaskById(@PathVariable String id) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<Task> Handle_getTaskById(@PathVariable String id) throws HttpClientErrorException.NotFound {
         Task task = getService().getService_TaskById(id);
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
@@ -82,9 +84,11 @@ public class TaskController {
      * if there is a task to the provided id (path variable) then that task is removed from the mongoDB, else an exception is thrown
      *
      * @param id, identifier of the task of intereset
+     * @return ResponseEntity, containing the task from the db and the http status code
+     * @throws HttpClientErrorException.NotFound Exception if no task to the id was found
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> Handle_deleteTask(@PathVariable String id) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<String> Handle_deleteTask(@PathVariable String id) throws HttpClientErrorException.NotFound {
         getService().deleteService(id);
         String msg = "successfully deleted task with id: "+id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
@@ -102,7 +106,7 @@ public class TaskController {
      * @throws ChangeSetPersister.NotFoundException Exception if no task to the id was found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<String> Handle_updateTask(@PathVariable String id,@RequestBody String body) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<String> Handle_updateTask(@PathVariable String id,@RequestBody String body) throws HttpClientErrorException.NotFound {
 
         Task update = jsonToTask(body);
         getService().updateService(id,update);

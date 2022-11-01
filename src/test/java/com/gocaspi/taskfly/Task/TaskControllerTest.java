@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,19 +73,16 @@ public class TaskControllerTest {
 				try {
 					ResponseEntity<String> actual = t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
 					assertEquals(expected, actual);
-				} catch (ChangeSetPersister.NotFoundException e) {
+				} catch (HttpClientErrorException e) {
 					throw new RuntimeException(e);
 				}
 
 			} else {
 				try {
 					t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
-				} catch (ChangeSetPersister.NotFoundException e) {
-					var expectedException = assertThrows(ChangeSetPersister.NotFoundException.class, () -> {
-						throw new ChangeSetPersister.NotFoundException();
-					});
+				} catch (HttpClientErrorException e) {
+					HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
 					assertEquals(e.getClass(), expectedException.getClass());
-					//			assertTrue(e instanceof ChangeSetPersister.NotFoundException);
 				}
 			}
 		}
@@ -153,10 +151,8 @@ public class TaskControllerTest {
 				ResponseEntity<List<Task>> expected = new ResponseEntity<>(Arrays.asList(mockTask), HttpStatus.OK);
 				ResponseEntity<List<Task>> actual1 = t.Handle_getAllTasks(tc.userId);
 				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
-			} catch (ChangeSetPersister.NotFoundException e) {
-				var expectedException = assertThrows(ChangeSetPersister.NotFoundException.class, () -> {
-					throw new ChangeSetPersister.NotFoundException();
-				});
+			} catch (HttpClientErrorException e) {
+				HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
 				assertEquals(e.getClass(), expectedException.getClass());
 			}
 		}
@@ -200,10 +196,8 @@ public class TaskControllerTest {
 				ResponseEntity<Task> expected = new ResponseEntity<>(tc.mockTask, HttpStatus.OK);
 				ResponseEntity<Task> actual1 = t.Handle_getTaskById(tc.userId);
 				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
-			} catch (ChangeSetPersister.NotFoundException e) {
-				var expectedException = assertThrows(ChangeSetPersister.NotFoundException.class, () -> {
-					throw new ChangeSetPersister.NotFoundException();
-				});
+			} catch (HttpClientErrorException e) {
+				HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
 				assertEquals(e.getClass(), expectedException.getClass());
 			}
 		}
@@ -247,10 +241,8 @@ public class TaskControllerTest {
 				ResponseEntity<String> expected = new ResponseEntity<>("successfully created task with id: " + tc.mockTask.getTaskIdString(), HttpStatus.ACCEPTED);
 				ResponseEntity<String> actual1 = t.Handle_createNewTask(tc.mockPayload);
 				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
-			} catch (ChangeSetPersister.NotFoundException e) {
-				var expectedException = assertThrows(ChangeSetPersister.NotFoundException.class, () -> {
-					throw new ChangeSetPersister.NotFoundException();
-				});
+			} catch (HttpClientErrorException e) {
+				HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
 				assertEquals(e.getClass(), expectedException.getClass());
 			}
 		}
@@ -294,10 +286,8 @@ public class TaskControllerTest {
 				ResponseEntity<String> expected = new ResponseEntity<>("successfully deleted task with id: " + tc.userId, HttpStatus.ACCEPTED);
 				ResponseEntity<String> actual1 = t.Handle_deleteTask(tc.userId);
 				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
-			} catch (ChangeSetPersister.NotFoundException e) {
-				var expectedException = assertThrows(ChangeSetPersister.NotFoundException.class, () -> {
-					throw new ChangeSetPersister.NotFoundException();
-				});
+			} catch (HttpClientErrorException e) {
+				HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
 				assertEquals(e.getClass(), expectedException.getClass());
 			}
 		}
