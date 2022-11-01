@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 
 public class TaskControllerTest {
 	TaskRepository mockRepo = mock(TaskRepository.class);
-//	TaskService mockService = mock(TaskService.class);
+	TaskService mockService = mock(TaskService.class);
 	String mockUserIds = "1";
 	String mockListId = "1";
 	String mockTopic = "topic1";
@@ -66,7 +66,7 @@ public class TaskControllerTest {
 			else { when(mockRepo.findById(tc.mockId)).thenReturn(null); }
 
 			if (tc.expectSuccess) {
-				ResponseEntity<String> expected = new ResponseEntity<String>("successfully updated task with id: "+tc.mockId, HttpStatus.ACCEPTED);
+				ResponseEntity<String> expected = new ResponseEntity<>("successfully updated task with id: " + tc.mockId, HttpStatus.ACCEPTED);
 				try {
 					ResponseEntity<String> actual = t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
 					assertEquals(expected, actual);
@@ -111,7 +111,7 @@ public class TaskControllerTest {
 	@Test
 	public void getAllTasksDB() {
 		TaskController t =  new TaskController(mockRepo);
-		ArrayList<Task> mockList = new ArrayList<Task>();
+		ArrayList<Task> mockList = new ArrayList<>();
 		for(Task task: mockTaskArr){
 			mockList.add(task);
 		}
@@ -141,7 +141,7 @@ public class TaskControllerTest {
 			else { when(mockRepo.findAll()).thenReturn(tc.mockArrayList); }
 
 			try {
-				ResponseEntity<List<Task>> expected = new ResponseEntity<List<Task>>(Arrays.asList(mockTask),HttpStatus.OK);
+				ResponseEntity<List<Task>> expected = new ResponseEntity<>(Arrays.asList(mockTask), HttpStatus.OK);
 				ResponseEntity<List<Task>> actual1 = t.Handle_getAllTasks(tc.userId);
 				assertEquals(actual1.getStatusCode(),expected.getStatusCode());
 			} catch (ChangeSetPersister.NotFoundException e) {
@@ -154,7 +154,7 @@ public class TaskControllerTest {
 
 
 	@Test
-	public void getAllTasksById() throws ChangeSetPersister.NotFoundException {
+	public void getAllTasksById() {
 		TaskController t =  new TaskController(mockRepo);
 
 		class Testcase {
@@ -192,6 +192,50 @@ public class TaskControllerTest {
 				var expectedException = assertThrows(ChangeSetPersister.NotFoundException.class, () -> {throw new ChangeSetPersister.NotFoundException();});
 				assertEquals(e.getClass(), expectedException.getClass());
 	//			assertTrue(e instanceof ChangeSetPersister.NotFoundException);
+			}
+		}
+	}
+
+
+	@Test
+	public void Handle_createNewTask() {
+		TaskController t =  new TaskController(mockRepo);
+
+		class Testcase {
+			final String userId;
+			final boolean badPayload;
+			final Task mockTask;
+			final  String mockPayload;
+
+			public 	Testcase(String userId, boolean badPayload, Task mockTask, String mockPayload) {
+				this.userId = userId;
+				this.badPayload = badPayload;
+				this.mockTask = mockTask;
+				this.mockPayload = mockPayload;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase("1",false, mockTask, new Gson().toJson(mockTask)),
+				new Testcase("1",true, mockTask, new Gson().toJson(mockTask)),
+	//			new Testcase(null,true, mockTask, "no tasks were found to the provided id"),
+	//			new Testcase("",true, mockTask, "no tasks were found to the provided id"),
+	//			new Testcase(null,false, mockTask, "no tasks were found to the provided id")
+		};
+		for (Testcase tc : testcases){
+			if (tc.badPayload){ when(mockService.validateTaskFields(tc.mockPayload)).thenReturn(false); }
+			else { when(mockService.validateTaskFields(tc.mockPayload)).thenReturn(true);
+				when(mockRepo.insert(tc.mockTask)).thenReturn(mockTask);
+			}
+
+			try {
+				ResponseEntity<String> expected = new ResponseEntity<>("successfully created task with id: " + tc.mockTask.getTaskIdString(), HttpStatus.ACCEPTED);
+				ResponseEntity<String> actual1 = t.Handle_createNewTask(tc.mockPayload);
+				assertEquals(actual1.getStatusCode(),expected.getStatusCode());
+			} catch (ChangeSetPersister.NotFoundException e) {
+				var expectedException = assertThrows(ChangeSetPersister.NotFoundException.class, () -> {throw new ChangeSetPersister.NotFoundException();});
+				assertEquals(e.getClass(), expectedException.getClass());
+				//			assertTrue(e instanceof ChangeSetPersister.NotFoundException);
 			}
 		}
 	}
