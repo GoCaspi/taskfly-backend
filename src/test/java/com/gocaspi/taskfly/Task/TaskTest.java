@@ -170,5 +170,4 @@ public class TaskTest {
 			assertEquals(t.getListId(),tc.newText);
 		}
 	}
-
 }
