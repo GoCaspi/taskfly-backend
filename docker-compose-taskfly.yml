@@ -8,8 +8,8 @@ services:
       - "8080:8080"
     environment:
       MONGO_URL: ""
-      MONGO_DATABASE:
-      SPRING_ADMIN_PASSWORD:
+      MONGO_DATABASE: taskfly
+      SPRING_ADMIN_PASSWORD: taskfly
   taskflyfrontend:
     image: taskfly.azurecr.io/taskflyfrontend:dev-5
     container_name: taskflyfrontend
@@ -26,6 +26,8 @@ services:
     image: prom/prometheus
     container_name: prometheus
     volumes:
+      - prometheus:/prometheus
       - /home/azureuser/taskfly/prometheus.yml:/etc/prometheus/prometheus.yml
 volumes:
   grafana:
+  prometheus:

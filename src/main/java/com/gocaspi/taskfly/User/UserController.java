@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.google.gson.Gson;
 import com.gocaspi.taskfly.User.User;
 
+import java.util.List;
+
 @RestController
 @ResponseBody
 @RequestMapping("/user")
@@ -27,11 +29,16 @@ public class UserController {
     }
     @GetMapping("/{id}")
     public String getPerson(@PathVariable String id){
-        User user = repository.findById(id).get();
+        User user = repository.findByLastName(id);
         return new Gson().toJson(user);
     }
     @DeleteMapping("/{id}")
     public void deletePerson(@PathVariable String id){
         repository.deleteById(id);
+    }
+    @GetMapping
+    public String getAllPersons(){
+        List<User> userList = repository.findAll();
+        return new Gson().toJson(userList);
     }
 }
