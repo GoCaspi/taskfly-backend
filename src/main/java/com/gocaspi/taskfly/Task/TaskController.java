@@ -120,10 +120,13 @@ public class TaskController {
      * @param jsonPayload, request body
      * @return true if the mentioned criteria holds for that Task-payload, else return false
      */
+
     public boolean validateTaskFields(String jsonPayload){
         Task task = jsonToTask(jsonPayload);
         return !Objects.equals(task.getUserId(), null) && !Objects.equals(task.getListId(), null) && !Objects.equals(task.getTopic(), null) && !Objects.equals(task.getDescription(), null);
     }
+
+
 
     /**
      * returns a Task from a Json

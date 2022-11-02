@@ -103,7 +103,9 @@ public class TaskControllerTest {
 		}
 
 		Testcase[] testcases = new Testcase[]{
-				new Testcase(mockTask, true)};
+				new Testcase(mockTask, true),
+		new Testcase(new Task(null,null,null,null,null,null,null,new ObjectId()),false)
+		};
 
 		for (Testcase tc : testcases) {
 			boolean actualOut = t.validateTaskFields(new Gson().toJson(tc.taskInput));
