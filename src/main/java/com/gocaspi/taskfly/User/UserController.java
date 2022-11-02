@@ -56,6 +56,11 @@ public class UserController {
             return "User Id not Existing";
         }
     }
+
+    /**
+     * this endpoint couverts to getall User from DB.
+     * @return
+     */
     @GetMapping()
     public String getAllUser(){
 

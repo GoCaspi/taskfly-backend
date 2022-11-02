@@ -12,16 +12,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+
 public class UserControllerTest {
     UserRepository mockRepo = mock(UserRepository.class);
 
-/*
+
    @Test
    public void getuserbyid() {
 
       UserController Usercontolle = new UserController(mockRepo);
-      User mockUser = new User("Luis","Müller");
+      User mockUser = new User("Luis","Müller","","","","");
       String testid = "234";
 
       when(mockRepo.findById(testid)).thenReturn(Optional.of(mockUser));
@@ -37,6 +37,5 @@ public class UserControllerTest {
     DeleteUser.deleteUser(id);
 }
 
-*/
 }
 
