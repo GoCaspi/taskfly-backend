@@ -7,7 +7,7 @@ name: employee-register-docker
 
 on:
   push:
-    branches: [ "master", "dev" ]
+    branches: [ "master", "dev","feature/ON4T-174_Backend_for_Tasks" ]
     # Publish semver tags as releases.
   pull_request:
     branches: [ "master" ]
