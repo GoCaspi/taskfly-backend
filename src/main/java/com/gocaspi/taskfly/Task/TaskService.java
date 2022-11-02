@@ -49,7 +49,7 @@ public class TaskService {
      */
     public List<Task> getService_AllTasksOfUser(String id){
         List<Task> tasks = getRepo().findAll();
-        List<Task> tasksToId = new ArrayList<Task>();
+        List<Task> tasksToId = new ArrayList<>();
         for(Task t : tasks){
             if (Objects.equals(t.getUserId(), id)){
                 tasksToId.add(t);
