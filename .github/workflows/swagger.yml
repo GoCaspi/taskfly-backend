@@ -36,6 +36,12 @@ jobs:
           node app.js
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
+
+      - name: Login via Azure CLI
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Install cosign
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@7e0881f8fe90b25e305bbf0309761e9314607e25
@@ -65,6 +71,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
+      - name: Test
+        run: echo ${{ steps.meta.outputs.tags }}
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
@@ -75,6 +84,19 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Deploy to Azure Container Instances
+        uses: azure/aci-deploy@v1
+        with:
+          resource-group: ${{ secrets.RESOURCE_GROUP }}
+          dns-name-label: ${{ secrets.RESOURCE_GROUP }}${{ github.run_number }}
+          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
+          registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          registry-username: ${{ secrets.REGISTRY_USERNAME }}
+          registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+          name: aci-sampleapp
+          location: 'west us'
+
 
         # Sign the resulting Docker image digest except on PRs.
         # This will only write to the public Rekor transparency log when the Docker
