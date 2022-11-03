@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.google.gson.Gson;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,11 +16,15 @@ import java.util.Optional;
 public class UserController {
     @Autowired
     private UserRepository repository;
+    //private final UserService service;
+
     public UserController(UserRepository repository){
         super();
         this.repository=repository;
     }
-
+  /* public UserService getService(){
+        return this.service;
+   }*/
     @PostMapping
     public void creatUser(@RequestBody String body){
         User user = new Gson().fromJson(body, User.class);
@@ -46,6 +51,12 @@ public class UserController {
      * this endpoint couverts to delete a User with UserID.With Error msg if there are no UserID in the DB.
      * @param id
      */
+    /*
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable String id) throws HttpClientErrorException.NotFound {
+    g
+    }
+
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable String id) {
         if(repository.existsById(id)){
@@ -56,7 +67,7 @@ public class UserController {
             return "User Id not Existing";
         }
     }
-
+*/
     /**
      * this endpoint couverts to getall User from DB.
      * @return
