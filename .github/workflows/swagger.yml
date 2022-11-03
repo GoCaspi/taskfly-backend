@@ -27,10 +27,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: test
-        run: |
-          cd scripts 
-          ls -al
+      - name: copy postmancollection
+        run: cp *.postman_collection.json ./scripts/swagdeploy
       - name: execute swagdeploy
         working-directory: ${{github.workspace}}/scripts/swagdeploy
         run: |
