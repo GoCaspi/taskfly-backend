@@ -23,12 +23,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
       - name: Node.JS
         uses: actions/setup-node@v3
         with:
           node-version: 16
+
       - name: copy postmancollection
         run: cp *.postman_collection.json ./scripts/swagdeploy
+
       - name: execute swagdeploy
         working-directory: ${{github.workspace}}/scripts/swagdeploy
         run: |
@@ -96,13 +104,14 @@ jobs:
         uses: azure/aci-deploy@v1
         with:
           resource-group: ${{ secrets.RESOURCE_GROUP }}
-          dns-name-label: ${{ secrets.RESOURCE_GROUP }}${{ github.run_number }}
-          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
+          dns-name-label: ${{ secrets.RESOURCE_GROUP }}Swagger
+          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ steps.extract_branch.outputs.branch }}
           registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           registry-username: ${{ secrets.REGISTRY_USERNAME }}
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-          name: aci-sampleapp
-          location: 'west us'
+          name: taskflyswagger
+          location: 'west europe'
+
 
 
         # Sign the resulting Docker image digest except on PRs.
