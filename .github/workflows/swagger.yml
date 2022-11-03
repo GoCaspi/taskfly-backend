@@ -28,6 +28,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+      - name: test
+        run: pwd
       - name: execute swagdeploy
         working-directory: scripts/swagdeploy
         run: |
