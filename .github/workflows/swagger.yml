@@ -24,7 +24,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
+      - name: Node.JS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+      - name: execute swagdeploy
+        working-directory: ./scripts/swagdeploy
+        run: |
+          npm i
+          node app.js
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
