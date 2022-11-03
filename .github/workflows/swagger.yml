@@ -29,10 +29,10 @@ jobs:
         with:
           node-version: 16
           cache: 'npm'
+          cache-dependency-path: scripts/swagdeploy/package-lock.json
       - name: execute swagdeploy
         working-directory: ./scripts/swagdeploy
         run: |
-          npm i
           node app.js
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
