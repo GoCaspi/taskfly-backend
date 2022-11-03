@@ -29,7 +29,6 @@ jobs:
           node-version: 16
       - name: test
         run: |
-          ls -al
           cd scripts 
           ls -al
       - name: execute swagdeploy
