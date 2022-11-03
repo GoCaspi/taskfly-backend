@@ -71,14 +71,6 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Test
-        run: echo ${{ steps.meta.outputs.tags }}
-        uses: mad9000/actions-find-and-replace-string@2
-        with:
-          source: ${{ steps.meta.outputs.tags  }} # this translates to ref/heads/main on the main branch, but can be any arbitrary string
-          find: '***/'        # we want to remove ref/heads/ from source
-          replace: ''               # and replace it with a blank string (ie. removing it)
-
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
@@ -89,6 +81,14 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Test
+        run: echo ${{ steps.meta.outputs.tags }}
+        uses: mad9000/actions-find-and-replace-string@2
+        with:
+          source: ${{ steps.meta.outputs.tags  }} # this translates to ref/heads/main on the main branch, but can be any arbitrary string
+          find: '***/'        # we want to remove ref/heads/ from source
+          replace: ''               # and replace it with a blank string (ie. removing it)
 
       - name: Deploy to Azure Container Instances
         uses: azure/aci-deploy@v1
