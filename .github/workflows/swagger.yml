@@ -28,7 +28,10 @@ jobs:
         with:
           node-version: 16
       - name: test
-        run: ls -al
+        run: |
+          ls -al
+          cd scripts 
+          ls -al
       - name: execute swagdeploy
         working-directory: ${{github.workspace}}/scripts/swagdeploy
         run: |
