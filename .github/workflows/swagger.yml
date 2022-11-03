@@ -30,7 +30,7 @@ jobs:
       - name: test
         run: pwd
       - name: execute swagdeploy
-        working-directory: ./scripts/swagdeploy
+        working-directory: scripts/swagdeploy
         run: |
           npm ci
           node app.js
