@@ -14,10 +14,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: scripts/swagdeploy
     permissions:
       contents: read
       packages: write
@@ -32,7 +28,7 @@ jobs:
         with:
           node-version: 16
       - name: test
-        run: pwd
+        run: echo ${{ GITHUB_WORKSPACE }}
       - name: execute swagdeploy
         run: |
           npm ci
