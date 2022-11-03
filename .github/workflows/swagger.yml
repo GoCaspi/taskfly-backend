@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: 16
       - name: test
-        run: echo ${{ GITHUB_WORKSPACE }}
+        run: ls -al
       - name: execute swagdeploy
         run: |
           npm ci
