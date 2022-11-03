@@ -83,12 +83,14 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Test
-        run: echo ${{ steps.meta.outputs.tags }}
         uses: mad9000/actions-find-and-replace-string@2
         with:
           source: ${{ steps.meta.outputs.tags  }} # this translates to ref/heads/main on the main branch, but can be any arbitrary string
           find: '***/'        # we want to remove ref/heads/ from source
           replace: ''               # and replace it with a blank string (ie. removing it)
+
+      - name: Test 2
+        run: echo ${{ steps.meta.outputs.tags }}
 
       - name: Deploy to Azure Container Instances
         uses: azure/aci-deploy@v1
