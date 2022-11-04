@@ -31,3 +31,7 @@ build/
 /scripts/registrypw.txt
 ### VS Code ###
 .vscode/
+
+/scripts/swagdeploy/node_modules
+/scripts/swagdeploy/collection.yml
+/scripts/swagdeploy/*.postman_collection.json
