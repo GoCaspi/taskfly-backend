@@ -1,6 +1,5 @@
 package com.gocaspi.taskfly.User;
 
-import junit.framework.TestCase;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 

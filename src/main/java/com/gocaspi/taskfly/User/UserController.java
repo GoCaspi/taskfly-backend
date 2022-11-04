@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> Handler_createUser(@RequestBody String body)throws HttpClientErrorException.BadRequest{
+    public ResponseEntity<String> handlerCreateUser(@RequestBody String body)throws HttpClientErrorException.BadRequest{
         User user = jsonToUser(body);
         getService().postService(user);
         String msg ="Successfully created User";
@@ -37,7 +37,7 @@ public class UserController {
      */
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> Handler_getUsreById(@PathVariable String id)throws HttpClientErrorException.NotFound{
+    public ResponseEntity<User> handlerGetUsreById(@PathVariable String id)throws HttpClientErrorException.NotFound{
         User user =getService().getServicebyid(id);
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
@@ -64,14 +64,14 @@ public class UserController {
      */
 
     @GetMapping()
-    public ResponseEntity<List<User>> Handle_getAllUsers()throws HttpClientErrorException.NotFound{
+    public ResponseEntity<List<User>> handleGetAllUsers()throws HttpClientErrorException.NotFound{
         List<User> users =getService().getServiceAllUser();
         if (users.size()==0){ throw HttpClientErrorException.create(HttpStatus.NOT_FOUND,"There are No User in the DB",null,null,null);}
         return new ResponseEntity<>(users,HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> Handle_updateUser(@PathVariable String id,@RequestBody String body) throws HttpClientErrorException.NotFound{
+    public ResponseEntity<String> handleUpdateUser(@PathVariable String id,@RequestBody String body) throws HttpClientErrorException.NotFound{
         User update = jsonToUser(body);
         getService().updateService(id,update);
         String msg ="Successfully update User with id :" +id ;

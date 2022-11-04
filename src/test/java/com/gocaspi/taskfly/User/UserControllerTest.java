@@ -4,7 +4,6 @@ package com.gocaspi.taskfly.User;
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
@@ -116,7 +115,7 @@ public class UserControllerTest {
             if (tc.expectSuccess) {
                 ResponseEntity<String> expected = new ResponseEntity<>("Successfully update User with id :" + tc.mockId, HttpStatus.ACCEPTED);
                 try {
-                    ResponseEntity<String> actual = t.Handle_updateUser(tc.mockId, new Gson().toJson(tc.updateForTask));
+                    ResponseEntity<String> actual = t.handleUpdateUser(tc.mockId, new Gson().toJson(tc.updateForTask));
                     assertEquals(expected, actual);
                 } catch (HttpClientErrorException e) {
                     throw new RuntimeException(e);
@@ -124,7 +123,7 @@ public class UserControllerTest {
 
             } else {
                 try {
-                    t.Handle_updateUser(tc.mockId, new Gson().toJson(tc.updateForTask));
+                    t.handleUpdateUser(tc.mockId, new Gson().toJson(tc.updateForTask));
                 } catch (HttpClientErrorException e) {
                     HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
                     assertEquals(e.getClass(), expectedException.getClass());
@@ -167,7 +166,7 @@ public class UserControllerTest {
 
             try {
                 ResponseEntity<User> expected = new ResponseEntity<>(tc.mockTask, HttpStatus.OK);
-                ResponseEntity<User> actual1 = t.Handler_getUsreById(tc.userId);
+                ResponseEntity<User> actual1 = t.handlerGetUsreById(tc.userId);
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
                 HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
@@ -208,7 +207,7 @@ public void Handle_create() {
 
         try {
             ResponseEntity<String> expected = new ResponseEntity<>("successfully created User" + tc.mockTask.getUserIdString(), HttpStatus.ACCEPTED);
-            ResponseEntity<String> actual1 = t.Handler_createUser(tc.mockPayload);
+            ResponseEntity<String> actual1 = t.handlerCreateUser(tc.mockPayload);
             assertEquals(actual1.getStatusCode(), expected.getStatusCode());
         } catch (HttpClientErrorException e) {
             HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
@@ -254,7 +253,7 @@ public void Handle_create() {
 
             try {
                 ResponseEntity<List<User>> expected = new ResponseEntity<>(Arrays.asList(mockUser), HttpStatus.OK);
-                ResponseEntity<List<User>> actual1 = t.Handle_getAllUsers();
+                ResponseEntity<List<User>> actual1 = t.handleGetAllUsers();
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
                 HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
