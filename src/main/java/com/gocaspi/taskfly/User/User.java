@@ -15,11 +15,11 @@ public class User {
     public String password;
     public String team;
     public String listId;
-    private ObjectId _id;
+    private ObjectId id;
     private String userId;
     private String topic;
 
-    public User(String firstName, String lastName, String email, String password, String team, String listId,String userId,ObjectId _id) {
+    public User(String firstName, String lastName, String email, String password, String team, String listId,String userId,ObjectId id) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -27,12 +27,11 @@ public class User {
         this.password = password;
         this.listId = listId;
         this.team = team;
-        this._id=_id;
-        this.topic = topic;
+        this.id=id;
 
     }
     public String getUserIdString(){
-        return this._id.toString();
+        return this.id.toString();
     }
     public String getUserId(){
         return this.userId;
