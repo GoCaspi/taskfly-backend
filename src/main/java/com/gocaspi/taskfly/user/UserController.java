@@ -1,4 +1,4 @@
-package com.gocaspi.taskfly.User;
+package com.gocaspi.taskfly.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

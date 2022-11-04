@@ -1,4 +1,4 @@
-package com.gocaspi.taskfly.User;
+package com.gocaspi.taskfly.user;
 
 
 import com.google.gson.Gson;

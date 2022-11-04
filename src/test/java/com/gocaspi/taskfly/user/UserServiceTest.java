@@ -1,4 +1,4 @@
-package com.gocaspi.taskfly.User;
+package com.gocaspi.taskfly.user;
 
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
