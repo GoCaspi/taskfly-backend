@@ -27,15 +27,13 @@ public class user {
         this.password = password;
         this.listId = listId;
         this.team = team;
-        this.id=id;
+        this.id = id;
 
     }
     public String getUserIdString(){
         return this.id.toString();
     }
-    public String getUserId(){
-        return this.userId;
-    }
+
     public void setTopic(String topic){
         this.topic = topic;
     }
