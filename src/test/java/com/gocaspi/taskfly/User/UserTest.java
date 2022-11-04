@@ -54,7 +54,8 @@ public class UserTest {
         User t = mockUser;
         for (Testcase_setString tc : testcases){
             t.setTopic(tc.newText);
-            assertEquals(t.getTopic(),tc.newText);
+            String actual = t.getTopic();
+            assertEquals(actual,tc.newText);
         }
     }
 }

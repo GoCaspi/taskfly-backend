@@ -31,7 +31,7 @@ public class UserController {
     public ResponseEntity<String> Handler_createUser(@RequestBody String body)throws HttpClientErrorException.BadRequest{
         User user = jsonToUser(body);
         getService().postService(user);
-        String msg ="Successfully created user with id :";
+        String msg ="Successfully created User";
         return new ResponseEntity<>(msg,HttpStatus.ACCEPTED);
     }
     public User jsonToUser(String jsonPayload){return new Gson().fromJson(jsonPayload, User.class);}

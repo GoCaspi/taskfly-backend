@@ -177,7 +177,7 @@ public class UserControllerTest {
     }
 
 @Test
-public void Handle_createNewTask() {
+public void Handle_create() {
         UserController t = new UserController(mockRepo);
 
     class Testcase {
@@ -207,7 +207,7 @@ public void Handle_createNewTask() {
         }
 
         try {
-            ResponseEntity<String> expected = new ResponseEntity<>("successfully created task with id: " + tc.mockTask.getUserIdString(), HttpStatus.ACCEPTED);
+            ResponseEntity<String> expected = new ResponseEntity<>("successfully created User" + tc.mockTask.getUserIdString(), HttpStatus.ACCEPTED);
             ResponseEntity<String> actual1 = t.Handler_createUser(tc.mockPayload);
             assertEquals(actual1.getStatusCode(), expected.getStatusCode());
         } catch (HttpClientErrorException e) {
