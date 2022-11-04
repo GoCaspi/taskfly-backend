@@ -1,4 +1,4 @@
-package com.gocaspi.taskfly.Task;
+package com.gocaspi.taskfly.task;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

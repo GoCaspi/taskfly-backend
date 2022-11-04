@@ -1,4 +1,4 @@
-package com.gocaspi.taskfly.Task;
+package com.gocaspi.taskfly.task;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class TaskController {
         Task task = jsonToTask(body);
         getService().postService(task);
         String msg = "successfully created task with id: " + task.getTaskIdString();
-        return new ResponseEntity<String>(msg,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
     /**

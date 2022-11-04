@@ -1,4 +1,4 @@
-package com.gocaspi.taskfly.Task;
+package com.gocaspi.taskfly.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.bson.types.ObjectId;

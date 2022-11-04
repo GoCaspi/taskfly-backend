@@ -1,4 +1,4 @@
-package com.gocaspi.taskfly.Task;
+package com.gocaspi.taskfly.task;
 
 import org.bson.types.ObjectId;
 
@@ -13,7 +13,7 @@ public class Task {
     private String deadline;
     private ObjectId id;
 
-    private String taskId;
+    //private String taskId;
 
 
     public Task(String userId, String listId,String topic, String team, String priority, String description, String deadline, ObjectId id){
@@ -25,8 +25,10 @@ public class Task {
         this.description = description;
         this.deadline = deadline;
         this.id = id;
-        this.taskId = getTaskIdString();
+        //this.taskId = getTaskIdString();
     }
+
+
 
     /**
      * returns the id string of the ObjectId of the task

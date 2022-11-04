@@ -1,4 +1,4 @@
-package com.gocaspi.taskfly.Task;
+package com.gocaspi.taskfly.task;
 
 import org.bson.types.ObjectId;
 import org.junit.*;
