@@ -66,7 +66,7 @@ public class UserController {
     @GetMapping()
     public ResponseEntity<List<User>> handleGetAllUsers()throws HttpClientErrorException.NotFound{
         List<User> users =getService().getServiceAllUser();
-        if (users.size()==0){ throw HttpClientErrorException.create(HttpStatus.NOT_FOUND,"There are No User in the DB",null,null,null);}
+        if (users.isEmpty()){ throw HttpClientErrorException.create(HttpStatus.NOT_FOUND,"There are No User in the DB",null,null,null);}
         return new ResponseEntity<>(users,HttpStatus.OK);
     }
 
