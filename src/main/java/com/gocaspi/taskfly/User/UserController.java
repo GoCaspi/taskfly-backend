@@ -3,15 +3,10 @@ package com.gocaspi.taskfly.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.config.Task;
 import org.springframework.web.bind.annotation.*;
-
 import com.google.gson.Gson;
 import org.springframework.web.client.HttpClientErrorException;
-
 import java.util.List;
-import java.util.Optional;
-
 
 @RestController
 @ResponseBody
@@ -43,7 +38,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> Handler_getUsreById(@PathVariable String id)throws HttpClientErrorException.NotFound{
-        User user =getService().getService_UserById(id);
+        User user =getService().getServicebyid(id);
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
@@ -70,7 +65,7 @@ public class UserController {
 
     @GetMapping()
     public ResponseEntity<List<User>> Handle_getAllUsers()throws HttpClientErrorException.NotFound{
-        List<User> users =getService().getService_AllUser();
+        List<User> users =getService().getServiceAllUser();
         if (users.size()==0){ throw HttpClientErrorException.create(HttpStatus.NOT_FOUND,"There are No User in the DB",null,null,null);}
         return new ResponseEntity<>(users,HttpStatus.OK);
     }

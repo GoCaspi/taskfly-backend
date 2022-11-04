@@ -59,7 +59,7 @@ public class UserServiceTest {
         };
         for(Testcase tc : testcases){
             when(mockRepo.findAll()).thenReturn(tc.dbReturn);
-            List actual = t.getService_AllUser();
+            List actual = t.getServiceAllUser();
             assertEquals(tc.expected, actual);
         }
     }

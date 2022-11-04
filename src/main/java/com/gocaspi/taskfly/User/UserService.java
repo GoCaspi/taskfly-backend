@@ -3,9 +3,6 @@ package com.gocaspi.taskfly.User;
         import com.google.gson.Gson;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.http.HttpStatus;
-        import org.springframework.web.bind.annotation.PatchMapping;
-        import org.springframework.web.bind.annotation.PathVariable;
-        import org.springframework.web.bind.annotation.RequestBody;
         import org.springframework.web.client.HttpClientErrorException;
 
         import java.util.ArrayList;
@@ -73,13 +70,13 @@ public class UserService {
     }
     public User jsonToUser(String jsonPayload){return new Gson().fromJson(jsonPayload,User.class);}
 
-    public User getService_UserById(String id)throws HttpClientErrorException.NotFound{
+    public User getServicebyid(String id)throws HttpClientErrorException.NotFound{
         if(!getRepo().existsById(id)){ throw exception_notFound;}
         User user = getRepo().findById(id).get();
         return user;
 
     }
-    public List<User> getService_AllUser(){
+    public List<User> getServiceAllUser(){
         List<User> users = getRepo().findAll();
         List<User> usersToId = new ArrayList<>();
         for (User t : users){
