@@ -13,8 +13,6 @@ public class Task {
     private String deadline;
     private ObjectId id;
 
-    //private String taskId;
-
 
     public Task(String userId, String listId,String topic, String team, String priority, String description, String deadline, ObjectId id){
         this.userId = userId;
@@ -25,8 +23,11 @@ public class Task {
         this.description = description;
         this.deadline = deadline;
         this.id = id;
-        //this.taskId = getTaskIdString();
+        String taskId = getTaskIdString();
     }
+
+
+
 
 
 

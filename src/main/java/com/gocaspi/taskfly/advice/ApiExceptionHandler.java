@@ -33,13 +33,4 @@ public class ApiExceptionHandler {
         return errorMap;
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(RuntimeException.class)
-    public Map<String,String> Handle_InvalidArgument(MethodArgumentNotValidException ex){
-        Map<String,String> errorMap = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error ->{
-            errorMap.put(error.getField(),error.getDefaultMessage());
-        });
-        return errorMap;
-    }
 }

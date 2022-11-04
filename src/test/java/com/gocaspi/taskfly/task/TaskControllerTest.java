@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TaskControllerTest {
+ class TaskControllerTest {
 	TaskRepository mockRepo = mock(TaskRepository.class);
 	TaskService mockService = mock(TaskService.class);
 	String mockUserIds = "1";
@@ -32,7 +32,7 @@ public class TaskControllerTest {
 
 
 	@Test
-	public void updateTask() {
+	 void updateTask() {
 		TaskController t = new TaskController(mockRepo);
 		Task mockUpdate = new Task(mockUserIds, mockListId, mockTopic + "updated", mockTeam + "updated", mockPrio, mockDesc + "updated", mockDeadline, mockObjectId);
 
@@ -89,7 +89,7 @@ public class TaskControllerTest {
 
 
 	@Test
-	public void validateTaskFields() {
+	 void validateTaskFields() {
 		TaskController t = new TaskController(mockRepo);
 		class Testcase {
 			final Task taskInput;
@@ -114,7 +114,7 @@ public class TaskControllerTest {
 
 
 	@Test
-	public void getAllTasksDB() {
+	 void getAllTasksDB() {
 		TaskController t = new TaskController(mockRepo);
 		ArrayList<Task> mockList = new ArrayList<>();
 		for (Task task : mockTaskArr) {
@@ -161,7 +161,7 @@ public class TaskControllerTest {
 
 
 	@Test
-	public void getAllTasksById() {
+	 void getAllTasksById() {
 		TaskController t = new TaskController(mockRepo);
 
 		class Testcase {
@@ -206,7 +206,7 @@ public class TaskControllerTest {
 
 
 	@Test
-	public void Handle_createNewTask() {
+	 void Handle_createNewTask() {
 		TaskController t = new TaskController(mockRepo);
 
 		class Testcase {
@@ -251,7 +251,7 @@ public class TaskControllerTest {
 	}
 
 	@Test
-	public void Handle_deleteTask() {
+	 void Handle_deleteTask() {
 		TaskController t = new TaskController(mockRepo);
 
 		class Testcase {

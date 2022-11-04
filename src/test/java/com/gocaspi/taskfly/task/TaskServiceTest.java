@@ -29,6 +29,7 @@ public class TaskServiceTest {
 
 
 	TaskService ts = new TaskService(mockRepo);
+	/*
 	@Test
 	public void postService() throws HttpClientErrorException {
 		TaskService t2 = mockService; // TODO Replace default value.
@@ -36,6 +37,8 @@ public class TaskServiceTest {
 		ts.postService(t);
 		verify(t2, times(1));
 	}
+
+	 */
 
 	@Test
 	public void getService_AllTasksOfUser() {

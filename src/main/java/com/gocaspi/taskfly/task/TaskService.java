@@ -2,21 +2,22 @@ package com.gocaspi.taskfly.task;
 
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.nio.charset.Charset;
 import java.util.*;
 
 public class TaskService {
     @Autowired
     private TaskRepository repo;
-    private final HttpClientErrorException exception_notFound;
-    private final HttpClientErrorException exception_badRequest;
+    private final HttpClientErrorException exceptionNotFound;
+    private final HttpClientErrorException exceptionBadRequest;
     public TaskService (TaskRepository repo){
         this.repo = repo;
-        this.exception_notFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", null, null, null);
-        this.exception_badRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
+        this.exceptionNotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
+        this.exceptionBadRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", new HttpHeaders(), "".getBytes(), null);
     }
 
     /**
@@ -28,6 +29,8 @@ public class TaskService {
         return repo;
     }
 
+    public HttpClientErrorException getNotFound(){return this.exceptionNotFound;}
+
     /**
      * throws an error if not all necessary fields of the provided task are assigned. If all fields are validated the task is saved to the db
      *
@@ -36,7 +39,7 @@ public class TaskService {
      */
     public void postService(Task t) throws HttpClientErrorException {
         if(!validateTaskFields(new Gson().toJson(t))){
-            throw exception_badRequest;
+            throw exceptionBadRequest;
         }
          getRepo().insert(t);
     }
@@ -47,7 +50,7 @@ public class TaskService {
      * @param id of the user
      * @return ArrayList containing the tasks of the user with the id id
      */
-    public List<Task> getService_AllTasksOfUser(String id){
+    public List<Task> getServiceAllTasksOfUser(String id){
         List<Task> tasks = getRepo().findAll();
         List<Task> tasksToId = new ArrayList<>();
         for(Task t : tasks){
@@ -58,21 +61,21 @@ public class TaskService {
         return tasksToId;
     }
 
-    public Task getService_TaskById(String id) throws HttpClientErrorException.NotFound {
-        if(!getRepo().existsById(id)){ throw exception_notFound; }
+    public Task getServiceTaskById(String id) throws HttpClientErrorException.NotFound {
+        if(!getRepo().existsById(id)){ throw exceptionNotFound; }
       Task task = getRepo().findById(id).get();
         return task;
     }
 
     public void deleteService(String id) throws HttpClientErrorException {
-        if(!getRepo().existsById(id)){ throw exception_notFound; }
+        if(!getRepo().existsById(id)){ throw exceptionNotFound; }
         getRepo().deleteById(id);
     }
 
     public void updateService(String id,Task update) throws HttpClientErrorException {
         Optional<Task> task =  getRepo().findById(id);
 
-        if(!getRepo().existsById(id)){ throw exception_notFound; }
+        if(!getRepo().existsById(id)){ throw exceptionNotFound; }
         task.ifPresent( t->{
             if(update.getDescription() != null){t.setDescription(update.getDescription());}
             if(update.getTopic() != null){t.setTopic(update.getTopic());}
