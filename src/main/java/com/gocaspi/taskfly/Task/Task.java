@@ -11,12 +11,12 @@ public class Task {
     private String priority;
     private String description;
     private String deadline;
-    private ObjectId _id;
+    private ObjectId id;
 
     private String taskId;
 
 
-    public Task(String userId, String listId,String topic, String team, String priority, String description, String deadline, ObjectId _id){
+    public Task(String userId, String listId,String topic, String team, String priority, String description, String deadline, ObjectId id){
         this.userId = userId;
         this.listId = listId;
         this.topic = topic;
@@ -24,7 +24,7 @@ public class Task {
         this.priority = priority;
         this.description = description;
         this.deadline = deadline;
-        this._id = _id;
+        this.id = id;
         this.taskId = getTaskIdString();
     }
 
@@ -34,7 +34,7 @@ public class Task {
      * @return String, id string of the ObjectId _id
      */
     public String getTaskIdString(){
-        return this._id.toString();
+        return this.id.toString();
     }
 
     /**
