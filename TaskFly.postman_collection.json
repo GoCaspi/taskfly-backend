@@ -40,15 +40,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/user/635258c96e80350bfca3723e",
-					"protocol": "http",
+					"raw": "{{host}}/user/6356916c5566ff77c19cb5ed",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"user",
-						"635258c96e80350bfca3723e"
+						"6356916c5566ff77c19cb5ed"
 					]
 				}
 			},
@@ -67,6 +65,185 @@
 					"path": [
 						"user",
 						"635259196e80350bfca37240"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Actuator",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/user",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateTask",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userIds\":[\"3\",\"addedUserID again\"],\n    \"listId\":\"2\",\n    \"topic\":\" updated new topic again and again\",\n    \"team\":\"blue\",\n    \"priority\":\"high\",\n    \"description\":\"updated Task again! lorem ipsum anima mea omnipotentis\",\n    \"deadline\":\"11-11-2022\",\n    \"test\":\"success\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/task/6359537a3981e25a5980f860",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"task",
+						"6359537a3981e25a5980f860"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteTaskById",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/task/6359537a3981e25a5980f860",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"task",
+						"6359537a3981e25a5980f860"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetTaskById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/task/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"task",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllTasks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/task/userId/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"task",
+						"userId",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateNewTask",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\":\"1\",\n    \"listId\":\"1\",\n    \"topic\":\"new topic\",\n    \"team\":\"blue\",\n    \"priority\":\"high\",\n    \"description\":\"description of the task\",\n    \"deadline\":\"11-11-2022\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/task",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateFakeEmployees",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"employees\": [\n    {\n      \"id\": \"1\",\n      \"first_name\": \"John\",\n      \"last_name\": \"Kenn\",\n      \"email\": \"john@gmail.com\",\n      \"department\": \"Logistics\"\n    },\n    {\n      \"id\": \"2\",\n      \"first_name\": \"Maria\",\n      \"last_name\": \"gonjaless\",\n      \"email\": \"maria@gmail.com\",\n      \"department\": \"Management\"\n    },\n    {\n      \"id\": \"3\",\n      \"first_name\": \"Lora\",\n      \"last_name\": \"kai\",\n      \"email\": \"lora@gmail.com\",\n      \"department\": \"Logistics\"\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/employee/create",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"employee",
+						"create"
 					]
 				}
 			},
