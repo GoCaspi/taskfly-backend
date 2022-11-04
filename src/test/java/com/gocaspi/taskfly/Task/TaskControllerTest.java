@@ -71,7 +71,7 @@ public class TaskControllerTest {
 			if (tc.expectSuccess) {
 				ResponseEntity<String> expected = new ResponseEntity<>("successfully updated task with id: " + tc.mockId, HttpStatus.ACCEPTED);
 				try {
-					ResponseEntity<String> actual = t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
+					ResponseEntity<String> actual = t.handleUpdateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
 					assertEquals(expected, actual);
 				} catch (HttpClientErrorException e) {
 					throw new RuntimeException(e);
@@ -79,7 +79,7 @@ public class TaskControllerTest {
 
 			} else {
 				try {
-					t.Handle_updateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
+					t.handleUpdateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
 				} catch (HttpClientErrorException e) {
 					HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
 					assertEquals(e.getClass(), expectedException.getClass());
@@ -151,7 +151,7 @@ public class TaskControllerTest {
 
 			try {
 				ResponseEntity<List<Task>> expected = new ResponseEntity<>(Arrays.asList(mockTask), HttpStatus.OK);
-				ResponseEntity<List<Task>> actual1 = t.Handle_getAllTasks(tc.userId);
+				ResponseEntity<List<Task>> actual1 = t.handleGetAllTasks(tc.userId);
 				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
 			} catch (HttpClientErrorException e) {
 				HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
@@ -196,7 +196,7 @@ public class TaskControllerTest {
 
 			try {
 				ResponseEntity<Task> expected = new ResponseEntity<>(tc.mockTask, HttpStatus.OK);
-				ResponseEntity<Task> actual1 = t.Handle_getTaskById(tc.userId);
+				ResponseEntity<Task> actual1 = t.handleGetTaskById(tc.userId);
 				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
 			} catch (HttpClientErrorException e) {
 				HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
@@ -241,7 +241,7 @@ public class TaskControllerTest {
 
 			try {
 				ResponseEntity<String> expected = new ResponseEntity<>("successfully created task with id: " + tc.mockTask.getTaskIdString(), HttpStatus.ACCEPTED);
-				ResponseEntity<String> actual1 = t.Handle_createNewTask(tc.mockPayload);
+				ResponseEntity<String> actual1 = t.handleCreateNewTask(tc.mockPayload);
 				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
 			} catch (HttpClientErrorException e) {
 				HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
@@ -286,7 +286,7 @@ public class TaskControllerTest {
 
 			try {
 				ResponseEntity<String> expected = new ResponseEntity<>("successfully deleted task with id: " + tc.userId, HttpStatus.ACCEPTED);
-				ResponseEntity<String> actual1 = t.Handle_deleteTask(tc.userId);
+				ResponseEntity<String> actual1 = t.handleDeleteTask(tc.userId);
 				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
 			} catch (HttpClientErrorException e) {
 				HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
