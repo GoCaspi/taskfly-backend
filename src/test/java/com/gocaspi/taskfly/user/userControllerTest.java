@@ -18,9 +18,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-public class UserControllerTest {
-    UserRepository mockRepo = mock(UserRepository.class);
-    UserService mockService = mock(UserService.class);
+public class userControllerTest {
+    userRepository mockRepo = mock(userRepository.class);
+    userService mockService = mock(userService.class);
     String mockUserIds = "123";
     String mockListId = "1";
     String mockFistName = "topic1";
@@ -29,21 +29,21 @@ public class UserControllerTest {
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     ObjectId mockObject_Id = new ObjectId();
-    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword, mockObject_Id);
-    User[] mockUseArr = new User[]{mockUser,mockUser};
+    user mockUser = new user(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword, mockObject_Id);
+    user[] mockUseArr = new user[]{mockUser,mockUser};
     @Test
     public void deleteUser() {
 
 
-        UserController t = new UserController(mockRepo);
+        userController t = new userController(mockRepo);
 
         class Testcase {
             final String userId;
             final boolean dbReturnSize0;
-            final User mockTask;
+            final user mockTask;
             final String expectedOutput;
 
-            public Testcase(String userId, boolean dbReturnSize0, User mockTask, String expectedOutput) {
+            public Testcase(String userId, boolean dbReturnSize0, user mockTask, String expectedOutput) {
                 this.userId = userId;
                 this.dbReturnSize0 = dbReturnSize0;
                 this.mockTask = mockTask;
@@ -78,17 +78,17 @@ public class UserControllerTest {
     }
     @Test
     public void updateUser() {
-        UserController t = new UserController(mockRepo);
-        User mockUpdate = new User(mockUserIds, mockListId, mockEmail + "updated", mockPassword + "updated", mockFistName, mockLastName + "updated",mockService+"updated",mockObject_Id);
+        userController t = new userController(mockRepo);
+        user mockUpdate = new user(mockUserIds, mockListId, mockEmail + "updated", mockPassword + "updated", mockFistName, mockLastName + "updated",mockService+"updated",mockObject_Id);
 
         class Testcase {
             final String mockId;
             final boolean idFoundInDb;
-            final User taskFromDb;
-            final User updateForTask;
+            final user taskFromDb;
+            final user updateForTask;
             final boolean expectSuccess;
 
-            public Testcase(String mockId, boolean idFoundInDb, User taskFromDb, User updateForTask, boolean expectSuccess) {
+            public Testcase(String mockId, boolean idFoundInDb, user taskFromDb, user updateForTask, boolean expectSuccess) {
                 this.mockId = mockId;
                 this.idFoundInDb = idFoundInDb;
                 this.taskFromDb = taskFromDb;
@@ -133,15 +133,15 @@ public class UserControllerTest {
     }
     @Test
     public void getUserById() {
-        UserController t = new UserController(mockRepo);
+        userController t = new userController(mockRepo);
 
         class Testcase {
             final String userId;
             final boolean dbReturnSize0;
-            final User mockTask;
+            final user mockTask;
             final String expectedOutput;
 
-            public Testcase(String userId, boolean dbReturnSize0, User mockTask, String expectedOutput) {
+            public Testcase(String userId, boolean dbReturnSize0, user mockTask, String expectedOutput) {
                 this.userId = userId;
                 this.dbReturnSize0 = dbReturnSize0;
                 this.mockTask = mockTask;
@@ -165,8 +165,8 @@ public class UserControllerTest {
             }
 
             try {
-                ResponseEntity<User> expected = new ResponseEntity<>(tc.mockTask, HttpStatus.OK);
-                ResponseEntity<User> actual1 = t.handlerGetUsreById(tc.userId);
+                ResponseEntity<user> expected = new ResponseEntity<>(tc.mockTask, HttpStatus.OK);
+                ResponseEntity<user> actual1 = t.handlerGetUsreById(tc.userId);
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
                 HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
@@ -177,15 +177,15 @@ public class UserControllerTest {
 
 @Test
 public void Handle_create() {
-        UserController t = new UserController(mockRepo);
+        userController t = new userController(mockRepo);
 
     class Testcase {
         final String userId;
         final boolean badPayload;
-        final User mockTask;
+        final user mockTask;
         final String mockPayload;
 
-        public Testcase(String userId, boolean badPayload, User mockTask, String mockPayload) {
+        public Testcase(String userId, boolean badPayload, user mockTask, String mockPayload) {
             this.userId = userId;
             this.badPayload = badPayload;
             this.mockTask = mockTask;
@@ -218,18 +218,18 @@ public void Handle_create() {
 }
     @Test
     public void getAllUser() {
-        UserController t = new UserController(mockRepo);
-        ArrayList<User> mockList = new ArrayList<>();
-        for (User task : mockUseArr) {
+        userController t = new userController(mockRepo);
+        ArrayList<user> mockList = new ArrayList<>();
+        for (user task : mockUseArr) {
             mockList.add(task);
         }
         class Testcase {
             final String userId;
             final boolean dbReturnSize0;
-            final ArrayList<User> mockArrayList;
+            final ArrayList<user> mockArrayList;
             final String expectedOutput;
 
-            public Testcase(String userId, boolean dbReturnSize0, ArrayList<User> mockArrayList, String expectedOutput) {
+            public Testcase(String userId, boolean dbReturnSize0, ArrayList<user> mockArrayList, String expectedOutput) {
                 this.userId = userId;
                 this.dbReturnSize0 = dbReturnSize0;
                 this.mockArrayList = mockArrayList;
@@ -252,8 +252,8 @@ public void Handle_create() {
             }
 
             try {
-                ResponseEntity<List<User>> expected = new ResponseEntity<>(Arrays.asList(mockUser), HttpStatus.OK);
-                ResponseEntity<List<User>> actual1 = t.handleGetAllUsers();
+                ResponseEntity<List<user>> expected = new ResponseEntity<>(Arrays.asList(mockUser), HttpStatus.OK);
+                ResponseEntity<List<user>> actual1 = t.handleGetAllUsers();
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
                 HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);

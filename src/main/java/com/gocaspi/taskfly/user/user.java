@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document
-public class User {
+public class user {
     public String firstName;
     public String lastName;
     public String email;
@@ -19,7 +19,7 @@ public class User {
     private String userId;
     private String topic;
 
-    public User(String firstName, String lastName, String email, String password, String team, String listId,String userId,ObjectId id) {
+    public user(String firstName, String lastName, String email, String password, String team, String listId, String userId, ObjectId id) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;

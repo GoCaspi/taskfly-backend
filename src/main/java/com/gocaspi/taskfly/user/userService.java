@@ -4,32 +4,29 @@ package com.gocaspi.taskfly.user;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.http.HttpStatus;
         import org.springframework.web.client.HttpClientErrorException;
-
         import java.util.ArrayList;
         import java.util.List;
         import java.util.Objects;
         import java.util.Optional;
-
-public class UserService {
+public class userService {
     @Autowired
-    private UserRepository repo;
+    private userRepository repo;
     private final HttpClientErrorException exception_notFound;
     private final HttpClientErrorException exception_badRequest;
-    public  UserService (UserRepository repo){
+    public userService(userRepository repo){
         this.repo = repo ;
         this.exception_notFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND,"not found",null,null,null);
         this.exception_badRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND,"bad payload",null,null,null);
     }
-    public UserRepository getRepo(){
+    public userRepository getRepo(){
         return repo;
     }
     public void deleteService(String id) throws HttpClientErrorException.NotFound{
         if (!getRepo().existsById(id)){throw exception_notFound; }
         getRepo().deleteById(id);
     }
-
-    public void updateService(String id,User update) throws HttpClientErrorException {
-        Optional<User> user = getRepo().findById(id);
+    public void updateService(String id, user update) throws HttpClientErrorException {
+        Optional<user> user = getRepo().findById(id);
 
         if (!getRepo().existsById(id)) {
             throw exception_notFound;
@@ -57,29 +54,27 @@ public class UserService {
 
         });
     }
-
-    public void postService(User t) throws HttpClientErrorException {
+    public void postService(user t) throws HttpClientErrorException {
         if(!validateTaskFields(new Gson().toJson(t))){
             throw exception_badRequest;
         }
         getRepo().insert(t);
     }
     public boolean validateTaskFields(String jsonPayload){
-        User user = jsonToUser(jsonPayload);
+        user user = jsonToUser(jsonPayload);
         return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getListId(), null) && !Objects.equals(user.getEmail(), null)&& !Objects.equals(user.getTeam(), null);
     }
-    public User jsonToUser(String jsonPayload){return new Gson().fromJson(jsonPayload,User.class);}
+    public user jsonToUser(String jsonPayload){return new Gson().fromJson(jsonPayload, user.class);}
 
-    public User getServicebyid(String id)throws HttpClientErrorException.NotFound{
+    public user getServicebyid(String id)throws HttpClientErrorException.NotFound{
         if(!getRepo().existsById(id)){ throw exception_notFound;}
-        User user = getRepo().findById(id).get();
+        user user = getRepo().findById(id).get();
         return user;
-
     }
-    public List<User> getServiceAllUser(){
-        List<User> users = getRepo().findAll();
-        List<User> usersToId = new ArrayList<>();
-        for (User t : users){
+    public List<user> getServiceAllUser(){
+        List<user> users = getRepo().findAll();
+        List<user> usersToId = new ArrayList<>();
+        for (user t : users){
                 usersToId.add(t);
         }
         return usersToId;
