@@ -65,7 +65,7 @@ public class TaskServiceTest {
 		};
 		for(Testcase tc : testcases){
 				when(mockRepo.findAll()).thenReturn(tc.dbReturn);
-			List actual = t.getService_AllTasksOfUser(tc.id);
+			List actual = t.getServiceAllTasksOfUser(tc.id);
 			assertEquals(tc.expected, actual);
 		}
 	}

@@ -61,7 +61,7 @@ public class TaskController {
      */
     @GetMapping("/userId/{id}")
     public ResponseEntity<List<Task>> handleGetAllTasks(@PathVariable String id) throws HttpClientErrorException.NotFound {
-        List<Task> tasks = getService().getService_AllTasksOfUser(id);
+        List<Task> tasks = getService().getServiceAllTasksOfUser(id);
         if(tasks.isEmpty()){ throw getService().getNotFound();}
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
@@ -76,7 +76,7 @@ public class TaskController {
      */
     @GetMapping("/taskId/{id}")
     public ResponseEntity<Task> handleGetTaskById(@PathVariable String id) throws HttpClientErrorException.NotFound {
-        Task task = getService().getService_TaskById(id);
+        Task task = getService().getServiceTaskById(id);
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
