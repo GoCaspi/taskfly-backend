@@ -9,27 +9,27 @@ import java.util.List;
 @RestController
 @ResponseBody
 @RequestMapping("/user")
-public class userController {
+public class UserController {
     @Autowired
-    private userRepository repository;
-    private final userService service;
+    private UserRepository repository;
+    private final UserService service;
 
-    public userController(userRepository repository) {
+    public UserController(UserRepository repository) {
         super();
         this.repository = repository;
-        this.service = new userService(repository);
+        this.service = new UserService(repository);
     }
 
     @PostMapping("/create")
     public ResponseEntity<String> handlerCreateUser(@RequestBody String body) throws HttpClientErrorException.BadRequest {
-        user user = jsonToUser(body);
+        User user = jsonToUser(body);
         getService().postService(user);
         String msg = "Successfully created User";
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
-    public user jsonToUser(String jsonPayload) {
-        return new Gson().fromJson(jsonPayload, user.class);
+    public User jsonToUser(String jsonPayload) {
+        return new Gson().fromJson(jsonPayload, User.class);
     }
 
     /**
@@ -39,8 +39,8 @@ public class userController {
      * @return Json of a User,that contain Users Data to the given userID id
      */
     @GetMapping("/{id}")
-    public ResponseEntity<user> handlerGetUsreById(@PathVariable String id) throws HttpClientErrorException.NotFound {
-        user user = getService().getServicebyid(id);
+    public ResponseEntity<User> handlerGetUsreById(@PathVariable String id) throws HttpClientErrorException.NotFound {
+        User user = getService().getServicebyid(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -56,7 +56,7 @@ public class userController {
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
-    public userService getService() {
+    public UserService getService() {
         return this.service;
     }
 
@@ -66,16 +66,14 @@ public class userController {
      * @return
      */
     @GetMapping()
-    public ResponseEntity<List<user>> handleGetAllUsers() throws HttpClientErrorException.NotFound {
-        List<user> users = getService().getServiceAllUser();
-        if (users.isEmpty()) {
-            throw HttpClientErrorException.create(HttpStatus.NOT_FOUND, "There are No User in the DB", null, null, null);
-        }
+    public ResponseEntity<List<User>> handleGetAllUsers() throws HttpClientErrorException.NotFound {
+        List<User> users = getService().getServiceAllUser();
+        if (users.isEmpty()) {throw  getService().getNotFound();}
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
     @PutMapping("/{id}")
     public ResponseEntity<String> handleUpdateUser(@PathVariable String id, @RequestBody String body) throws HttpClientErrorException.NotFound {
-        user update = jsonToUser(body);
+        User update = jsonToUser(body);
         getService().updateService(id, update);
         String msg = "Successfully update User with id :" + id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);

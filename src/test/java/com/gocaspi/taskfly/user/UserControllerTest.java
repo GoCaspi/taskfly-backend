@@ -18,9 +18,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-public class userControllerTest {
-    userRepository mockRepo = mock(userRepository.class);
-    userService mockService = mock(userService.class);
+ class UserControllerTest {
+    UserRepository mockRepo = mock(UserRepository.class);
+    UserService mockService = mock(UserService.class);
     String mockUserIds = "123";
     String mockListId = "1";
     String mockFistName = "topic1";
@@ -29,24 +29,24 @@ public class userControllerTest {
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     ObjectId mockObject_Id = new ObjectId();
-    user mockUser = new user(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword, mockObject_Id);
-    user[] mockUseArr = new user[]{mockUser,mockUser};
+    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword, mockObject_Id);
+    User[] mockUseArr = new User[]{mockUser,mockUser};
     @Test
-    public void deleteUser() {
+     void deleteUser() {
 
 
-        userController t = new userController(mockRepo);
+        UserController t = new UserController(mockRepo);
 
         class Testcase {
             final String userId;
             final boolean dbReturnSize0;
-            final user mockTask;
+            final User mockUser;
             final String expectedOutput;
 
-            public Testcase(String userId, boolean dbReturnSize0, user mockTask, String expectedOutput) {
+            public Testcase(String userId, boolean dbReturnSize0, User mockUser, String expectedOutput) {
                 this.userId = userId;
                 this.dbReturnSize0 = dbReturnSize0;
-                this.mockTask = mockTask;
+                this.mockUser = mockUser;
                 this.expectedOutput = expectedOutput;
             }
         }
@@ -77,22 +77,22 @@ public class userControllerTest {
         }
     }
     @Test
-    public void updateUser() {
-        userController t = new userController(mockRepo);
-        user mockUpdate = new user(mockUserIds, mockListId, mockEmail + "updated", mockPassword + "updated", mockFistName, mockLastName + "updated",mockService+"updated",mockObject_Id);
+     void updateUser() {
+        UserController t = new UserController(mockRepo);
+        User mockUpdate = new User(mockUserIds, mockListId, mockEmail + "updated", mockPassword + "updated", mockFistName, mockLastName + "updated",mockService+"updated",mockObject_Id);
 
         class Testcase {
             final String mockId;
             final boolean idFoundInDb;
-            final user taskFromDb;
-            final user updateForTask;
+            final User taskFromDb;
+            final User updateForUser;
             final boolean expectSuccess;
 
-            public Testcase(String mockId, boolean idFoundInDb, user taskFromDb, user updateForTask, boolean expectSuccess) {
+            public Testcase(String mockId, boolean idFoundInDb, User taskFromDb, User updateForUser, boolean expectSuccess) {
                 this.mockId = mockId;
                 this.idFoundInDb = idFoundInDb;
                 this.taskFromDb = taskFromDb;
-                this.updateForTask = updateForTask;
+                this.updateForUser = updateForUser;
                 this.expectSuccess = expectSuccess;
             }
         }
@@ -115,7 +115,7 @@ public class userControllerTest {
             if (tc.expectSuccess) {
                 ResponseEntity<String> expected = new ResponseEntity<>("Successfully update User with id :" + tc.mockId, HttpStatus.ACCEPTED);
                 try {
-                    ResponseEntity<String> actual = t.handleUpdateUser(tc.mockId, new Gson().toJson(tc.updateForTask));
+                    ResponseEntity<String> actual = t.handleUpdateUser(tc.mockId, new Gson().toJson(tc.updateForUser));
                     assertEquals(expected, actual);
                 } catch (HttpClientErrorException e) {
                     throw new RuntimeException(e);
@@ -123,7 +123,7 @@ public class userControllerTest {
 
             } else {
                 try {
-                    t.handleUpdateUser(tc.mockId, new Gson().toJson(tc.updateForTask));
+                    t.handleUpdateUser(tc.mockId, new Gson().toJson(tc.updateForUser));
                 } catch (HttpClientErrorException e) {
                     HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
                     assertEquals(e.getClass(), expectedException.getClass());
@@ -132,19 +132,19 @@ public class userControllerTest {
         }
     }
     @Test
-    public void getUserById() {
-        userController t = new userController(mockRepo);
+     void getUserById() {
+        UserController t = new UserController(mockRepo);
 
         class Testcase {
             final String userId;
             final boolean dbReturnSize0;
-            final user mockTask;
+            final User mockUser;
             final String expectedOutput;
 
-            public Testcase(String userId, boolean dbReturnSize0, user mockTask, String expectedOutput) {
+            public Testcase(String userId, boolean dbReturnSize0, User mockUser, String expectedOutput) {
                 this.userId = userId;
                 this.dbReturnSize0 = dbReturnSize0;
-                this.mockTask = mockTask;
+                this.mockUser = mockUser;
                 this.expectedOutput = expectedOutput;
             }
         }
@@ -165,8 +165,8 @@ public class userControllerTest {
             }
 
             try {
-                ResponseEntity<user> expected = new ResponseEntity<>(tc.mockTask, HttpStatus.OK);
-                ResponseEntity<user> actual1 = t.handlerGetUsreById(tc.userId);
+                ResponseEntity<User> expected = new ResponseEntity<>(tc.mockUser, HttpStatus.OK);
+                ResponseEntity<User> actual1 = t.handlerGetUsreById(tc.userId);
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
                 HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
@@ -176,19 +176,19 @@ public class userControllerTest {
     }
 
 @Test
-public void Handle_create() {
-        userController t = new userController(mockRepo);
+ void Handle_create() {
+        UserController t = new UserController(mockRepo);
 
     class Testcase {
         final String userId;
         final boolean badPayload;
-        final user mockTask;
+        final User mockUser;
         final String mockPayload;
 
-        public Testcase(String userId, boolean badPayload, user mockTask, String mockPayload) {
+        public Testcase(String userId, boolean badPayload, User mockUser, String mockPayload) {
             this.userId = userId;
             this.badPayload = badPayload;
-            this.mockTask = mockTask;
+            this.mockUser = mockUser;
             this.mockPayload = mockPayload;
         }
     }
@@ -202,11 +202,11 @@ public void Handle_create() {
             when(mockService.validateTaskFields(tc.mockPayload)).thenReturn(false);
         } else {
             when(mockService.validateTaskFields(tc.mockPayload)).thenReturn(true);
-            when(mockRepo.insert(tc.mockTask)).thenReturn(mockUser);
+            when(mockRepo.insert(tc.mockUser)).thenReturn(mockUser);
         }
 
         try {
-            ResponseEntity<String> expected = new ResponseEntity<>("successfully created User" + tc.mockTask.getUserIdString(), HttpStatus.ACCEPTED);
+            ResponseEntity<String> expected = new ResponseEntity<>("successfully created User" + tc.mockUser.getUserIdString(), HttpStatus.ACCEPTED);
             ResponseEntity<String> actual1 = t.handlerCreateUser(tc.mockPayload);
             assertEquals(actual1.getStatusCode(), expected.getStatusCode());
         } catch (HttpClientErrorException e) {
@@ -217,19 +217,19 @@ public void Handle_create() {
 
 }
     @Test
-    public void getAllUser() {
-        userController t = new userController(mockRepo);
-        ArrayList<user> mockList = new ArrayList<>();
-        for (user task : mockUseArr) {
+     void getAllUser() {
+        UserController t = new UserController(mockRepo);
+        ArrayList<User> mockList = new ArrayList<>();
+        for (User task : mockUseArr) {
             mockList.add(task);
         }
         class Testcase {
             final String userId;
             final boolean dbReturnSize0;
-            final ArrayList<user> mockArrayList;
+            final ArrayList<User> mockArrayList;
             final String expectedOutput;
 
-            public Testcase(String userId, boolean dbReturnSize0, ArrayList<user> mockArrayList, String expectedOutput) {
+            public Testcase(String userId, boolean dbReturnSize0, ArrayList<User> mockArrayList, String expectedOutput) {
                 this.userId = userId;
                 this.dbReturnSize0 = dbReturnSize0;
                 this.mockArrayList = mockArrayList;
@@ -252,8 +252,8 @@ public void Handle_create() {
             }
 
             try {
-                ResponseEntity<List<user>> expected = new ResponseEntity<>(Arrays.asList(mockUser), HttpStatus.OK);
-                ResponseEntity<List<user>> actual1 = t.handleGetAllUsers();
+                ResponseEntity<List<User>> expected = new ResponseEntity<>(Arrays.asList(mockUser), HttpStatus.OK);
+                ResponseEntity<List<User>> actual1 = t.handleGetAllUsers();
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
                 HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);

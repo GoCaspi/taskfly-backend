@@ -3,23 +3,23 @@ package com.gocaspi.taskfly.user;
 
 import lombok.Data;
 import org.bson.types.ObjectId;
-
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document
-public class user {
-    public String firstName;
-    public String lastName;
-    public String email;
-    public String password;
-    public String team;
-    public String listId;
+public class User {
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
+    private String team;
+    private String listId;
+
     private ObjectId id;
     private String userId;
     private String topic;
 
-    public user(String firstName, String lastName, String email, String password, String team, String listId, String userId, ObjectId id) {
+    public User(String firstName, String lastName, String email, String password, String team, String listId, String userId, ObjectId id) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;

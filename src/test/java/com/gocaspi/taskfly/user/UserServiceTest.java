@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class userServiceTest {
-    userRepository mockRepo = mock(userRepository.class);
-    userService mockService = mock(userService.class);
+ class UserServiceTest {
+    UserRepository mockRepo = mock(UserRepository.class);
+    UserService mockService = mock(UserService.class);
     HttpClientErrorException er = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "no User are assigned to the provided userId", null, null, null);
     String mockUserIds = "123";
     String mockListId = "1";
@@ -24,29 +24,23 @@ public class userServiceTest {
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     ObjectId mockObject_Id = new ObjectId();
-    user mockUser = new user(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword, mockObject_Id);
-    userService ts = new userService(mockRepo);
-    @Test
-    public void postService() throws HttpClientErrorException {
-        userService t2 = mockService;
-        user t = mockUser;
-        ts.postService(t);
+    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword, mockObject_Id);
+    UserService ts = new UserService(mockRepo);
 
-    }
     @Test
-    public void getService_AllUser() {
+     void getService_AllUser() {
 
-        userService t = new userService(mockRepo);
-        user[] mockTaskArr = new user[]{mockUser, mockUser };
-        ArrayList<user> mockList = new ArrayList<>();
-        for (user task : mockTaskArr) { mockList.add(task); }
+        UserService t = new UserService(mockRepo);
+        User[] mockTaskArr = new User[]{mockUser, mockUser };
+        ArrayList<User> mockList = new ArrayList<>();
+        for (User task : mockTaskArr) { mockList.add(task); }
 
         class Testcase {
             final String id;
-            final List<user> dbReturn;
-            final List<user> expected;
+            final List<User> dbReturn;
+            final List<User> expected;
 
-            public	Testcase(String id, List<user> dbReturn, List<user> expected) {
+            public	Testcase(String id, List<User> dbReturn, List<User> expected) {
                 this.id = id;
                 this.dbReturn = dbReturn;
                 this.expected = expected;
@@ -54,7 +48,7 @@ public class userServiceTest {
         }
         Testcase[] testcases = new Testcase[]{
                 new Testcase("123", mockList,mockList),
-                new Testcase("1",new ArrayList<user>(),new ArrayList<user>())
+                new Testcase("1",new ArrayList<User>(),new ArrayList<User>())
         };
         for(Testcase tc : testcases){
             when(mockRepo.findAll()).thenReturn(tc.dbReturn);

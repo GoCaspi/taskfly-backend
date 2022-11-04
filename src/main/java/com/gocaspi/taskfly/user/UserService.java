@@ -1,35 +1,45 @@
 package com.gocaspi.taskfly.user;
 
         import com.google.gson.Gson;
+        import org.bson.types.ObjectId;
         import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.http.HttpHeaders;
         import org.springframework.http.HttpStatus;
         import org.springframework.web.client.HttpClientErrorException;
         import java.util.ArrayList;
         import java.util.List;
         import java.util.Objects;
         import java.util.Optional;
-public class userService {
+public class UserService {
+
     @Autowired
-    private userRepository repo;
-    private final HttpClientErrorException exception_notFound;
-    private final HttpClientErrorException exception_badRequest;
-    public userService(userRepository repo){
+    private UserRepository repo;
+    private final HttpClientErrorException exceptionnotFound;
+    private final HttpClientErrorException exceptionbadRequest;
+    public UserService(UserRepository repo){
+
         this.repo = repo ;
-        this.exception_notFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND,"not found",null,null,null);
-        this.exception_badRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND,"bad payload",null,null,null);
+        this.exceptionnotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
+        this.exceptionbadRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", new HttpHeaders(), "".getBytes(), null);
     }
-    public userRepository getRepo(){
+
+    public HttpClientErrorException getNotFound() {
+
+        return this.exceptionbadRequest;
+    }
+
+    public UserRepository getRepo(){
         return repo;
     }
     public void deleteService(String id) throws HttpClientErrorException.NotFound{
-        if (!getRepo().existsById(id)){throw exception_notFound; }
+        if (!getRepo().existsById(id)){throw exceptionnotFound; }
         getRepo().deleteById(id);
     }
-    public void updateService(String id, user update) throws HttpClientErrorException {
-        Optional<user> user = getRepo().findById(id);
+    public void updateService(String id, User update) throws HttpClientErrorException {
+        Optional<User> user = getRepo().findById(id);
 
         if (!getRepo().existsById(id)) {
-            throw exception_notFound;
+            throw exceptionnotFound;
         }
         user.ifPresent(t -> {
             if (update.getEmail() != null) {
@@ -54,27 +64,27 @@ public class userService {
 
         });
     }
-    public void postService(user t) throws HttpClientErrorException {
+    public void postService(User t) throws HttpClientErrorException {
         if(!validateTaskFields(new Gson().toJson(t))){
-            throw exception_badRequest;
+            throw exceptionbadRequest;
         }
         getRepo().insert(t);
     }
     public boolean validateTaskFields(String jsonPayload){
-        user user = jsonToUser(jsonPayload);
+        User user = jsonToUser(jsonPayload);
         return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getListId(), null) && !Objects.equals(user.getEmail(), null)&& !Objects.equals(user.getTeam(), null);
     }
-    public user jsonToUser(String jsonPayload){return new Gson().fromJson(jsonPayload, user.class);}
+    public User jsonToUser(String jsonPayload){return new Gson().fromJson(jsonPayload, User.class);}
 
-    public user getServicebyid(String id)throws HttpClientErrorException.NotFound{
-        if(!getRepo().existsById(id)){ throw exception_notFound;}
-        user user = getRepo().findById(id).get();
-        return user;
+    public User getServicebyid(String id)throws HttpClientErrorException.NotFound{
+        if(!getRepo().existsById(id)){ throw exceptionnotFound;}
+        return getRepo().findById(id).isPresent() ? getRepo().findById(id).get() : new User("","","","","","","",new ObjectId());
+
     }
-    public List<user> getServiceAllUser(){
-        List<user> users = getRepo().findAll();
-        List<user> usersToId = new ArrayList<>();
-        for (user t : users){
+    public List<User> getServiceAllUser(){
+        List<User> users = getRepo().findAll();
+        List<User> usersToId = new ArrayList<>();
+        for (User t : users){
                 usersToId.add(t);
         }
         return usersToId;

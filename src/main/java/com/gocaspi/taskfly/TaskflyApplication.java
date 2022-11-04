@@ -5,9 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
-public class taskflyApplication {
+public class TaskflyApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(taskflyApplication.class, args);
+		SpringApplication.run(TaskflyApplication.class, args);
 	}
 
 }
