@@ -161,6 +161,15 @@ import org.junit.jupiter.api.Test;
 			assertEquals(actual,tc.expected);
 		}
 	}
+	 @Test
+	 void getTaskId(){
+		 Task t = mockTask;
+		 for (Testcase_getString tc : testcases_get){
+			 t.setTaskId(tc.expected);
+			 String actual = t.getTaskId();
+			 assertEquals(actual,tc.expected);
+		 }
+	 }
 
 	@Test
 	 void setListId() {

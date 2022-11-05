@@ -76,11 +76,11 @@ public class TaskService {
 
         if(!getRepo().existsById(id)){ throw exceptionNotFound; }
         task.ifPresent( t->{
-            if(update.getDescription() != null){t.setDescription(update.getDescription());}
-            if(update.getTopic() != null){t.setTopic(update.getTopic());}
-            if(update.getTeam() != null){t.setTeam(update.getTeam());}
-            if(update.getDeadline() != null){t.setDeadline(update.getDeadline());}
-            if(update.getListId() != null){t.setListId(update.getListId());}
+            if(!Objects.equals(update.getDescription(), "")){t.setDescription(update.getDescription());}
+            if(!Objects.equals(update.getTopic(), "")){t.setTopic(update.getTopic());}
+            if(!Objects.equals(update.getTeam(), "")){t.setTeam(update.getTeam());}
+            if(!Objects.equals(update.getDeadline(), "")){t.setDeadline(update.getDeadline());}
+            if(!Objects.equals(update.getListId(), "")){t.setListId(update.getListId());}
             getRepo().save(t);
                 });
     }

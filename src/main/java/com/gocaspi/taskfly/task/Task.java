@@ -12,6 +12,7 @@ public class Task {
     private String description;
     private String deadline;
     private ObjectId id;
+    private String taskId;
 
 
 
@@ -24,13 +25,29 @@ public class Task {
         this.description = description;
         this.deadline = deadline;
         this.id = id;
-        String taskId = getTaskIdString();
+     //   String taskId = getTaskIdString();
+        this.taskId = id.toString();
     }
 
 
 
+    /**
+     * returns the id string of the ObjectId of the task
+     *
+     * @return String, id string of the ObjectId _id
+     */
+    public String getTaskId(){
+        return this.taskId;
+    }
 
-
+    /**
+     * sets the description of the task to a provided string (text)
+     *
+     * @param text, new description of the task
+     */
+    public void setTaskId(String text){
+        this.taskId = text;
+    }
 
     /**
      * returns the id string of the ObjectId of the task

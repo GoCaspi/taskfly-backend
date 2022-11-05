@@ -1,5 +1,6 @@
 package com.gocaspi.taskfly.task;
 
+import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.*;
 import org.springframework.http.HttpStatus;
@@ -69,4 +70,30 @@ public class TaskServiceTest {
 			assertEquals(tc.expected, actual);
 		}
 	}
+
+	@Test
+	public void validateTaskFields() {
+		TaskService t = new TaskService(mockRepo);
+		class Testcase {
+			final Task taskInput;
+			final boolean expected;
+
+			public Testcase(Task testTask, boolean expected) {
+				this.taskInput = testTask;
+				this.expected = expected;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase(mockTask, true),
+				new Testcase(new Task(null,null,null,null,null,null,null,new ObjectId()),false),
+				new Testcase(new Task("test","test","test","test","test","test","test",new ObjectId()),true)
+		};
+
+		for (Testcase tc : testcases) {
+			boolean actualOut = t.validateTaskFields(new Gson().toJson(tc.taskInput));
+			assertEquals(tc.expected, actualOut);
+		}
+	}
 }
+
