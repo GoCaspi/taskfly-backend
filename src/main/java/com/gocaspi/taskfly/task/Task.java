@@ -6,16 +6,65 @@ import org.bson.types.ObjectId;
 public class Task {
     private String userId;
     private String listId;
-    private String topic;
+//    private String topic;
     private String team;
-    private String priority;
-    private String description;
+ //   private String priority;
+//    private String description;
     private String deadline;
     private ObjectId id;
     private String taskId;
+    private Taskbody body;
+
+   public static class Taskbody {
+        private String topic;
+        private String priority;
+        private String description;
+
+        public Taskbody(String topic, String priority,String description){
+            this.topic = topic;
+            this.priority = priority;
+            this.description = description;
+        }
+
+        public void setPriority(String str){
+            this.priority = str;
+        }
+        public void setDescription(String str){
+            this.description = str;
+        }
+        public void setTopic(String str){
+            this.topic = str;
+        }
+
+        public String getTopic(){
+            return this.topic;
+        }
+        public String getDescription(){
+            return this.description;
+        }
+        public String getPriority(){
+            return this.priority;
+        }
+
+    }
 
 
 
+    public Task(String userId, String listId, String team,  String deadline, ObjectId id, Taskbody body){
+        this.userId = userId;
+        this.listId = listId;
+        this.team = team;
+        this.deadline = deadline;
+        this.id = id;
+        this.taskId = id.toString();
+        this.body = body;
+    }
+
+
+
+
+
+/*
     public Task(String userId, String listId,String topic, String team, String priority, String description, String deadline, ObjectId id){
         this.userId = userId;
         this.listId = listId;
@@ -29,6 +78,14 @@ public class Task {
         this.taskId = id.toString();
     }
 
+ */
+
+    public void setBody(Taskbody body){
+        this.body = body;
+    }
+    public Taskbody getBody(){
+        return this.body;
+    }
 
 
     /**
@@ -63,16 +120,16 @@ public class Task {
      *
      * @param text, new description of the task
      */
-    public void setDescription(String text){
-        this.description = text;
-    }
+//    public void setDescription(String text){
+//        this.description = text;
+//    }
 
     /**
      * returns the description of the task
      *
      * @return String, description of the task
      */
-    public String getDescription(){ return this.description; }
+//    public String getDescription(){ return this.description; }
 
     /**
      * sets the userIDs array of a task to the provided String-array (newUserIds)
@@ -95,16 +152,16 @@ public class Task {
      *
      * @param topic, new topic of the task
      */
-    public void setTopic(String topic){
-        this.topic = topic;
-    }
+ //   public void setTopic(String topic){
+ //       this.topic = topic;
+ //   }
 
     /**
      * returns the topic of the task
      *
      * @return String, topic of the task
      */
-    public String getTopic(){ return this.topic; }
+ //   public String getTopic(){ return this.topic; }
 
     /**
      * sets the team of a task to a new team (team)
@@ -143,14 +200,14 @@ public class Task {
      *
      * @return String, priority of the task
      */
-    public String getPriority(){ return this.priority; }
+  //  public String getPriority(){ return this.priority; }
 
     /**
      * sets the priorty value of the task to the given parameter
      *
      * @param priority, String new priority of the task
      */
-    public void setPriority(String priority){ this.priority = priority; }
+ //   public void setPriority(String priority){ this.priority = priority; }
 
     /**
      * sets the value of the listId of the task to the given input

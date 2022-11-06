@@ -27,8 +27,13 @@ import static org.mockito.Mockito.when;
 	String mockDesc = "desc1";
 	String mockDeadline = "11-11-2022";
 	ObjectId mockObjectId = new ObjectId();
-	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
-	Task[] mockTaskArr = new Task[]{mockTask, mockTask};
+
+	Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescription");
+
+	Task mockTask1 = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObjectId,mockbody);
+//	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
+	Task[] mockTaskArr = new Task[]{mockTask1, mockTask1};
+
 
 
 	@Test
