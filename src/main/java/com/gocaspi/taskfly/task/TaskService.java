@@ -63,7 +63,7 @@ public class TaskService {
 
     public Task getServiceTaskById(String id) throws HttpClientErrorException.NotFound {
         if(!getRepo().existsById(id)){ throw exceptionNotFound; }
-        return getRepo().findById(id).isPresent() ? getRepo().findById(id).get() : new Task("","","","","","","",new ObjectId());
+        return getRepo().findById(id).isPresent() ? getRepo().findById(id).get() : new Task(null,null,null,null,new ObjectId(),null);
     }
 
     public void deleteService(String id) throws HttpClientErrorException {
@@ -76,11 +76,11 @@ public class TaskService {
 
         if(!getRepo().existsById(id)){ throw exceptionNotFound; }
         task.ifPresent( t->{
-            if(update.getDescription() != null){t.setDescription(update.getDescription());}
-            if(update.getTopic() != null){t.setTopic(update.getTopic());}
-            if(update.getTeam() != null){t.setTeam(update.getTeam());}
-            if(update.getDeadline() != null){t.setDeadline(update.getDeadline());}
-            if(update.getListId() != null){t.setListId(update.getListId());}
+            if(!Objects.equals(update.getBody().getDescription(), "")){t.getBody().setDescription(update.getBody().getDescription());}
+            if(!Objects.equals(update.getBody().getTopic(), "")){t.getBody().setTopic(update.getBody().getTopic());}
+            if(!Objects.equals(update.getTeam(), "")){t.setTeam(update.getTeam());}
+            if(!Objects.equals(update.getDeadline(), "")){t.setDeadline(update.getDeadline());}
+            if(!Objects.equals(update.getListId(), "")){t.setListId(update.getListId());}
             getRepo().save(t);
                 });
     }
@@ -92,7 +92,7 @@ public class TaskService {
      */
     public boolean validateTaskFields(String jsonPayload){
         Task task = jsonToTask(jsonPayload);
-        return !Objects.equals(task.getUserId(), null) && !Objects.equals(task.getListId(), null) && !Objects.equals(task.getTopic(), null) && !Objects.equals(task.getDescription(), null);
+        return !Objects.equals(task.getUserId(), null) && !Objects.equals(task.getListId(), null) && !Objects.equals(task.getBody().getTopic(), null) && !Objects.equals(task.getBody().getDescription(), null);
     }
 
     /**
