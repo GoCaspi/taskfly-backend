@@ -9,17 +9,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http.anonymous().and().authorizeRequests()
-                .antMatchers("/user/**")
-                .permitAll()
-                .and()
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/task/**")
-                .permitAll()
-                .and()
-                .csrf().disable()
-                .authorizeRequests()
+        http.csrf().disable().cors().disable().authorizeRequests()
+                .antMatchers("/user/**").permitAll()
+                .antMatchers("/task/**").permitAll()
                 .antMatchers("/actuator/**")
                 .authenticated()
                 .and()
