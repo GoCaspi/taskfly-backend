@@ -14,7 +14,7 @@ public class UserTest {
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     ObjectId mockObject_Id = new ObjectId();
-    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword, mockObject_Id);
+    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword);
     class Testcase_setString{
         final String newText;
 
@@ -63,9 +63,9 @@ public class UserTest {
     public void getId(){
         User t = mockUser;
 
-        ObjectId oId = new ObjectId();
+        String oId = new String("");
         t.setId(oId);
-        ObjectId actual = t.getId();
+        String actual = t.getId();
         assertEquals(oId,actual);
     }
 

@@ -8,8 +8,9 @@ import org.junit.jupiter.api.Test;
  class TaskTest {
 	String mockUserIds = "1"; String mockListId = ""; String mockTopic = ""; String mockTeam = "";
 	String mockPrio = ""; String mockDesc = ""; String mockDeadline = ""; ObjectId mockObjectId = new ObjectId();
-	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
-
+//	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
+Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescription");
+Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObjectId,mockbody);
 
 	class Testcase_setString{
 		final String newText;
@@ -43,8 +44,8 @@ import org.junit.jupiter.api.Test;
 	 void setDescription() {
 		Task t = mockTask;
 		for (Testcase_setString tc : testcases){
-			t.setDescription(tc.newText);
-			assertEquals(t.getDescription(),tc.newText);
+			t.getBody().setDescription(tc.newText);
+			assertEquals(t.getBody().getDescription(),tc.newText);
 		}
 	}
 
@@ -70,8 +71,8 @@ import org.junit.jupiter.api.Test;
 	 void setPriority() {
 		Task t = mockTask;
 		for (Testcase_setString tc : testcases){
-			t.setPriority(tc.newText);
-			assertEquals(t.getPriority(),tc.newText);
+			t.getBody().setPriority(tc.newText);
+			assertEquals(t.getBody().getPriority(),tc.newText);
 		}
 	}
 
@@ -79,8 +80,8 @@ import org.junit.jupiter.api.Test;
 	 void setTopic() {
 		Task t = mockTask; 
 		for (Testcase_setString tc : testcases){
-			t.setTopic(tc.newText);
-			assertEquals(t.getTopic(),tc.newText);
+			t.getBody().setTopic(tc.newText);
+			assertEquals(t.getBody().getTopic(),tc.newText);
 		}
 	}
 
@@ -96,8 +97,8 @@ import org.junit.jupiter.api.Test;
 	 void getDescription(){
 		Task t = mockTask;
 		for (Testcase_getString tc : testcases_get){
-			t.setDescription(tc.expected);
-			String actual = t.getDescription();
+			t.getBody().setDescription(tc.expected);
+			String actual = t.getBody().getDescription();
 			assertEquals(actual,tc.expected);
 		}
 	}
@@ -116,8 +117,8 @@ import org.junit.jupiter.api.Test;
 	 void getPriority(){
 		Task t = mockTask;
 		for (Testcase_getString tc : testcases_get){
-			t.setPriority(tc.expected);
-			String actual = t.getPriority();
+			t.getBody().setPriority(tc.expected);
+			String actual = t.getBody().getPriority();
 			assertEquals(actual,tc.expected);
 		}
 	}
@@ -136,8 +137,8 @@ import org.junit.jupiter.api.Test;
 	 void getTopic(){
 		Task t = mockTask;
 		for (Testcase_getString tc : testcases_get){
-			t.setTopic(tc.expected);
-			String actual = t.getTopic();
+			t.getBody().setTopic(tc.expected);
+			String actual = t.getBody().getTopic();
 			assertEquals(actual,tc.expected);
 		}
 	}
@@ -146,7 +147,7 @@ import org.junit.jupiter.api.Test;
 	 void getTaskIdString(){
 		Task t = mockTask;
 		for (Testcase_getString tc : testcases_get){
-			t.setTopic(tc.expected);
+			t.getBody().setTopic(tc.expected);
 			String actual = t.getTaskIdString();
 			assertEquals(actual,t.getTaskIdString());
 		}
@@ -179,4 +180,13 @@ import org.junit.jupiter.api.Test;
 			assertEquals(t.getListId(),tc.newText);
 		}
 	}
+
+	 @Test
+	 void setBody() {
+		 Task t = mockTask;
+		 Task.Taskbody mockbody =  new Task.Taskbody("mockTopic","mockPrio","mockDescription");
+		 t.setBody(mockbody);
+		 Task.Taskbody actual = t.getBody();
+		 assertEquals(actual,mockbody);
+	 }
 }
