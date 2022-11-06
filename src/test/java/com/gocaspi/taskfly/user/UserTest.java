@@ -14,7 +14,7 @@ public class UserTest {
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     ObjectId mockObject_Id = new ObjectId();
-    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword, mockObject_Id);
+    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword);
     class Testcase_setString{
         final String newText;
 
@@ -40,21 +40,33 @@ public class UserTest {
             new Testcase_getString(""),
     };
     @Test
-    public void getUserIdString(){
+    public void getUserId(){
         User t = mockUser;
         for (Testcase_getString tc : testcases_get){
-            t.setTopic(tc.expected);
-            String actual = t.getUserIdString();
-            assertEquals(actual,t.getUserIdString());
+            t.setUserId(tc.expected);
+            String actual = t.getUserId();
+            assertEquals(actual,t.getUserId());
         }
     }
+
     @Test
-    public void setTopic() {
+    public void setUserId(){
         User t = mockUser;
-        for (Testcase_setString tc : testcases){
-            t.setTopic(tc.newText);
-            String actual = t.getTopic();
-            assertEquals(actual,tc.newText);
+        for (Testcase_getString tc : testcases_get){
+            t.setUserId(tc.expected);
+            String actual = t.getUserId();
+            assertEquals(actual,t.getUserId());
         }
     }
+
+    @Test
+    public void getId(){
+        User t = mockUser;
+
+        String oId = new String("");
+        t.setId(oId);
+        String actual = t.getId();
+        assertEquals(oId,actual);
+    }
+
 }

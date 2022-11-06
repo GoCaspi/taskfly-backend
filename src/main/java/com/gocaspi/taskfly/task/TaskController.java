@@ -123,7 +123,7 @@ public class TaskController {
 
     public boolean validateTaskFields(String jsonPayload){
         Task task = jsonToTask(jsonPayload);
-        return !Objects.equals(task.getUserId(), null) && !Objects.equals(task.getListId(), null) && !Objects.equals(task.getTopic(), null) && !Objects.equals(task.getDescription(), null);
+        return !Objects.equals(task.getUserId(), null) && !Objects.equals(task.getListId(), null) && !Objects.equals(task.getBody().getTopic(), null) && !Objects.equals(task.getBody().getDescription(), null);
     }
 
 

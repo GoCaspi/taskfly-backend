@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     ObjectId mockObject_Id = new ObjectId();
-    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword, mockObject_Id);
+    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword);
     User[] mockUseArr = new User[]{mockUser,mockUser};
     @Test
      void deleteUser() {
@@ -79,7 +79,7 @@ import static org.mockito.Mockito.when;
     @Test
      void updateUser() {
         UserController t = new UserController(mockRepo);
-        User mockUpdate = new User(mockUserIds, mockListId, mockEmail + "updated", mockPassword + "updated", mockFistName, mockLastName + "updated",mockService+"updated",mockObject_Id);
+        User mockUpdate = new User(mockUserIds, mockListId, mockEmail + "updated", mockPassword + "updated", mockFistName, mockLastName + "updated",mockService+"updated");
 
         class Testcase {
             final String mockId;
@@ -206,7 +206,7 @@ import static org.mockito.Mockito.when;
         }
 
         try {
-            ResponseEntity<String> expected = new ResponseEntity<>("successfully created User" + tc.mockUser.getUserIdString(), HttpStatus.ACCEPTED);
+            ResponseEntity<String> expected = new ResponseEntity<>("successfully created User" , HttpStatus.ACCEPTED);
             ResponseEntity<String> actual1 = t.handlerCreateUser(tc.mockPayload);
             assertEquals(actual1.getStatusCode(), expected.getStatusCode());
         } catch (HttpClientErrorException e) {

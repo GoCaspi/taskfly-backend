@@ -1,5 +1,6 @@
 package com.gocaspi.taskfly.task;
 
+import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.*;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,9 @@ public class TaskServiceTest {
 	String mockDesc = "desc1";
 	String mockDeadline = "11-11-2022";
 	ObjectId mockObjectId = new ObjectId();
-	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
-
+//	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
+Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescription");
+	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObjectId,mockbody);
 
 	TaskService ts = new TaskService(mockRepo);
 	/*
@@ -69,4 +71,30 @@ public class TaskServiceTest {
 			assertEquals(tc.expected, actual);
 		}
 	}
+
+	@Test
+	public void validateTaskFields() {
+		TaskService t = new TaskService(mockRepo);
+		class Testcase {
+			final Task taskInput;
+			final boolean expected;
+
+			public Testcase(Task testTask, boolean expected) {
+				this.taskInput = testTask;
+				this.expected = expected;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase(mockTask, true),
+				new Testcase(new Task(null,null,null,null,new ObjectId(),mockbody),false),
+				new Testcase(new Task("test","test","test","test",new ObjectId(),mockbody),true)
+		};
+
+		for (Testcase tc : testcases) {
+			boolean actualOut = t.validateTaskFields(new Gson().toJson(tc.taskInput));
+			assertEquals(tc.expected, actualOut);
+		}
+	}
 }
+
