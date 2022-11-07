@@ -3,8 +3,8 @@ COPY src /home/app/src
 COPY pom.xml /home/app
 COPY mvnw /home/app
 COPY ./.mvn /home/app
-RUN mvn -f /home/app/pom.xml -q clean package -DskipTests
 
+RUN mvn -f /home/app/pom.xml -q clean package -DskipTests
 FROM openjdk:17-jdk
 WORKDIR /opt/app
 COPY --from=build /home/app/target/taskfly-0.0.1-SNAPSHOT.jar /usr/local/lib/taskfly.jar
