@@ -1,4 +1,4 @@
-package com.gocaspi.taskfly.User;
+package com.gocaspi.taskfly.user;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
