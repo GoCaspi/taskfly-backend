@@ -1,25 +1,171 @@
 {
 	"info": {
-		"_postman_id": "a5b2426c-bda8-46f0-9fe5-303e17becc06",
+		"_postman_id": "decf4e67-c5ba-4a80-9117-fd9b969b5211",
 		"name": "TaskFly",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21612803"
+		"_exporter_id": "21778639"
 	},
 	"item": [
 		{
 			"name": "CreateUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create User 1\", () => {",
+							"    pm.response.to.have.status(201)",
+							"})",
+							"",
+							"var jsonBody = pm.response.json()",
+							"",
+							"pm.environment.set(\"userID1\", jsonBody.id)",
+							"",
+							"var user2 = {",
+							"    \"firstName\": pm.environment.get(\"userfirstName1\"),",
+							"    \"lastName\": pm.environment.get(\"userlastName1\"),",
+							"    \"email\": pm.environment.get(\"userEmail1\"),",
+							"    \"password\": pm.environment.get(\"userpassword1\"),",
+							"    \"team\": pm.environment.get(\"userTeam1\"),",
+							"    \"listId\": pm.environment.get(\"userListId1\")",
+							"}",
+							"",
+							"var user3 = {",
+							"    \"username\": pm.environment.get(\"userUsername3\"),",
+							"    \"password\": pm.environment.get(\"userPassword3\"),",
+							"    \"email\": pm.environment.get(\"userEmail3\"),",
+							"    \"firstname\": pm.environment.get(\"userFirstname3\"),",
+							"    \"lastname\": pm.environment.get(\"userLastname3\")",
+							"}",
+							"",
+							"var errorInsufficentData = {",
+							"    \"username\": \"{{userUsername1}}\",",
+							"    \"password\": \"{{userPassword1}}\",",
+							"    \"firstname\": \"{{userFirstname1}}\",",
+							"    \"lastname\": \"{{userLastname1}}\",",
+							"}",
+							"",
+							"var errorInvalidPayload = \"{'username': 'Babo123', password:}\"",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/user\",",
+							"    method: \"POST\",",
+							"    body: JSON.stringify(user2)",
+							"}, (err, res) => {",
+							"    var jsonBody = res.json()",
+							"    pm.environment.set(\"userID2\", jsonBody.id)",
+							"    pm.test(\"Create User 2\", () => {",
+							"        pm.expect(res).to.have.status(201)",
+							"    })",
+							"    ",
+							"    pm.sendRequest({",
+							"        url: pm.environment.get(\"host\") + \"/user\",",
+							"        method: \"POST\",",
+							"        body: JSON.stringify(user2)",
+							"    }, (err, res) => {",
+							"        pm.test(\"User already exists\", () => {",
+							"            pm.expect(res).to.have.status(500)",
+							"    })",
+							"        ",
+							"})",
+							"    ",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/user\",",
+							"    method: \"POST\",",
+							"    body: JSON.stringify(user3)",
+							"}, (err, res) => {",
+							"    var jsonBody = res.json()",
+							"    pm.environment.set(\"userID3\", jsonBody.id)",
+							"    pm.test(\"Create User 3\", () => {",
+							"        pm.expect(res).to.have.status(201)",
+							"    })",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/user\",",
+							"    method: \"POST\",",
+							"    body: JSON.stringify(errorInsufficentData)",
+							"}, (err, res) => {",
+							"    pm.test(\"Insufficent Data\", () => {",
+							"        pm.expect(res).to.have.status(500)",
+							"    })",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/user\",",
+							"    method: \"POST\",",
+							"    body: errorInvalidPayload",
+							"}, (err, res) => {",
+							"    pm.test(\"Invalid Payload\", () => {",
+							"        pm.expect(res).to.have.status(400)",
+							"    })",
+							"})",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"firstName\": \"Peter\",\n    \"lastName\": \"Müller\"\n}",
+					"raw": "{\n    \"firstName\": \"Miled\",\n    \"lastName\": \"Müller\",\n    \"email\":\"Müller@gmail.com\",\n    \"password\":\"password\",\n    \"team\":\"Okapi\",\n    \"listId\":\"1\"\n    \n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
+				"url": {
+					"raw": "http://localhost:8080/user/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetallUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status check\", () => {",
+							"    pm.response.to.have.status(200)",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/user\",",
+							"    method: \"GET\",",
+							"   ",
+							"}, (err, res) => {",
+							"    pm.test(\"Check Unauthorized User\", () => {",
+							"        pm.expect(res).to.have.status(401)",
+							"    })",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
 				"url": {
 					"raw": "http://localhost:8080/user",
 					"protocol": "http",
@@ -32,7 +178,53 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Getalluser",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "text/plain;charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "309"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 28 Oct 2022 06:23:10 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[{\"id\":\"635b74f37a4fc27d889f187c\",\"firstName\":\"Müller\",\"lastName\":\"Müller\",\"email\":\"Müller@gmail.com\",\"password\":\"password\",\"team\":\"Okapi\",\"listId\":\"1\"},{\"id\":\"635b75067a4fc27d889f187d\",\"firstName\":\"Patrik\",\"lastName\":\"Müller\",\"email\":\"Patrik@gmail.com\",\"password\":\"password\",\"team\":\"Okapi\",\"listId\":\"1\"}]"
+				}
+			]
 		},
 		{
 			"name": "GetUser",
@@ -40,13 +232,179 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{host}}/user/6356916c5566ff77c19cb5ed",
+					"raw": "http://localhost:8080/user/6364b4648d1ba634ae236728",
+					"protocol": "http",
 					"host": [
-						"{{host}}"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
 						"user",
-						"6356916c5566ff77c19cb5ed"
+						"6364b4648d1ba634ae236728"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "GetUser",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/user/635a75c03ac4195d34f72be2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"635a75c03ac4195d34f72be2"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "text/plain;charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "122"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 27 Oct 2022 12:27:50 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"635a75c03ac4195d34f72be2\",\n    \"firstName\": \"Bremen\",\n    \"lastName\": \"Müller\",\n    \"email\": \"Luca@gmail.com\",\n    \"password\": \"password\"\n}"
+				}
+			]
+		},
+		{
+			"name": "UpdateUser",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Update User Status\", () => {",
+							"    pm.response.to.have.status(200)",
+							"})",
+							"",
+							"var body2 = {",
+							"    \"id\": pm.environment.get(\"userID2\"),",
+							"    \"password\": \"123\"",
+							"}",
+							"",
+							"var body3 = {",
+							"    \"id\": pm.environment.get(\"userID3\"),",
+							"    \"group\": \"admin\"",
+							"}",
+							"",
+							"var body4 = `",
+							"    [",
+							"        {",
+							"            \"id\": \"${pm.environment.get(\"userID1\")}\",",
+							"            \"team\": \"bestTeam\"",
+							"        },",
+							"        {",
+							"            \"id\": \"${pm.environment.get(\"userID2\")}\",",
+							"            \"team\": \"bestTeam\"",
+							"        },",
+							"        {",
+							"            \"id\": \"${pm.environment.get(\"userID3\")}\",",
+							"            \"team\": \"bestTeam\"",
+							"        }",
+							"    ]",
+							"`",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/user\",",
+							"    method: \"PATCH\",",
+							"    body: JSON.stringify(body2),",
+							"    header: {",
+							"        Authorization: \"Bearer \" + pm.environment.get(\"userToken3\") ",
+							"    }",
+							"}, (err, res) => {",
+							"    pm.test(\"Check Password Update dosent work\", () => {",
+							"        pm.expect(res).to.have.status(401)",
+							"    })",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/user\",",
+							"    method: \"PATCH\",",
+							"    body: JSON.stringify(body3),",
+							"    header: {",
+							"        Authorization: \"Bearer \" + pm.environment.get(\"userToken2\") ",
+							"    }",
+							"}, (err, res) => {",
+							"    pm.test(\"Check Group Update dosent work\", () => {",
+							"        pm.expect(res).to.have.status(401)",
+							"    })",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/user\",",
+							"    method: \"PATCH\",",
+							"    body: body4,",
+							"    header: {",
+							"        Authorization: \"Bearer \" + pm.environment.get(\"userToken1\") ",
+							"    }",
+							"}, (err, res) => {",
+							"    pm.test(\"Update Groups from Users\", () => {",
+							"        pm.expect(res).to.have.status(200)",
+							"    })",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"Luis\",\n    \"lastName\": \"Müller\",\n    \"email\":\"Luis_Müller@gmail.com\",\n    \"password\":\"password\",\n    \"team\":\"Okapi\",\n    \"listId\":\"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/6363c2583920285de3098fa7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"6363c2583920285de3098fa7"
 					]
 				}
 			},
@@ -54,17 +412,35 @@
 		},
 		{
 			"name": "DeleteUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"User 1 Status check\", () => {",
+							"    pm.response.to.have.status(200)",
+							"})",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{host}}/user/635259196e80350bfca37240",
+					"raw": "{{host}}/user/6363e57add38660a75db4470",
 					"host": [
 						"{{host}}"
 					],
 					"path": [
 						"user",
-						"635259196e80350bfca37240"
+						"6363e57add38660a75db4470"
 					]
 				}
 			},
@@ -74,23 +450,9 @@
 			"name": "Actuator",
 			"request": {
 				"method": "GET",
-				"header": []
-			},
-			"response": []
-		},
-		{
-			"name": "GetAllUser",
-			"request": {
-				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{host}}/user",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"user"
-					]
+					"raw": ""
 				}
 			},
 			"response": []
