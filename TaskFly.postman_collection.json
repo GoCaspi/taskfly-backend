@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "decf4e67-c5ba-4a80-9117-fd9b969b5211",
+		"_postman_id": "84a40b2f-17f2-4c43-940a-5ce822fe2b9e",
 		"name": "TaskFly",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21778639"
+		"_exporter_id": "21612803"
 	},
 	"item": [
 		{
@@ -167,12 +167,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/user",
-					"protocol": "http",
+					"raw": "{{host}}/user",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"user"
 					]
@@ -232,12 +230,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/user/6364b4648d1ba634ae236728",
-					"protocol": "http",
+					"raw": "{{host}}/user/6364b4648d1ba634ae236728",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"user",
 						"6364b4648d1ba634ae236728"
@@ -396,12 +392,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/user/6363c2583920285de3098fa7",
-					"protocol": "http",
+					"raw": "{{host}}/user/6363c2583920285de3098fa7",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"user",
 						"6363c2583920285de3098fa7"
@@ -472,12 +466,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/task/6359537a3981e25a5980f860",
-					"protocol": "http",
+					"raw": "{{host}}/task/6359537a3981e25a5980f860",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"task",
 						"6359537a3981e25a5980f860"
@@ -501,12 +493,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/task/6359537a3981e25a5980f860",
-					"protocol": "http",
+					"raw": "{{host}}/task/6359537a3981e25a5980f860",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"task",
 						"6359537a3981e25a5980f860"
@@ -521,12 +511,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/task/2",
-					"protocol": "http",
+					"raw": "{{host}}/task/2",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"task",
 						"2"
@@ -541,12 +529,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/task/userId/2",
-					"protocol": "http",
+					"raw": "{{host}}/task/userId/2",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"task",
 						"userId",
@@ -571,12 +557,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/task",
-					"protocol": "http",
+					"raw": "{{host}}/task",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"task"
 					]
