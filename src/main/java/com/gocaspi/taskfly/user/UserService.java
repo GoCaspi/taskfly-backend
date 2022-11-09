@@ -78,7 +78,7 @@ public class UserService {
 
     public User getServicebyid(String id)throws HttpClientErrorException.NotFound{
         if(!getRepo().existsById(id)){ throw exceptionnotFound;}
-        return getRepo().findById(id).isPresent() ? getRepo().findById(id).get() : new User("","","","","","","");
+        return getRepo().findById(id).isPresent() ? getRepo().findById(id).get() : new User("","","","","","","", true,true);
 
     }
     public List<User> getServiceAllUser(){
