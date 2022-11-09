@@ -1,7 +1,5 @@
 package com.gocaspi.taskfly.teammanagement;
 
-import org.bson.types.ObjectId;
-
 public class TeamManagement {
 
     private String userID;
@@ -10,13 +8,13 @@ public class TeamManagement {
 
     private String teamName;
 
-    private ObjectId[] objectId;
+    private String[] members;
 
-    public TeamManagement(String userID, String teamID, String teamName, ObjectId[] objectId){
+    public TeamManagement(String userID, String teamID, String teamName, String[] members){
         this.userID = userID;
         this.teamID = teamID;
         this.teamName = teamName;
-        this.objectId = objectId;
+        this.members = members;
     }
     public void setUserID(String str){
         this.userID = str;
@@ -27,7 +25,7 @@ public class TeamManagement {
     public void setTeamName(String str){
         this.teamName = str;
     }
-    public void setObjectId(ObjectId[] str) { this.objectId = str; }
+    public void setMembers(String[] str) { this.members = str; }
 
     public String getUserID(){
         return this.userID;
@@ -38,8 +36,8 @@ public class TeamManagement {
     public String getTeamName(){
         return this.teamName;
     }
-    public ObjectId[] getObjectId(){
-        return this.objectId;
+    public String[] getMembers(){
+        return this.members;
     }
 
 }

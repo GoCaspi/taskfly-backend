@@ -30,7 +30,7 @@ public class TeamManagementService {
     public boolean validateTaskFields(String jsonPayload){
         TeamManagement teamManagement = jsonToTeamManagement(jsonPayload);
 
-        return !Objects.equals(teamManagement.getTeamID(), null) && !Objects.equals(teamManagement.getObjectId(), null ) &&
+        return !Objects.equals(teamManagement.getTeamID(), null) && !Objects.equals(teamManagement.getMembers(), null ) &&
                 !Objects.equals(teamManagement.getTeamName(), null) && !Objects.equals(teamManagement.getUserID(), null);
     }
     public TeamManagement jsonToTeamManagement(String jsonPayload){
