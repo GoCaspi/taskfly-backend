@@ -1,5 +1,6 @@
 package com.gocaspi.taskfly.taskcollection;
 
+import com.gocaspi.taskfly.task.Task;
 import org.springframework.data.annotation.Id;
 
 import java.util.List;
@@ -8,10 +9,9 @@ public class TaskCollection {
     @Id
     private String id;
     private String name;
-    private List<String> members;
     private String teamID;
     private String ownerID;
-    private List<String> taskIDs;
+
     public String getId() {
         return id;
     }
@@ -26,14 +26,6 @@ public class TaskCollection {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<String> getMembers() {
-        return members;
-    }
-
-    public void setMembers(List<String> members) {
-        this.members = members;
     }
 
     public String getTeamID() {
@@ -51,16 +43,4 @@ public class TaskCollection {
     public void setOwnerID(String ownerID) {
         this.ownerID = ownerID;
     }
-
-    public List<String> getTaskIDs() {
-        return taskIDs;
-    }
-
-    public void setTaskIDs(List<String> taskIDs) {
-        this.taskIDs = taskIDs;
-    }
-
-
-
-
 }
