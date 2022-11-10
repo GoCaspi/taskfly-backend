@@ -27,11 +27,31 @@ public class TeamManagementController {
         return service;
     }
 
-    @PostMapping("/createTeam")
+    @PostMapping
     public ResponseEntity<String> createTeam(@RequestBody String body) throws HttpClientErrorException.BadRequest {
-        TeamManagement teamManagement = jsonToTeamManagement(body);
-        getService().postService(teamManagement);
+        TeamManagement insert = jsonToTeamManagement(body);
+        getService().insertService(insert);
         String msg = "successfully created Team";
+        return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
+    }
+    /*hier weiter machen
+    @PostMapping
+    public ResponseEntity<String> addMemberInTeam(@PathVariable String id, @RequestBody String body) throws HttpClientErrorException.NotFound {
+        return
+    }*/
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateTeam(@PathVariable String id,@RequestBody String body) throws HttpClientErrorException.NotFound {
+
+        TeamManagement update = jsonToTeamManagement(body);
+        getService().updateService(id,update);
+        String msg = "successfully updated task";
+        return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTeam(@PathVariable String id) throws HttpClientErrorException.NotFound {
+        getService().deleteService(id);
+        String msg = "successfully deleted team";
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
