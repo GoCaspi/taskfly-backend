@@ -15,7 +15,7 @@ public class UserController {
     private UserRepository repository;
     private final UserService service;
     private PasswordEncoder encoder;
-    public UserController(UserRepository repository,PasswordEncoder encoder) {
+    public UserController(UserRepository repository) {
         super();
         this.repository = repository;
         this.service = new UserService(repository);
@@ -83,6 +83,7 @@ public class UserController {
     }
     @GetMapping("/getUserRoles")
     public String getUserRoles(@RequestParam("sname")String username){
+
         return service.getUserRoles(username);
     }
 }

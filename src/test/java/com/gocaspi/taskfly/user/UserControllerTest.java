@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
@@ -28,9 +29,12 @@ import static org.mockito.Mockito.when;
     String mockLastName = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
+    String mockSrole = "";
     ObjectId mockObject_Id = new ObjectId();
-    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword);
+
+    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword,mockSrole);
     User[] mockUseArr = new User[]{mockUser,mockUser};
+     UserController ts = new UserController(mockRepo);
     @Test
      void deleteUser() {
 
@@ -53,10 +57,10 @@ import static org.mockito.Mockito.when;
 
         Testcase[] testcases = new Testcase[]{
                 new Testcase("1", false, mockUser, ""),
-                new Testcase("1", true, mockUser, "no tasks were found to the provided id"),
-                new Testcase(null, true, mockUser, "no tasks were found to the provided id"),
-                new Testcase("", true, mockUser, "no tasks were found to the provided id"),
-                new Testcase(null, false, mockUser, "no tasks were found to the provided id")
+                new Testcase("1", true, mockUser, "no users were found to the provided id"),
+                new Testcase(null, true, mockUser, "no users were found to the provided id"),
+                new Testcase("", true, mockUser, "no users were found to the provided id"),
+                new Testcase(null, false, mockUser, "no users were found to the provided id")
         };
         for (Testcase tc : testcases) {
             if (tc.dbReturnSize0) {
@@ -67,7 +71,7 @@ import static org.mockito.Mockito.when;
             }
 
             try {
-                ResponseEntity<String> expected = new ResponseEntity<>("successfully deleted task with id: " + tc.userId, HttpStatus.ACCEPTED);
+                ResponseEntity<String> expected = new ResponseEntity<>("successfully deleted user with id: " + tc.userId, HttpStatus.ACCEPTED);
                 ResponseEntity<String> actual1 = t.deleteUser(tc.userId);
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
@@ -79,7 +83,7 @@ import static org.mockito.Mockito.when;
     @Test
      void updateUser() {
         UserController t = new UserController(mockRepo);
-        User mockUpdate = new User(mockUserIds, mockListId, mockEmail + "updated", mockPassword + "updated", mockFistName, mockLastName + "updated",mockService+"updated");
+        User mockUpdate = new User(mockUserIds, mockListId, mockEmail + "updated", mockPassword + "updated", mockFistName, mockLastName + "updated",mockService+"updated",mockSrole+"");
 
         class Testcase {
             final String mockId;
@@ -151,10 +155,10 @@ import static org.mockito.Mockito.when;
 
         Testcase[] testcases = new Testcase[]{
                 new Testcase("1", false, mockUser, ""),
-                new Testcase("1", true, mockUser, "no tasks were found to the provided id"),
-                new Testcase(null, true, mockUser, "no tasks were found to the provided id"),
-                new Testcase("", true, mockUser, "no tasks were found to the provided id"),
-                new Testcase(null, false, mockUser, "no tasks were found to the provided id")
+                new Testcase("1", true, mockUser, "no users were found to the provided id"),
+                new Testcase(null, true, mockUser, "no users were found to the provided id"),
+                new Testcase("", true, mockUser, "no users were found to the provided id"),
+                new Testcase(null, false, mockUser, "no users were found to the provided id")
         };
         for (Testcase tc : testcases) {
             if (tc.dbReturnSize0) {
@@ -239,10 +243,10 @@ import static org.mockito.Mockito.when;
 
         Testcase[] testcases = new Testcase[]{
                 new Testcase("1", false, mockList, new Gson().toJson(mockList)),
-                new Testcase("1", true, new ArrayList<>(), "no tasks were found to the provided id"),
-                new Testcase(null, true, new ArrayList<>(), "no tasks were found to the provided id"),
-                new Testcase("", true, new ArrayList<>(), "no tasks were found to the provided id"),
-                new Testcase(null, false, new ArrayList<>(), "no tasks were found to the provided id")
+                new Testcase("1", true, new ArrayList<>(), "no users were found to the provided id"),
+                new Testcase(null, true, new ArrayList<>(), "no users were found to the provided id"),
+                new Testcase("", true, new ArrayList<>(), "no users were found to the provided id"),
+                new Testcase(null, false, new ArrayList<>(), "no users were found to the provided id")
         };
         for (Testcase tc : testcases) {
             if (tc.dbReturnSize0) {
