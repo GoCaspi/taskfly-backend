@@ -1,19 +1,25 @@
 package com.gocaspi.taskfly.user;
 
         import com.google.gson.Gson;
-        import org.bson.types.ObjectId;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.http.HttpHeaders;
         import org.springframework.http.HttpStatus;
+        import org.springframework.security.core.userdetails.UserDetails;
+        import org.springframework.security.core.userdetails.UserDetailsService;
+        import org.springframework.security.core.userdetails.UsernameNotFoundException;
+        import org.springframework.stereotype.Service;
         import org.springframework.web.client.HttpClientErrorException;
         import java.util.ArrayList;
         import java.util.List;
         import java.util.Objects;
         import java.util.Optional;
-public class UserService {
+        @Service
+
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository repo;
+
     private final HttpClientErrorException exceptionnotFound;
     private final HttpClientErrorException exceptionbadRequest;
     public UserService(UserRepository repo){
@@ -29,10 +35,13 @@ public class UserService {
     }
 
     public UserRepository getRepo(){
+
         return repo;
     }
     public void deleteService(String id) throws HttpClientErrorException.NotFound{
-        if (!getRepo().existsById(id)){throw exceptionnotFound; }
+        if (!getRepo().existsById(id)){
+            throw exceptionnotFound;
+        }
         getRepo().deleteById(id);
     }
     public void updateService(String id, User update) throws HttpClientErrorException {
@@ -88,6 +97,12 @@ public class UserService {
                 usersToId.add(t);
         }
         return usersToId;
+    }
+   private final static String USER_NOT_FOUND_MSG = "user with email %s not found";
+    @Override
+    public UserDetails loadUserByUsername(String email)
+            throws UsernameNotFoundException {
+        return repo.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG,email)));
     }
 }
 

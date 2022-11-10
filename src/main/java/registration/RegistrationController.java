@@ -1,16 +1,19 @@
 package registration;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
+@RequestMapping(path = "api/user/registration")
+@AllArgsConstructor
 public class RegistrationController {
-    @Autowired
-    private LoginRepository repository;
-    private final RegistrationService service;
-
-    public RegistrationController(LoginRepository repository){
-        super();
-        this.repository=repository;
-        this.service=new RegistrationService();
-
-    }
+    private RegistrationService registrationService;
+    @PostMapping
+   public String register(@RequestBody RegistrationRequest request){
+       return registrationService.register(request);
+   }
 }

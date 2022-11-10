@@ -20,13 +20,17 @@ import java.util.Collections;
 @NoArgsConstructor
 @EntityScan
 public class User implements UserDetails {
+
+
     @Id
+    @GeneratedValue
     private String firstName;
     private String lastName;
     private String email;
     private String password;
     private String team;
     private String listId;
+
     private AppUserRole appUserRole;
     private Boolean locked;
     private Boolean enabled;
@@ -45,6 +49,7 @@ public class User implements UserDetails {
         this.listId = listId;
         this.team = team;
         this.locked=locked;
+        this.enabled=enabled;
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities(){
@@ -75,6 +80,12 @@ public class User implements UserDetails {
     }
     public String getPassword(){
         return this.password;
+    }
+    public Boolean getEnabled(){
+        return this.enabled;
+    }
+    public Boolean getLocked(){
+        return this.locked;
     }
 
     @Override
