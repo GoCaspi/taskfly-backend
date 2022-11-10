@@ -15,9 +15,10 @@ public class User {
 @Id
     private String id;
     private String userId;
+    private String srole;
 
 
-    public User(String firstName, String lastName, String email, String password, String team, String listId, String userId) {
+    public User(String firstName, String lastName, String email, String password, String team, String listId, String userId,String srole) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -25,6 +26,7 @@ public class User {
         this.password = password;
         this.listId = listId;
         this.team = team;
+        this.srole = srole;
     }
     public String getUserId(){return this.userId;}
 
@@ -46,6 +48,10 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+    public String getSrole(){
+        return srole;
+    }
+
 
 
 

@@ -2,6 +2,7 @@ package com.gocaspi.taskfly.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import org.springframework.web.client.HttpClientErrorException;
@@ -13,16 +14,18 @@ public class UserController {
     @Autowired
     private UserRepository repository;
     private final UserService service;
-
-    public UserController(UserRepository repository) {
+    private PasswordEncoder encoder;
+    public UserController(UserRepository repository,PasswordEncoder encoder) {
         super();
         this.repository = repository;
         this.service = new UserService(repository);
+        this.encoder=encoder;
     }
 
     @PostMapping("/create")
     public ResponseEntity<String> handlerCreateUser(@RequestBody String body) throws HttpClientErrorException.BadRequest {
         User user = jsonToUser(body);
+        user.setPassword(encoder.encode(user.getPassword()));
         getService().postService(user);
         String msg = "Successfully created User";
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
@@ -77,5 +80,9 @@ public class UserController {
         getService().updateService(id, update);
         String msg = "Successfully update User with id :" + id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
+    }
+    @GetMapping("/getUserRoles")
+    public String getUserRoles(@RequestParam("sname")String username){
+        return service.getUserRoles(username);
     }
 }

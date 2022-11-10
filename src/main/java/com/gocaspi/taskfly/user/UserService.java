@@ -1,17 +1,20 @@
 package com.gocaspi.taskfly.user;
 
         import com.google.gson.Gson;
-        import org.bson.types.ObjectId;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.http.HttpHeaders;
         import org.springframework.http.HttpStatus;
+        import org.springframework.security.crypto.password.PasswordEncoder;
+        import org.springframework.stereotype.Service;
         import org.springframework.web.client.HttpClientErrorException;
         import java.util.ArrayList;
         import java.util.List;
         import java.util.Objects;
         import java.util.Optional;
+        @Service
 public class UserService {
-
+            @Autowired
+       private PasswordEncoder passwordEncoder ;
     @Autowired
     private UserRepository repo;
     private final HttpClientErrorException exceptionnotFound;
@@ -78,7 +81,7 @@ public class UserService {
 
     public User getServicebyid(String id)throws HttpClientErrorException.NotFound{
         if(!getRepo().existsById(id)){ throw exceptionnotFound;}
-        return getRepo().findById(id).isPresent() ? getRepo().findById(id).get() : new User("","","","","","","");
+        return getRepo().findById(id).isPresent() ? getRepo().findById(id).get() : new User("","","","","","","","");
 
     }
     public List<User> getServiceAllUser(){
@@ -88,6 +91,9 @@ public class UserService {
                 usersToId.add(t);
         }
         return usersToId;
+    }
+    public String getUserRoles(String email){
+        return repo.findByEmail(email).getSrole();
     }
 }
 
