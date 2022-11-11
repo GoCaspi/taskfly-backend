@@ -48,6 +48,14 @@ public class TeamManagementController {
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
+    @DeleteMapping("/{id}/{member}")
+    public ResponseEntity<String> deleteTeamMember(@PathVariable String id, @PathVariable String member) throws HttpClientErrorException.BadRequest {
+        TeamManagement team = getService().getTeamById(id);
+        getService().deleteMemberService(id ,team.getMembers(), team, member);
+        String msg = "successfully delete Member from Team";
+        return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTeam(@PathVariable String id) throws HttpClientErrorException.NotFound {
         getService().deleteService(id);
