@@ -4,10 +4,21 @@ import com.gocaspi.taskfly.task.Task;
 
 import java.util.List;
 public class TaskCollectionGetQuery {
-    private List<Task> tasks;
-
     private String name;
+    private String teamID;
 
+
+
+    private String id;
+    private String ownerID;
+    private List<Task> tasks;
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
     public String getName() {
         return name;
     }
@@ -16,11 +27,27 @@ public class TaskCollectionGetQuery {
         this.name = name;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
+    public String getTeamID() {
+        return teamID;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public void setTeamID(String teamID) {
+        this.teamID = teamID;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getOwnerID() {
+        return ownerID;
+    }
+
+    public void setOwnerID(String ownerID) {
+        this.ownerID = ownerID;
     }
 }
