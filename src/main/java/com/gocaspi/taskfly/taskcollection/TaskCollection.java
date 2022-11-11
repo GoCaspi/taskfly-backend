@@ -3,14 +3,25 @@ package com.gocaspi.taskfly.taskcollection;
 import com.gocaspi.taskfly.task.Task;
 import org.springframework.data.annotation.Id;
 
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
 public class TaskCollection {
+
+
     @Id
     private String id;
+    @NotNull
     private String name;
     private String teamID;
+    @NotNull
     private String ownerID;
+
+    public TaskCollection(String id, String name, String teamID, String ownerID) {
+        this.id = id;
+        this.name = name;
+        this.teamID = teamID;
+        this.ownerID = ownerID;
+    }
 
     public String getId() {
         return id;

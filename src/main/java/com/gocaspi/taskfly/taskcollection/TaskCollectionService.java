@@ -17,8 +17,8 @@ public class TaskCollectionService {
     private TaskCollectionRepository repo;
     @Autowired
     private MongoTemplate mongoTemplate;
-    public TaskCollectionRepository getRepo(){
-        return repo;
+    public TaskCollectionService(TaskCollectionRepository taskCollectionRepository){
+        this.repo = taskCollectionRepository;
     }
 
     public List<TaskCollectionGetQuery> getTaskCollectionByOwnerIDLookup(String userID) {
@@ -31,14 +31,17 @@ public class TaskCollectionService {
         return mongoTemplate.aggregate(aggregation, "TaskCollection", TaskCollectionGetQuery.class).getMappedResults();
     }
 
-    public void createTaskCollection(String body) throws HttpClientErrorException {
-        TaskCollection taskCollection = parseJSON(body);
-        repo.insert(taskCollection);
+    public String createTaskCollection(TaskCollection body) throws HttpClientErrorException {
+        repo.insert(body);
+        return new Gson().toJson(body);
     }
 
-    public String getTaskCollectionsByUser(String userID) {
-        List<TaskCollectionGetQuery> tcResult = repo.findByOwnerID(userID);
-        System.out.println(tcResult);
+    public List<TaskCollectionGetQuery> getTaskCollectionsByUser(String userID) {
+        return repo.findByOwnerID(userID);
+    }
+
+    public String getTaskCollectionByID(String collID){
+        TaskCollectionGetQuery tcResult = repo.findByID(collID);
         return new Gson().toJson(tcResult);
     }
 

@@ -6,14 +6,19 @@ import java.util.List;
 public class TaskCollectionGetQuery {
     private String name;
     private String teamID;
-
-
-
     private String id;
     private String ownerID;
     private List<Task> tasks;
     public List<Task> getTasks() {
         return tasks;
+    }
+
+    public TaskCollectionGetQuery(String name, String teamID, String id, String ownerID, List<Task> task){
+        this.id = id;
+        this.name = name;
+        this.teamID = teamID;
+        this.ownerID = ownerID;
+        this.tasks = task;
     }
 
     public void setTasks(List<Task> tasks) {
