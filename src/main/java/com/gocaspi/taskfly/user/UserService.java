@@ -4,8 +4,11 @@ package com.gocaspi.taskfly.user;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.http.HttpHeaders;
         import org.springframework.http.HttpStatus;
+        import org.springframework.security.core.userdetails.UserDetails;
+        import org.springframework.security.core.userdetails.UsernameNotFoundException;
         import org.springframework.security.crypto.password.PasswordEncoder;
         import org.springframework.stereotype.Service;
+        import org.springframework.transaction.annotation.Transactional;
         import org.springframework.web.client.HttpClientErrorException;
         import java.util.ArrayList;
         import java.util.List;
@@ -93,8 +96,12 @@ public class UserService {
         return usersToId;
     }
     public String getUserRoles(String email){
+
         return repo.findByEmail(email).getSrole();
+
     }
+
+
 }
 
 
