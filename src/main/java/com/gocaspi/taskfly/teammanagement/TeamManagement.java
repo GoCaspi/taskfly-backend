@@ -1,10 +1,13 @@
 package com.gocaspi.taskfly.teammanagement;
 
+import org.springframework.data.annotation.Id;
+
 public class TeamManagement {
 
     private String teamName;
     private String[] members;
     private String userID;
+    @Id
     private String ID;
 
     public TeamManagement(String userID, String teamName, String[] members, String ID){

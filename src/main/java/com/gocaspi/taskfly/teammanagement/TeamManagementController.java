@@ -34,25 +34,28 @@ public class TeamManagementController {
         String msg = "successfully created Team";
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
-    /*hier weiter machen
-    @PostMapping
-    public ResponseEntity<String> addMemberInTeam(@PathVariable String id, @RequestBody String body) throws HttpClientErrorException.NotFound {
-        return
-    }*/
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateTeam(@PathVariable String id,@RequestBody String body) throws HttpClientErrorException.NotFound {
 
-        TeamManagement update = jsonToTeamManagement(body);
-        getService().updateService(id,update);
-        String msg = "successfully updated task";
+    @PostMapping("/{id}/{body}")
+    public ResponseEntity<String> addTeamMember(@PathVariable String id, @PathVariable String body) throws HttpClientErrorException.BadRequest {
+        String newMemberId = body;
+        TeamManagement team = getService().getTeamById(id);
+        getService().addMemberService(id ,team.getMembers(),newMemberId, team);
+        String msg = "successfully created new Member in Team";
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
-
     @DeleteMapping("/{id}/{member}")
     public ResponseEntity<String> deleteTeamMember(@PathVariable String id, @PathVariable String member) throws HttpClientErrorException.BadRequest {
         TeamManagement team = getService().getTeamById(id);
         getService().deleteMemberService(id ,team.getMembers(), team, member);
         String msg = "successfully delete Member from Team";
+        return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateTeam(@PathVariable String id,@RequestBody String body) throws HttpClientErrorException.NotFound {
+        TeamManagement update = jsonToTeamManagement(body);
+        getService().updateService(id,update);
+        String msg = "successfully updated task";
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 

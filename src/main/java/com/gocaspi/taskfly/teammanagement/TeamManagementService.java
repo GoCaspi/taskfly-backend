@@ -27,14 +27,47 @@ public class TeamManagementService {
         getRepository().insert(insert);
     }
 
-    //hier weiter machen
-    public void addMemberService(String id, TeamManagement insert) throws HttpClientErrorException {
-        if(!validateTeamManagementFields(new Gson().toJson(insert))){
+    public TeamManagement getTeamById(String id) throws HttpClientErrorException {
+        if(!getRepository().existsById(id)){ throw exceptionNotFound; }
+
+        return getRepository().findById(id).isPresent() ? getRepository().findById(id).get() : new TeamManagement(null,null,null,null);
+
+    }
+    public void addMemberService(String id,String[] members, String newMember, TeamManagement team) throws HttpClientErrorException {
+        if(Arrays.stream(members).anyMatch(newMember::equals)){
             throw exceptionBadRequest;
         }
-        getRepository().insert(insert);
-    }
 
+        List<String> newMembers = new ArrayList<>();
+        for (String t: members){
+            newMembers.add(t);
+        }
+        newMembers.add(newMember);
+        //Liste zu Array
+        String[] a = new String[newMembers.size()];
+        newMembers.toArray(a);
+
+        team.setMembers(a);
+
+        updateService(id, team);
+    }
+    public void deleteMemberService(String id, String[] members, TeamManagement team, String member) throws HttpClientErrorException {
+        if(!getRepository().existsById(id)){ throw exceptionNotFound; }
+
+        List<String> mem = new ArrayList<>();
+        for (String t: members){
+            if (!Objects.equals(t, member)) {
+                mem.add(t);
+            }
+        }
+
+        String[] a = new String[mem.size()];
+        mem.toArray(a);
+
+        team.setMembers(a);
+
+        updateService(id, team);
+    }
     public void deleteService(String id) throws HttpClientErrorException {
         if(!getRepository().existsById(id)){ throw exceptionNotFound; }
         getRepository().deleteById(id);
