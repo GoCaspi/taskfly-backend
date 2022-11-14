@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import org.springframework.web.client.HttpClientErrorException;
 
-
 @RestController
 @ResponseBody
 @RequestMapping("/teammanagement")

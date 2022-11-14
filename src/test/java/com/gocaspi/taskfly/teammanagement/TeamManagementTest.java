@@ -57,11 +57,11 @@ class TeamManagementTest {
     }
 
     @Test
-    void setID(){
+    void setId(){
         TeamManagement team = mockTeamManagement;
         for (Testcase_setString tc : testcases){
-            team.setID(tc.newText);
-            assertEquals(team.getID(),tc.newText);
+            team.setId(tc.newText);
+            assertEquals(team.getId(),tc.newText);
         }
     }
 
@@ -86,11 +86,11 @@ class TeamManagementTest {
     }
 
     @Test
-    void getID(){
+    void getId(){
         TeamManagement team = mockTeamManagement;
         for (Testcase_getString tc : testcases_get){
-            team.setID(tc.expected);
-            String actual = team.getID();
+            team.setId(tc.expected);
+            String actual = team.getId();
             assertEquals(actual,tc.expected);
         }
     }

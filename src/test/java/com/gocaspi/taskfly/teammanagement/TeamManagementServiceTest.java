@@ -10,7 +10,6 @@ class TeamManagementServiceTest {
 
     String mockUserID = "1";
     String mockTeamName = "gelb";
-
     String mockID = "1";
     String[] mockMembers = {"1", "3", "7"};
 

@@ -33,15 +33,13 @@ public class TeamManagementService {
         return getRepository().findById(id).isPresent() ? getRepository().findById(id).get() : new TeamManagement(null,null,null,null);
 
     }
+
     public void addMemberService(String id,String[] members, String newMember, TeamManagement team) throws HttpClientErrorException {
-        if(Arrays.stream(members).anyMatch(newMember::equals)){
+        if(Arrays.asList(members).contains(newMember)){
             throw exceptionBadRequest;
         }
 
-        List<String> newMembers = new ArrayList<>();
-        for (String t: members){
-            newMembers.add(t);
-        }
+        List<String> newMembers = new ArrayList<>(Arrays.asList(members));
         newMembers.add(newMember);
         //Liste zu Array
         String[] a = new String[newMembers.size()];
@@ -92,11 +90,10 @@ public class TeamManagementService {
             getRepository().save(t);
         });
     }
-
     public boolean validateTeamManagementFields(String jsonPayload){
         TeamManagement teamManagement = jsonToTeamManagement(jsonPayload);
 
-        return !Objects.equals(teamManagement.getID(), null) && !Objects.equals(teamManagement.getMembers(), null ) &&
+        return !Objects.equals(teamManagement.getId(), null) && !Objects.equals(teamManagement.getMembers(), null ) &&
                 !Objects.equals(teamManagement.getTeamName(), null) && !Objects.equals(teamManagement.getUserID(), null);
     }
     public TeamManagement jsonToTeamManagement(String jsonPayload){
