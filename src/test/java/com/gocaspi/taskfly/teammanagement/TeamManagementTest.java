@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 class TeamManagementTest {
     String mockUserID = "1";
     String mockTeamName = "gelb";
-
     String mockID ="test";
     String[] mockMembers = {"1", "3", "7"};
 
@@ -19,11 +18,11 @@ class TeamManagementTest {
             this.newText = newText;
         }
     }
-        TeamManagementTest.Testcase_setString[] testcases = new TeamManagementTest.Testcase_setString[]{
-                new Testcase_setString("abc"),
-                new Testcase_setString(null),
-                new Testcase_setString(""),
-        };
+    TeamManagementTest.Testcase_setString[] testcases = new TeamManagementTest.Testcase_setString[]{
+            new Testcase_setString("abc"),
+            new Testcase_setString(null),
+            new Testcase_setString(""),
+    };
 
     static class Testcase_getString {
         final String expected;
@@ -33,11 +32,11 @@ class TeamManagementTest {
         }
     }
 
-        TeamManagementTest.Testcase_getString[] testcases_get = new TeamManagementTest.Testcase_getString[]{
-                new Testcase_getString("abc"),
-                new Testcase_getString(null),
-                new Testcase_getString(""),
-        };
+    TeamManagementTest.Testcase_getString[] testcases_get = new TeamManagementTest.Testcase_getString[]{
+            new Testcase_getString("abc"),
+            new Testcase_getString(null),
+            new Testcase_getString(""),
+    };
     @Test
     void setUserID(){
         TeamManagement team = mockTeamManagement;
@@ -107,5 +106,5 @@ class TeamManagementTest {
 
 
 
-    }
+}
 
