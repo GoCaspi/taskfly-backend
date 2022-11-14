@@ -12,6 +12,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.*;
 
 @RestController
+@CrossOrigin
 @ResponseBody
 @RequestMapping("/task")
 public class TaskController {
@@ -59,6 +60,7 @@ public class TaskController {
      * @return ResponseEntity containing the list with all tasks to the given id along with the http status code
      * @throws HttpClientErrorException.NotFound Exception if no task to the id was found
      */
+    @CrossOrigin
     @GetMapping("/userId/{id}")
     public ResponseEntity<List<Task>> handleGetAllTasks(@PathVariable String id) throws HttpClientErrorException.NotFound {
         List<Task> tasks = getService().getServiceAllTasksOfUser(id);
@@ -74,6 +76,7 @@ public class TaskController {
      * @return ResponseEntity, containing the task from the db and the http status code
      * @throws HttpClientErrorException.NotFound Exception if no task to the id was found
      */
+    @CrossOrigin
     @GetMapping("/taskId/{id}")
     public ResponseEntity<Task> handleGetTaskById(@PathVariable String id) throws HttpClientErrorException.NotFound {
         Task task = getService().getServiceTaskById(id);
@@ -105,6 +108,7 @@ public class TaskController {
      * @return ResponseEntity containing success message and updated task id and the http status code
      * @throws ChangeSetPersister.NotFoundException Exception if no task to the id was found
      */
+    @CrossOrigin
     @PutMapping("/{id}")
     public ResponseEntity<String> handleUpdateTask(@PathVariable String id,@RequestBody String body) throws HttpClientErrorException.NotFound {
 

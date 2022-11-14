@@ -81,6 +81,7 @@ public class TaskService {
             if(!Objects.equals(update.getTeam(), "")){t.setTeam(update.getTeam());}
             if(!Objects.equals(update.getDeadline(), "")){t.setDeadline(update.getDeadline());}
             if(!Objects.equals(update.getListId(), "")){t.setListId(update.getListId());}
+            if(!Objects.equals(update.getBody().getPriority(), "")){t.getBody().setPriority(update.getBody().getPriority());}
             getRepo().save(t);
                 });
     }
