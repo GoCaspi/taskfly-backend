@@ -3,6 +3,7 @@ package com.gocaspi.taskfly.taskcollection;
 import com.gocaspi.taskfly.task.Task;
 import org.springframework.data.annotation.Id;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class TaskCollection {
@@ -10,10 +11,10 @@ public class TaskCollection {
 
     @Id
     private String id;
-    @NotNull
+    @NotBlank
     private String name;
     private String teamID;
-    @NotNull
+    @NotBlank
     private String ownerID;
 
     public TaskCollection(String id, String name, String teamID, String ownerID) {

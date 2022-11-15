@@ -1,15 +1,17 @@
 package com.gocaspi.taskfly.taskcollection;
 
 import com.gocaspi.taskfly.task.Task;
+import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
+import java.util.*;
 
 public class TaskCollectionControllerTest {
 
@@ -19,7 +21,7 @@ public class TaskCollectionControllerTest {
     final private String mockTCName = "TaskCollection1";
     final private String mockTCTeamID = new ObjectId().toHexString();
     final private String mockTCOwnerID = new ObjectId().toHexString();
-    final private TaskCollection mockTC = new TaskCollection(mockTCID, "", mockTCTeamID, "");
+    final private TaskCollection mockTC = new TaskCollection(mockTCID, mockTCName, mockTCTeamID, mockTCOwnerID);
     final private String mockUserIds = "1";
     final private String mockListId = "1";
     final private String mockTopic = "topic1";
@@ -28,32 +30,44 @@ public class TaskCollectionControllerTest {
     final private String mockDesc = "desc1";
     final private String mockDeadline = "11-11-2022";
     final private ObjectId mockObjectId = new ObjectId();
-    final private Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescription");
+    final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic","mockPrio","mockDescription");
 
     @Test
     void createTaskCollection(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
         TaskCollectionController t = new TaskCollectionController(s);
-        class Testcase {
-            final TaskCollection mockTaskCollection;
-            final Boolean badRequest;
-
-            public Testcase(TaskCollection mockTaskCollection, Boolean badRequest){
-                this.badRequest = badRequest;
-                this.mockTaskCollection = mockTaskCollection;
-            }
-
-        }
-
-
-
-        Testcase[] testcases = new Testcase[]{
-                new Testcase(mockTC, false),
-        };
-        for (Testcase tc : testcases){
-            ResponseEntity<String> actual = t.createTaskCollectionEndpoint(tc.mockTaskCollection);
-            System.out.println(actual);
-        }
+        TaskCollection taskCollection = new TaskCollection(mockTCID, mockTCName, mockTCTeamID, mockTCOwnerID);
+        ResponseEntity<String> actual = t.createTaskCollectionEndpoint(taskCollection);
+        HttpStatus code = actual.getStatusCode();
+        String taskCollectionString = new Gson().toJson(taskCollection);
+        assertEquals(taskCollectionString, actual.getBody());
+        assertEquals(HttpStatus.CREATED, code);
     }
-
+    @Test
+    void getTaskCollectionByUserID(){
+        TaskCollectionService s = new TaskCollectionService(mockRepo);
+        TaskCollectionController c = new TaskCollectionController(s);
+        Task task1 = new Task(mockUserIds, mockTCID, mockTCTeamID, mockDeadline, mockObjectId, mockBody);
+        List<Task> taskList = Arrays.asList(task1);
+        TaskCollectionGetQuery tcSingle = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        List<TaskCollectionGetQuery> tcReturn = Arrays.asList(tcSingle);
+        when(s.getTaskCollectionsByUser(mockTCOwnerID)).thenReturn(tcReturn);
+        ResponseEntity<List<TaskCollectionGetQuery>> actual = c.getTaskCollectionsByUserID(mockTCOwnerID);
+        assertEquals(actual.getStatusCode(), HttpStatus.OK);
+        String tcString = new Gson().toJson(tcReturn);
+        String bodyString = new Gson().toJson(actual.getBody());
+        assertEquals(tcString, bodyString);
+    }
+    @Test
+    void getTaskCollectionByID(){
+        TaskCollectionController c = new TaskCollectionController(mockService);
+        Task task1 = new Task(mockUserIds, mockTCID, mockTCTeamID, mockDeadline, mockObjectId, mockBody);
+        List<Task> taskList = Arrays.asList(task1);
+        TaskCollectionGetQuery tcSingle = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        when(mockService.getTaskCollectionByID(mockTCOwnerID)).thenReturn(tcSingle);
+        ResponseEntity<List<TaskCollectionGetQuery>> actual = c.getTaskCollectionByID(mockTCOwnerID);
+        assertEquals(actual.getStatusCode(), HttpStatus.OK);
+        String tcString = new Gson().toJson(tcSingle);
+        assertEquals(tcString, actual.getBody());
+    }
 }

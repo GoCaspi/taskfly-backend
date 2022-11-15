@@ -19,8 +19,11 @@ import java.util.List;
 public class TaskCollectionController {
     @Autowired
     private TaskCollectionService service;
+    @Autowired
+    private TaskCollectionRepository repo;
     public TaskCollectionController(TaskCollectionService taskCollectionService){
         this.service = taskCollectionService;
+        this.repo = repo;
     }
     @PostMapping
     public ResponseEntity<String> createTaskCollectionEndpoint(@RequestBody TaskCollection tc){
@@ -36,6 +39,6 @@ public class TaskCollectionController {
     @GetMapping(params = {"id"})
     public ResponseEntity getTaskCollectionByID(@RequestParam ("id") String id){
         service.getTaskCollectionByID(id);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

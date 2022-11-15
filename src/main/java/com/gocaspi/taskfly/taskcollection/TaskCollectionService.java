@@ -21,16 +21,6 @@ public class TaskCollectionService {
         this.repo = taskCollectionRepository;
     }
 
-    public List<TaskCollectionGetQuery> getTaskCollectionByOwnerIDLookup(String userID) {
-        LookupOperation lookupOperation = LookupOperation.newLookup()
-                .from("task")
-                .localField("_id")
-                .foreignField("listId")
-                .as("tasks");
-        Aggregation aggregation = Aggregation.newAggregation(Aggregation.match(Criteria.where("ownerID").is(userID)), lookupOperation);
-        return mongoTemplate.aggregate(aggregation, "TaskCollection", TaskCollectionGetQuery.class).getMappedResults();
-    }
-
     public String createTaskCollection(TaskCollection body) throws HttpClientErrorException {
         repo.insert(body);
         return new Gson().toJson(body);
@@ -40,9 +30,8 @@ public class TaskCollectionService {
         return repo.findByOwnerID(userID);
     }
 
-    public String getTaskCollectionByID(String collID){
-        TaskCollectionGetQuery tcResult = repo.findByID(collID);
-        return new Gson().toJson(tcResult);
+    public TaskCollectionGetQuery getTaskCollectionByID(String collID){
+        return repo.findByID(collID);
     }
 
     public TaskCollection parseJSON(String body){
