@@ -1,8 +1,6 @@
 package com.gocaspi.taskfly.teammanagement;
 
-import com.gocaspi.taskfly.task.Task;
 import com.google.gson.Gson;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -110,7 +108,7 @@ class TeamManagementControllerTest {
             }
 
             try {
-                ResponseEntity<String> expected = new ResponseEntity<>("successfully created Team" , HttpStatus.ACCEPTED);
+                ResponseEntity<String> expected = new ResponseEntity<>("successfully created Team", HttpStatus.ACCEPTED);
                 ResponseEntity<String> actual1 = t.createTeam(tc.mockPayload);
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
@@ -161,6 +159,119 @@ class TeamManagementControllerTest {
                 assertEquals(e.getClass(), expectedException.getClass());
             }
         }
+    }
+
+    @Test
+    void deleteTeamMember() {
+        TeamManagementController t = new TeamManagementController(mockRepository);
+
+        String[] mockMembers = {"1", "2"};
+        TeamManagement team = new TeamManagement("1", "1", mockMembers, "1");
+        class Testcase {
+
+            final boolean idFoundInDb;
+            final String mockId;
+            final String mockMember;
+            final String expectedOutput;
+
+            final TeamManagement team;
+
+            public Testcase(boolean idFoundInDb, String mockId, String mockMember, String expectedOutput, TeamManagement team) {
+                this.idFoundInDb = idFoundInDb;
+                this.mockId = mockId;
+                this.mockMember = mockMember;
+                this.expectedOutput = expectedOutput;
+                this.team = team;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(false, "1", "1","", team),
+                new Testcase(true,"1", "1","no teams were found to the provided id", team),
+                new Testcase(false, null, "1","no teams were found to the provided id", team),
+                new Testcase(true,null, "1","no teams were found to the provided id", team),
+                new Testcase(false,"", "1", "no teams were found to the provided id", team),
+                new Testcase(true, "", "1", "no teams were found to the provided id", team),
+
+                new Testcase(false, "1", "1","", team),
+                new Testcase(true, "1", "1","no member were found to the provided id", team),
+                new Testcase(false, "1", null,"no member were found to the provided id", team),
+                new Testcase(true,"1", null,"no member were found to the provided id", team),
+                new Testcase(false,"1", "","no member were found to the provided id", team),
+                new Testcase(true, "1", "","no member were found to the provided id", team),
+        };
+
+        for (Testcase tc : testcases) {
+            when(mockService.getTeamById(tc.mockId)).thenReturn(tc.team);
+
+            //when(mockRepository.existsById(tc.mockId)).thenReturn(tc.idFoundInDb);
+            //when(mockService.deleteMemberService(tc.mockMember)).thenReturn();
+
+            try {
+                ResponseEntity<String> expected = new ResponseEntity<>("successfully delete Member from Team" , HttpStatus.ACCEPTED);
+                ResponseEntity<String> actual1 = t.deleteTeamMember(tc.mockId, tc.mockMember);
+                assertEquals(actual1.getStatusCode(), expected.getStatusCode());
+            } catch (HttpClientErrorException e) {
+                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
+                assertEquals(e.getClass(), expectedException.getClass());
+            }
+        }
+    }
+
+    @Test
+    void addTeamMember() {
+        TeamManagementController t = new TeamManagementController(mockRepository);
+
+        String[] mockMembers = {"1", "2"};
+
+        TeamManagement team = new TeamManagement("1", "1", mockMembers, "1");
+
+        class Testcase{
+            final boolean idFoundInDb;
+            final String mockId;
+            final String mockBody;
+            final String expectedOutput;
+            final TeamManagement team;
+
+
+            public Testcase(boolean idFoundInDb, String mockId, String mockMember, String expectedOutput, TeamManagement team) {
+                this.idFoundInDb = idFoundInDb;
+                this.mockId = mockId;
+                this.mockBody = mockMember;
+                this.expectedOutput = expectedOutput;
+                this.team = team;
+            }
+        }
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(false, "1", "1","", team),
+                new Testcase(true,"1", "1","no teams were found to the provided id", team),
+                new Testcase(false, null, "1","no teams were found to the provided id", team),
+                new Testcase(true,null, "1","no teams were found to the provided id", team),
+                new Testcase(false,"", "1", "no teams were found to the provided id", team),
+                new Testcase(true, "", "1", "no teams were found to the provided id", team),
+
+                new Testcase(false, "1", "1","", team),
+                new Testcase(true, "1", "1","no member were found to the provided id", team),
+                new Testcase(false, "1", null,"no member were found to the provided id", team),
+                new Testcase(true,"1", null,"no member were found to the provided id", team),
+                new Testcase(false,"1", "","no member were found to the provided id", team),
+                new Testcase(true, "1", "","no member were found to the provided id", team),
+        };
+
+        for (Testcase tc : testcases) {
+            when(mockService.getTeamById(tc.mockId)).thenReturn(tc.team);
+
+            try {
+                ResponseEntity<String> expected = new ResponseEntity<>("successfully delete Member from Team" , HttpStatus.ACCEPTED);
+                ResponseEntity<String> actual1 = t.addTeamMember(tc.mockId, tc.mockBody);
+                assertEquals(actual1.getStatusCode(), expected.getStatusCode());
+            } catch (HttpClientErrorException e) {
+                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
+                assertEquals(e.getClass(), expectedException.getClass());
+            }
+        }
+
+
     }
 }
 

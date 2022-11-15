@@ -35,4 +35,11 @@ class TeamManagementServiceTest {
         };
     }
 
+    @Test
+    void addMember(){
+        TeamManagementService team = new TeamManagementService(mockrepository);
+        class Testcase{
+
+        }
+    }
 }

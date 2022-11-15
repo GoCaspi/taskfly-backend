@@ -34,7 +34,7 @@ public class TeamManagementService {
 
     }
 
-    public void addMemberService(String id,String[] members, String newMember, TeamManagement team) throws HttpClientErrorException {
+    public void addMemberService(String id, String[] members, String newMember, TeamManagement team) throws HttpClientErrorException {
         if(Arrays.asList(members).contains(newMember)){
             throw exceptionBadRequest;
         }
