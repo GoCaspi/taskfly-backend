@@ -1,29 +1,26 @@
 package com.gocaspi.taskfly.taskcollection;
 
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.LookupOperation;
-import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class TaskCollectionService {
     @Autowired
     private TaskCollectionRepository repo;
-    @Autowired
-    private MongoTemplate mongoTemplate;
-    public TaskCollectionService(TaskCollectionRepository taskCollectionRepository){
-        this.repo = taskCollectionRepository;
-    }
 
-    public String createTaskCollection(TaskCollection body) throws HttpClientErrorException {
+    private final HttpClientErrorException httpNotFoundError = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
+
+
+    public TaskCollection createTaskCollection(TaskCollection body) throws HttpClientErrorException {
         repo.insert(body);
-        return new Gson().toJson(body);
+        return body;
     }
 
     public List<TaskCollectionGetQuery> getTaskCollectionsByUser(String userID) {
@@ -34,7 +31,20 @@ public class TaskCollectionService {
         return repo.findByID(collID);
     }
 
-    public TaskCollection parseJSON(String body){
-        return new Gson().fromJson(body, TaskCollection.class);
+    public void deleteTaskCollectionByID(String id){
+        repo.deleteById(id);
+    }
+
+    public void updateTaskCollectionByID(String id, TaskCollection update){
+        System.out.println("this should trigger");
+
+        Optional<TaskCollection> task = repo.findById(id);
+        if(!repo.existsById(id)){ throw httpNotFoundError; }
+        task.ifPresent( t->{
+            if(!Objects.equals(update.getName(), "")){t.setName(update.getName());}
+            if(!Objects.equals(update.getOwnerID(), "")){t.setOwnerID(update.getOwnerID());}
+            if(!Objects.equals(update.getTeamID(), "")){t.setTeamID(update.getTeamID());}
+            repo.save(t);
+        });
     }
 }

@@ -1,11 +1,8 @@
 package com.gocaspi.taskfly.taskcollection;
 
-import com.gocaspi.taskfly.task.Task;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 public class TaskCollection {
 
 

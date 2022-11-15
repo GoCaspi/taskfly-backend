@@ -11,15 +11,16 @@ import java.util.List;
 public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCustom {
     private final MongoTemplate mongoTemplate;
 
+    private static final String OBJECTID = "objId";
     @Autowired
     public TaskCollectionRepositoryImpl(MongoTemplate mongoTemplate){
         this.mongoTemplate = mongoTemplate;
     }
 
     private AggregationOperation addConvertedIDField(){
-        return AggregationOperation -> {
+        return aggregationOperation -> {
             Document toString = new Document("$toString", "$_id");
-            Document id = new Document("objId", toString);
+            Document id = new Document(OBJECTID, toString);
             return new Document("$addFields", id);
         };
     }
@@ -29,7 +30,7 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
 
         LookupOperation lookupOperation = LookupOperation.newLookup()
                 .from("task")
-                .localField("objId")
+                .localField(OBJECTID)
                 .foreignField("listId")
                 .as("tasks");
         Aggregation aggregation = Aggregation.newAggregation(match, addConvertedIDField(), lookupOperation);
@@ -42,7 +43,7 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
 
         LookupOperation lookupOperation = LookupOperation.newLookup()
                 .from("task")
-                .localField("objId")
+                .localField(OBJECTID)
                 .foreignField("listId")
                 .as("tasks");
         Aggregation aggregation = Aggregation.newAggregation(match, addConvertedIDField(), lookupOperation);

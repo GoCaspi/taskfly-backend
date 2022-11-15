@@ -12,6 +12,7 @@ public class SecurityConfiguration {
         http.csrf().disable().cors().disable().authorizeRequests()
                 .antMatchers("/user/**").permitAll()
                 .antMatchers("/task/**").permitAll()
+                .antMatchers("/tc/**").permitAll()
                 .antMatchers("/actuator/**")
                 .authenticated()
                 .and()
