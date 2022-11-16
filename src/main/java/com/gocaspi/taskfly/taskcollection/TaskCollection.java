@@ -8,10 +8,10 @@ public class TaskCollection {
 
     @Id
     private String id;
-    @NotBlank
+    @NotBlank(message = "{name.notblank}")
     private String name;
     private String teamID;
-    @NotBlank
+    @NotBlank(message = "{ownerid.notblank}")
     private String ownerID;
 
     public TaskCollection(String id, String name, String teamID, String ownerID) {

@@ -1,11 +1,10 @@
 package com.gocaspi.taskfly.taskcollection;
 
 import com.gocaspi.taskfly.SecurityConfiguration;
+import com.gocaspi.taskfly.advice.ApiExceptionHandler;
 import com.gocaspi.taskfly.task.Task;
 import com.google.gson.Gson;
-import com.mongodb.connection.ServerDescription;
 import org.bson.types.ObjectId;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -14,22 +13,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.Filter;
-import javax.validation.ConstraintViolationException;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
@@ -38,7 +32,7 @@ import java.util.*;
 @ContextConfiguration
 @Import(SecurityConfiguration.class)
 @WebAppConfiguration
-public class TaskCollectionControllerTest {
+class TaskCollectionControllerTest {
     @Autowired
     private WebApplicationContext context;
 
@@ -47,12 +41,13 @@ public class TaskCollectionControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private TaskCollectionService service;
+    private  TaskCollectionService service;
+    @MockBean
+    private TaskCollectionRepository repo;
+    @InjectMocks
+    private TaskCollectionController controller;
 
 
-
-    final private TaskCollectionRepository mockRepo = mock(TaskCollectionRepository.class);
-    final private TaskCollectionService mockService = mock(TaskCollectionService.class);
     final private String mockTCID = "1234";
     final private String mockTCName = "TaskCollection1";
     final private String mockTCTeamID = new ObjectId().toHexString();
@@ -67,66 +62,78 @@ public class TaskCollectionControllerTest {
     final private String mockDeadline = "11-11-2022";
     final private ObjectId mockObjectId = new ObjectId();
     final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic","mockPrio","mockDescription");
+    final private Task mockTask = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
 
-    @Before
+    @BeforeEach
     public void setup() {
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(context)
+        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new ApiExceptionHandler())
                 .addFilters(springSecurityFilterChain)
                 .build();
     }
 
-
-
-/*
     @Test
-    void createTaskCollection(){
-        TaskCollectionService s = new TaskCollectionService(mockRepo);
-        TaskCollectionController t = new TaskCollectionController(s);
+    void createTaskCollection() throws Exception {
+        final String URL = "/tc";
         TaskCollection taskCollection = new TaskCollection(mockTCID, mockTCName, mockTCTeamID, mockTCOwnerID);
-        ResponseEntity<TaskCollection> actual = t.createTaskCollectionEndpoint(taskCollection);
-        HttpStatus code = actual.getStatusCode();
-        String taskCollectionString = new Gson().toJson(taskCollection);
-        String bodyString = new Gson().toJson(actual.getBody());
-        assertEquals(taskCollectionString, bodyString);
-        assertEquals(HttpStatus.CREATED, code);
+
+
+        class Testcase {
+            final String requestBody;
+            final int httpStatus;
+            final String responseBody;
+
+
+            public Testcase(String requestBody, int httpStatus, String responseBody) {
+                this.requestBody = requestBody;
+                this.httpStatus = httpStatus;
+                this.responseBody = responseBody;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(new Gson().toJson(taskCollection), HttpStatus.CREATED.value(), new Gson().toJson(taskCollection)),
+                new Testcase(new Gson().toJson(taskCollection).substring(5,6), HttpStatus.BAD_REQUEST.value(), new Gson().toJson(taskCollection))
+        };
+
+        for (Testcase tc: testcases){
+            when(service.createTaskCollection(taskCollection)).thenReturn(taskCollection);
+            this.mockMvc.perform(post(URL).with(csrf()).contentType("application/json").content(tc.requestBody)).andExpect(status().is(tc.httpStatus));
+        }
+
     }
+
     @Test
-    void getTaskCollectionByUserID(){
-        TaskCollectionController c = new TaskCollectionController(mockService);
-        Task task1 = new Task(mockUserIds, mockTCID, mockTCTeamID, mockDeadline, mockObjectId, mockBody);
-        List<Task> taskList = Arrays.asList(task1);
-        TaskCollectionGetQuery tcSingle = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
-        List<TaskCollectionGetQuery> tcReturn = Arrays.asList(tcSingle);
-        when(mockService.getTaskCollectionsByUser(mockTCOwnerID)).thenThrow(ConstraintViolationException.class);
-        ResponseEntity<List<TaskCollectionGetQuery>> actual = c.getTaskCollectionsByUserID(mockTCOwnerID);
-        assertEquals(actual.getStatusCode(), HttpStatus.OK);
-        String tcString = new Gson().toJson(tcReturn);
-        String bodyString = new Gson().toJson(actual.getBody());
-        assertEquals(tcString, bodyString);
+    void getTaskCollectionsByUserID() throws Exception {
+        final String URL = "/tc";
+        List<Task> tasks = Arrays.asList(mockTask);
+        TaskCollectionGetQuery taskCollection = new TaskCollectionGetQuery(mockTCID, mockTCName, mockTCTeamID, mockTCOwnerID, tasks);
+        List<TaskCollectionGetQuery> taskCollectionGetQueries = Arrays.asList(taskCollection);
+
+        class Testcase {
+            final String userIDParam;
+            final int httpStatus;
+            final String responseBody;
+
+
+            public Testcase(String userIDParam, int httpStatus, String responseBody) {
+                this.userIDParam = userIDParam;
+                this.httpStatus = httpStatus;
+                this.responseBody = responseBody;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(mockUserIds, HttpStatus.OK.value(), new Gson().toJson(taskCollection)),
+                new Testcase(mockUserIds, HttpStatus.NOT_FOUND.value(), new Gson().toJson(taskCollection))
+        };
+
+        for (Testcase tc: testcases){
+            when(service.getTaskCollectionsByUser(mockUserIds)).thenReturn(taskCollectionGetQueries);
+            this.mockMvc.perform(get(URL).param(tc.userIDParam))
+                    .andExpect(status().is(tc.httpStatus));
+        }
+
     }
-    @Test
 
-
-    void getTaskCollectionByID(){
-        TaskCollectionController c = new TaskCollectionController(mockService);
-
-        Task task1 = new Task(mockUserIds, mockTCID, mockTCTeamID, mockDeadline, mockObjectId, mockBody);
-        List<Task> taskList = Arrays.asList(task1);
-        TaskCollectionGetQuery tcSingle = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
-
-        when(mockService.getTaskCollectionByID(mockTCOwnerID)).thenReturn(tcSingle);
-        ResponseEntity<TaskCollectionGetQuery> actual = c.getTaskCollectionByID(mockTCOwnerID);
-        assertEquals(actual.getStatusCode(), HttpStatus.OK);
-        String tcString = new Gson().toJson(tcSingle);
-        String bodyString = new Gson().toJson(actual.getBody());
-        assertEquals(tcString, bodyString);
-    }
-*/
-    @Test
-    public void createTaskCollectionShouldReturn200() throws Exception {
-        TaskCollection taskCollection = new TaskCollection(mockTCID, mockTCName, mockTCTeamID, mockTCOwnerID);
-        when(service.createTaskCollection(taskCollection)).thenReturn(taskCollection);
-        this.mockMvc.perform(post("/tc").with(csrf()).contentType("application/json").content(new Gson().toJson(taskCollection))).andExpect(status().isCreated());
-    }
 }

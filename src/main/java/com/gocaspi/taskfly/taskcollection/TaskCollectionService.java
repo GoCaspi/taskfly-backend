@@ -15,6 +15,11 @@ public class TaskCollectionService {
     @Autowired
     private TaskCollectionRepository repo;
 
+    public TaskCollectionService(TaskCollectionRepository repo){
+        this.repo = repo;
+    }
+
+
     private final HttpClientErrorException httpNotFoundError = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
 
 
@@ -24,10 +29,18 @@ public class TaskCollectionService {
     }
 
     public List<TaskCollectionGetQuery> getTaskCollectionsByUser(String userID) {
+        List<TaskCollectionGetQuery> tc = repo.findByOwnerID(userID);
+        if(tc.isEmpty()){
+            throw httpNotFoundError;
+        }
         return repo.findByOwnerID(userID);
     }
 
     public TaskCollectionGetQuery getTaskCollectionByID(String collID){
+        TaskCollectionGetQuery tc = repo.findByID(collID);
+        if(Objects.isNull(tc)){
+            throw httpNotFoundError;
+        }
         return repo.findByID(collID);
     }
 
@@ -36,8 +49,6 @@ public class TaskCollectionService {
     }
 
     public void updateTaskCollectionByID(String id, TaskCollection update){
-        System.out.println("this should trigger");
-
         Optional<TaskCollection> task = repo.findById(id);
         if(!repo.existsById(id)){ throw httpNotFoundError; }
         task.ifPresent( t->{

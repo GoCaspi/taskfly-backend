@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,7 +20,7 @@ public class TaskCollectionController {
         this.service = taskCollectionService;
     }
     @PostMapping
-    public ResponseEntity<TaskCollection> createTaskCollectionEndpoint(@RequestBody TaskCollection tc){
+    public ResponseEntity<TaskCollection> createTaskCollectionEndpoint(@Valid @RequestBody TaskCollection tc){
         TaskCollection result = service.createTaskCollection(tc);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
