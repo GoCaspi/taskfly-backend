@@ -1,8 +1,10 @@
 package com.gocaspi.taskfly.teammanagement;
 
 
+import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class TeamManagementServiceTest {
@@ -17,7 +19,7 @@ class TeamManagementServiceTest {
 
     @Test
     void validateTaskFields() {
-        TeamManagementService team = new TeamManagementService(mockrepository);
+        TeamManagementService service = new TeamManagementService(mockrepository);
 
         class Testcase {
             final TeamManagement teamManagementInput;
@@ -33,6 +35,11 @@ class TeamManagementServiceTest {
                 new Testcase(new TeamManagement(null,null,null,null),false),
                 new Testcase(new TeamManagement("test", "test", mockMembers, "test"),true)
         };
+
+        for (Testcase tc : testcases) {
+            boolean actualOut = service.validateTeamManagementFields(new Gson().toJson(tc.teamManagementInput));
+            assertEquals(tc.expected, actualOut);
+        }
     }
 
     @Test

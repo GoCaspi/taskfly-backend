@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.*;
+@Service
 public class TeamManagementService {
     @Autowired
     private TeamManagementRepository repository;
@@ -28,7 +30,7 @@ public class TeamManagementService {
     }
 
     public TeamManagement getTeamById(String id) throws HttpClientErrorException {
-        if(!getRepository().existsById(id)){ throw exceptionNotFound; }
+        //if(!getRepository().existsById(id)){ throw exceptionNotFound; }
 
         return getRepository().findById(id).isPresent() ? getRepository().findById(id).get() : new TeamManagement(null,null,null,null);
 
@@ -50,7 +52,7 @@ public class TeamManagementService {
         updateService(id, team);
     }
     public void deleteMemberService(String id, String[] members, TeamManagement team, String member) throws HttpClientErrorException {
-        if(!getRepository().existsById(id)){ throw exceptionNotFound; }
+        //if(!getRepository().existsById(id)){ throw exceptionNotFound; }
 
         List<String> mem = new ArrayList<>();
         for (String t: members){

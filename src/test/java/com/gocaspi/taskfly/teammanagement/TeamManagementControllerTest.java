@@ -9,8 +9,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class TeamManagementControllerTest {
     TeamManagementRepository mockRepository = mock(TeamManagementRepository.class);
@@ -25,7 +24,7 @@ class TeamManagementControllerTest {
 
     @Test
     void updateTeam() {
-        TeamManagementController t = new TeamManagementController(mockRepository);
+        TeamManagementController t = new TeamManagementController(mockRepository,mockService);
         TeamManagement mockUpdate = new TeamManagement(mockUserId, mockTeamName, mockMember, mockId);
 
         class Testcase {
@@ -79,7 +78,7 @@ class TeamManagementControllerTest {
 
     @Test
     void createTeam() {
-        TeamManagementController t = new TeamManagementController(mockRepository);
+        TeamManagementController t = new TeamManagementController(mockRepository, mockService);
 
         class Testcase {
             final String mockId;
@@ -120,7 +119,7 @@ class TeamManagementControllerTest {
 
     @Test
     void deleteTea() {
-        TeamManagementController t = new TeamManagementController(mockRepository);
+        TeamManagementController t = new TeamManagementController(mockRepository, mockService);
 
         class Testcase {
             final String mockId;
@@ -163,7 +162,7 @@ class TeamManagementControllerTest {
 
     @Test
     void deleteTeamMember() {
-        TeamManagementController t = new TeamManagementController(mockRepository);
+        TeamManagementController t = new TeamManagementController(mockRepository, mockService);
 
         String[] mockMembers = {"1", "2"};
         TeamManagement team = new TeamManagement("1", "1", mockMembers, "1");
@@ -174,42 +173,44 @@ class TeamManagementControllerTest {
             final String mockMember;
             final String expectedOutput;
 
+            final String[] mockMemberss;
             final TeamManagement team;
 
-            public Testcase(boolean idFoundInDb, String mockId, String mockMember, String expectedOutput, TeamManagement team) {
+            public Testcase(boolean idFoundInDb, String mockId, String mockMember, String expectedOutput, TeamManagement team, String[]mockMemberss) {
                 this.idFoundInDb = idFoundInDb;
                 this.mockId = mockId;
                 this.mockMember = mockMember;
                 this.expectedOutput = expectedOutput;
                 this.team = team;
+                this.mockMemberss = mockMemberss;
             }
         }
 
         Testcase[] testcases = new Testcase[]{
-                new Testcase(false, "1", "1","", team),
-                new Testcase(true,"1", "1","no teams were found to the provided id", team),
-                new Testcase(false, null, "1","no teams were found to the provided id", team),
-                new Testcase(true,null, "1","no teams were found to the provided id", team),
-                new Testcase(false,"", "1", "no teams were found to the provided id", team),
-                new Testcase(true, "", "1", "no teams were found to the provided id", team),
+                new Testcase(false, "1", "1","", team, mockMembers),
+                new Testcase(true,"1", "1","no teams were found to the provided id", team, mockMembers),
+                 new Testcase(false, null, "1","no teams were found to the provided id", team, mockMembers),
+                 new Testcase(true,null, "1","no teams were found to the provided id", team, mockMembers),
+                 new Testcase(false,"", "1", "no teams were found to the provided id", team, mockMembers),
+                 new Testcase(true, "", "1", "no teams were found to the provided id", team, mockMembers),
 
-                new Testcase(false, "1", "1","", team),
-                new Testcase(true, "1", "1","no member were found to the provided id", team),
-                new Testcase(false, "1", null,"no member were found to the provided id", team),
-                new Testcase(true,"1", null,"no member were found to the provided id", team),
-                new Testcase(false,"1", "","no member were found to the provided id", team),
-                new Testcase(true, "1", "","no member were found to the provided id", team),
+                 new Testcase(false, "1", "1","", team, mockMembers),
+                 new Testcase(true, "1", "1","no member were found to the provided id", team, mockMembers),
+                 new Testcase(false, "1", null,"no member were found to the provided id", team, mockMembers),
+                 new Testcase(true,"1", null,"no member were found to the provided id", team, mockMembers),
+                 new Testcase(false,"1", "","no member were found to the provided id", team, mockMembers),
+                 new Testcase(true, "1", "","no member were found to the provided id", team, mockMembers)
         };
 
         for (Testcase tc : testcases) {
-            when(mockService.getTeamById(tc.mockId)).thenReturn(tc.team);
-
+            when(mockService.getTeamById(tc.mockId)).thenReturn(team);
             //when(mockRepository.existsById(tc.mockId)).thenReturn(tc.idFoundInDb);
             //when(mockService.deleteMemberService(tc.mockMember)).thenReturn();
 
             try {
                 ResponseEntity<String> expected = new ResponseEntity<>("successfully delete Member from Team" , HttpStatus.ACCEPTED);
                 ResponseEntity<String> actual1 = t.deleteTeamMember(tc.mockId, tc.mockMember);
+                //verify(mockService, times(1)).deleteMemberService(tc.mockId, mockMembers, tc.team, tc.mockMember);
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
                 HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
@@ -220,7 +221,7 @@ class TeamManagementControllerTest {
 
     @Test
     void addTeamMember() {
-        TeamManagementController t = new TeamManagementController(mockRepository);
+        TeamManagementController t = new TeamManagementController(mockRepository, mockService);
 
         String[] mockMembers = {"1", "2"};
 
@@ -262,7 +263,7 @@ class TeamManagementControllerTest {
             when(mockService.getTeamById(tc.mockId)).thenReturn(tc.team);
 
             try {
-                ResponseEntity<String> expected = new ResponseEntity<>("successfully delete Member from Team" , HttpStatus.ACCEPTED);
+                ResponseEntity<String> expected = new ResponseEntity<>("successfully created new Member in Team" , HttpStatus.ACCEPTED);
                 ResponseEntity<String> actual1 = t.addTeamMember(tc.mockId, tc.mockBody);
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {

@@ -13,13 +13,14 @@ import org.springframework.web.client.HttpClientErrorException;
 public class TeamManagementController {
     @Autowired //teilt spring mit wo es Objekte in anderen klassen anlegen soll
     private TeamManagementRepository repository;
-
+    @Autowired
     private final TeamManagementService service;
 
-    public TeamManagementController(TeamManagementRepository repository){
+    public TeamManagementController(TeamManagementRepository repository, TeamManagementService service){
         super();
         this.repository = repository;
-        this.service = new TeamManagementService(repository);
+        this.service = service;
+        //this.service = new TeamManagementService(repository);
     }
 
     public TeamManagementService getService() {
