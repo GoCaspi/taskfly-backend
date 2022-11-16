@@ -1,5 +1,7 @@
-package com.gocaspi.taskfly.auth;
+package com.gocaspi.taskfly.security.jwt;
 
+
+import com.gocaspi.taskfly.models.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

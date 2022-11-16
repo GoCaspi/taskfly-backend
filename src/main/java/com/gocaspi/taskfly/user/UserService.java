@@ -4,11 +4,8 @@ package com.gocaspi.taskfly.user;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.http.HttpHeaders;
         import org.springframework.http.HttpStatus;
-        import org.springframework.security.core.userdetails.UserDetails;
-        import org.springframework.security.core.userdetails.UsernameNotFoundException;
         import org.springframework.security.crypto.password.PasswordEncoder;
         import org.springframework.stereotype.Service;
-        import org.springframework.transaction.annotation.Transactional;
         import org.springframework.web.client.HttpClientErrorException;
         import java.util.ArrayList;
         import java.util.List;
@@ -60,8 +57,8 @@ public class UserService {
             if (update.getListId() != null) {
                 t.setListId(update.getListId());
             }
-            if (update.getFirstName() != null) {
-                t.setFirstName(update.getFirstName());
+            if (update.getUsername() != null) {
+                t.setUsername(update.getUsername());
             }
             if (update.getLastName() != null) {
                 t.setLastName(update.getLastName());
@@ -78,13 +75,13 @@ public class UserService {
     }
     public boolean validateTaskFields(String jsonPayload){
         User user = jsonToUser(jsonPayload);
-        return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getListId(), null) && !Objects.equals(user.getEmail(), null)&& !Objects.equals(user.getTeam(), null);
+        return !Objects.equals(user.getUsername(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getListId(), null) && !Objects.equals(user.getEmail(), null)&& !Objects.equals(user.getTeam(), null);
     }
     public User jsonToUser(String jsonPayload){return new Gson().fromJson(jsonPayload, User.class);}
 
     public User getServicebyid(String id)throws HttpClientErrorException.NotFound{
         if(!getRepo().existsById(id)){ throw exceptionnotFound;}
-        return getRepo().findById(id).isPresent() ? getRepo().findById(id).get() : new User("","","","","","","","");
+        return getRepo().findById(id).isPresent() ? getRepo().findById(id).get() : new User("","","","");
 
     }
     public List<User> getServiceAllUser(){
@@ -95,11 +92,7 @@ public class UserService {
         }
         return usersToId;
     }
-    public String getUserRoles(String email){
 
-        return repo.findByEmail(email).getSrole();
-
-    }
 
 
 }

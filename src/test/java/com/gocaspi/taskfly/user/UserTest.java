@@ -5,17 +5,17 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class UserTest {
+  public class UserTest {
     String mockUserIds = "123";
     String mockListId = "1";
-    String mockFistName = "topic1";
+    String mockUsername = "topic1";
     String mockTeam = "team1";
     String mockLastName = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     String mockSrole ="";
     ObjectId mockObject_Id = new ObjectId();
-    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword,mockSrole);
+      User mockUser = new User(mockUsername,mockEmail,mockPassword,mockSrole);
     class Testcase_setString{
         final String newText;
 
@@ -41,7 +41,7 @@ public class UserTest {
             new Testcase_getString(""),
     };
     @Test
-    public void getUserId(){
+     void getUserId(){
         User t = mockUser;
         for (Testcase_getString tc : testcases_get){
             t.setUserId(tc.expected);
@@ -51,7 +51,7 @@ public class UserTest {
     }
 
     @Test
-    public void setUserId(){
+     void setUserId(){
         User t = mockUser;
         for (Testcase_getString tc : testcases_get){
             t.setUserId(tc.expected);
@@ -61,7 +61,7 @@ public class UserTest {
     }
 
     @Test
-    public void getId(){
+     void getId(){
         User t = mockUser;
 
         String oId = new String("");

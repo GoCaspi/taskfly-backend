@@ -6,7 +6,6 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
@@ -26,13 +25,13 @@ import static org.mockito.Mockito.when;
     String mockListId = "1";
     String mockFistName = "topic1";
     String mockTeam = "team1";
-    String mockLastName = "prio1";
+    String mockUsername = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     String mockSrole = "";
     ObjectId mockObject_Id = new ObjectId();
 
-    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword,mockSrole);
+     User mockUser = new User(mockUsername,mockEmail,mockPassword,mockSrole);
     User[] mockUseArr = new User[]{mockUser,mockUser};
      UserController ts = new UserController(mockRepo);
     @Test
@@ -83,7 +82,7 @@ import static org.mockito.Mockito.when;
     @Test
      void updateUser() {
         UserController t = new UserController(mockRepo);
-        User mockUpdate = new User(mockUserIds, mockListId, mockEmail + "updated", mockPassword + "updated", mockFistName, mockLastName + "updated",mockService+"updated",mockSrole+"");
+        User mockUpdate = new User(mockUserIds, mockEmail + "updated", mockPassword + "updated", mockFistName);
 
         class Testcase {
             final String mockId;

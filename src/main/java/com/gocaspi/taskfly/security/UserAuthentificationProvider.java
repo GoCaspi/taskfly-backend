@@ -4,7 +4,6 @@ import com.gocaspi.taskfly.user.User;
 import com.gocaspi.taskfly.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,17 +11,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class UserAuthentificationProvider implements AuthenticationProvider {
@@ -41,13 +34,16 @@ public class UserAuthentificationProvider implements AuthenticationProvider {
        String email = authentication.getName();
        String password = authentication.getCredentials().toString();
 
-        User user = repository.findByEmail(email);
+
+       Optional <User> user = repository.findByEmail(email);
+
         if (user == null){
+
             throw new BadCredentialsException("Details not found");
         }
-        if(encoder.matches(password,user.getPassword())){
+        if(encoder.matches(password,user.get().getPassword())){
             logger.info("Successfully Authenticated the user");
-            return new UsernamePasswordAuthenticationToken(email, password , getUserRoles(user.getSrole()));
+            return new UsernamePasswordAuthenticationToken(email, password , getUserRoles(user.get().getSrole().toString()));
         }else{
             throw new BadCredentialsException("Password mismatch");
         }
@@ -57,7 +53,6 @@ public class UserAuthentificationProvider implements AuthenticationProvider {
         List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
         String[] roles = userRoles.split(",");
         for (String role : roles){
-            logger.info("Role:" + role);
             grantedAuthorityList.add(new SimpleGrantedAuthority(role.replaceAll("\\s+","")));
         }
         return grantedAuthorityList;

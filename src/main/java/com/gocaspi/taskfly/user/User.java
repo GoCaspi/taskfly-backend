@@ -2,11 +2,16 @@ package com.gocaspi.taskfly.user;
 
 
 
+import com.gocaspi.taskfly.models.Role;
 import org.springframework.data.annotation.Id;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class User {
-    private String firstName;
+
+    private String username;
     private String lastName;
     private String email;
     private String password;
@@ -15,13 +20,13 @@ public class User {
 @Id
     private String id;
     private String userId;
-    private String srole;
+
+    private Set<Role> srole = new HashSet<>();
 
 
-    public User(String firstName, String lastName, String email, String password, String team, String listId, String userId,String srole) {
+    public User(String username, String email, String password, String team) {
         this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.username = username;
         this.email = email;
         this.password = password;
         this.listId = listId;
@@ -30,7 +35,7 @@ public class User {
     }
     public String getUserId(){return this.userId;}
 
-    public String getFirstName(){ return this.firstName;}
+    public String getUsername(){ return this.username;}
     public String getLastName(){ return  this.lastName;}
     public String getEmail(){ return this.email;}
     public String getListId(){ return this.listId;}
@@ -38,7 +43,7 @@ public class User {
     public String getId() {return this.id;}
     public String getPassword(){return this.password;}
     public void setUserId(String str){ this.userId = str;}
-    public void setFirstName(String str){ this.firstName = str;}
+    public void setUsername(String str){ this.username = str;}
     public void setLastName(String str){ this.lastName = str;}
     public void setEmail(String str){ this.email = str;}
     public void setListId(String str){ this.listId = str;}
@@ -48,10 +53,10 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    public String getSrole(){
+    public Set<Role> getSrole(){
+
         return srole;
     }
-
 
 
 

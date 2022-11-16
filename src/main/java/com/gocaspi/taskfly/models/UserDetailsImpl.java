@@ -1,15 +1,18 @@
-package com.gocaspi.taskfly.auth;
+package com.gocaspi.taskfly.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gocaspi.taskfly.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L ;
@@ -21,19 +24,26 @@ public class UserDetailsImpl implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
 
-    public UserDetailsImpl(String id,String username,String email,String password){
+    public UserDetailsImpl(String id,String username,String email,String password,Collection<? extends GrantedAuthority> authorities){
         this.id = id;
         this.username = username;
         this.email = email;
+        this.password=password;
         this.authorities =authorities;
     }
     public static UserDetailsImpl build(User user){
+        List<GrantedAuthority> authorities = user.getSrole().stream().map(srole -> new SimpleGrantedAuthority(srole.getName().toString())).collect(Collectors.toList());
 
-        return new UserDetailsImpl( user.getId(),user.getFirstName(),user.getEmail(),user.getPassword());
+        return new UserDetailsImpl(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPassword(),
+                authorities);
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return authorities;
     }
     public String getId() {
         return id;
@@ -44,32 +54,32 @@ public class UserDetailsImpl implements UserDetails {
     }
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
     @Override
     public boolean equals(Object o) {

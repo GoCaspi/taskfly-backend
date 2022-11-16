@@ -14,6 +14,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -54,7 +55,7 @@ public class UserController<LoginRequest> {
      */
     @GetMapping("/{id}")
     public ResponseEntity<User> handlerGetUsreById(@PathVariable String id) throws HttpClientErrorException.NotFound {
-        User user = getService().getServicebyid(id);
+       User user = getService().getServicebyid(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -92,11 +93,7 @@ public class UserController<LoginRequest> {
         String msg = "Successfully update User with id :" + id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
-    @GetMapping("/getUserRoles")
-    public String getUserRoles(@RequestParam("sname")String username){
 
-        return service.getUserRoles(username);
-    }
 
 
 }
