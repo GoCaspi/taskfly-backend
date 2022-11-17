@@ -21,6 +21,9 @@ public class TaskCollection {
         this.ownerID = ownerID;
     }
 
+    public TaskCollection() {
+
+    }
     public String getId() {
         return id;
     }

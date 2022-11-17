@@ -16,31 +16,15 @@ import static org.mockito.Mockito.*;
 public class TaskServiceTest {
 
 	TaskRepository mockRepo = mock(TaskRepository.class);
-	TaskService mockService = mock(TaskService.class);
 	HttpClientErrorException er = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "no tasks are assigned to the provided userId", null, null, null);
 	String mockUserIds = "123";
 	String mockListId = "1";
-	String mockTopic = "topic1";
 	String mockTeam = "team1";
-	String mockPrio = "prio1";
-	String mockDesc = "desc1";
 	String mockDeadline = "11-11-2022";
 	ObjectId mockObjectId = new ObjectId();
-//	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
 Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescription");
 	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObjectId,mockbody);
 
-	TaskService ts = new TaskService(mockRepo);
-	/*
-	@Test
-	public void postService() throws HttpClientErrorException {
-		TaskService t2 = mockService; // TODO Replace default value.
-		Task t = mockTask; // TODO Replace default value.
-		ts.postService(t);
-		verify(t2, times(1));
-	}
-
-	 */
 
 	@Test
 	public void getService_AllTasksOfUser() {

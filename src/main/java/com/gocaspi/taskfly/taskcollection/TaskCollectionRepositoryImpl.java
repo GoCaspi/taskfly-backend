@@ -49,4 +49,17 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
         Aggregation aggregation = Aggregation.newAggregation(match, addConvertedIDField(), lookupOperation);
         return mongoTemplate.aggregate(aggregation, "taskCollection", TaskCollectionGetQuery.class).getUniqueMappedResult();
     }
+
+    @Override
+    public List<TaskCollectionGetQuery> findByTeamID(String teamID){
+        MatchOperation match = Aggregation.match(new Criteria("teamID").is(teamID));
+
+        LookupOperation lookupOperation = LookupOperation.newLookup()
+                .from("task")
+                .localField(OBJECTID)
+                .foreignField("listId")
+                .as("tasks");
+        Aggregation aggregation = Aggregation.newAggregation(match, addConvertedIDField(), lookupOperation);
+        return mongoTemplate.aggregate(aggregation, "taskCollection", TaskCollectionGetQuery.class).getMappedResults();
+    }
 }

@@ -15,13 +15,11 @@ public class TaskCollectionService {
     @Autowired
     private TaskCollectionRepository repo;
 
+    private final HttpClientErrorException httpNotFoundError = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
+
     public TaskCollectionService(TaskCollectionRepository repo){
         this.repo = repo;
     }
-
-
-    private final HttpClientErrorException httpNotFoundError = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
-
 
     public TaskCollection createTaskCollection(TaskCollection body) throws HttpClientErrorException {
         repo.insert(body);
@@ -33,16 +31,25 @@ public class TaskCollectionService {
         if(tc.isEmpty()){
             throw httpNotFoundError;
         }
-        return repo.findByOwnerID(userID);
-    }
+        return tc;    }
 
     public TaskCollectionGetQuery getTaskCollectionByID(String collID){
         TaskCollectionGetQuery tc = repo.findByID(collID);
         if(Objects.isNull(tc)){
             throw httpNotFoundError;
         }
-        return repo.findByID(collID);
+        return tc;
     }
+
+    public List<TaskCollectionGetQuery> getTaskCollectionByTeamID(String teamID){
+        List<TaskCollectionGetQuery> tc = repo.findByTeamID(teamID);
+        if(tc.isEmpty()){
+            throw httpNotFoundError;
+        }
+        return tc;
+    }
+
+
 
     public void deleteTaskCollectionByID(String id){
         repo.deleteById(id);

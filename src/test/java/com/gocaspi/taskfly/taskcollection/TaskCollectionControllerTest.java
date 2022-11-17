@@ -1,53 +1,31 @@
 package com.gocaspi.taskfly.taskcollection;
 
-import com.gocaspi.taskfly.SecurityConfiguration;
-import com.gocaspi.taskfly.advice.ApiExceptionHandler;
+
 import com.gocaspi.taskfly.task.Task;
-import com.google.gson.Gson;
+
 import org.bson.types.ObjectId;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
+import org.mockito.Mockito;
+
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.http.ResponseEntity;
 
-import javax.servlet.Filter;
+import org.springframework.web.client.HttpClientErrorException;
 
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
 
 import java.util.*;
-@WebMvcTest(TaskCollectionController.class)
-@ContextConfiguration
-@Import(SecurityConfiguration.class)
-@WebAppConfiguration
 class TaskCollectionControllerTest {
-    @Autowired
-    private WebApplicationContext context;
 
-    @Autowired
-    private Filter springSecurityFilterChain;
-    @Autowired
-    private MockMvc mockMvc;
-    @MockBean
-    private  TaskCollectionService service;
-    @MockBean
-    private TaskCollectionRepository repo;
-    @InjectMocks
-    private TaskCollectionController controller;
+    private final HttpClientErrorException httpNotFoundError = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
 
 
+    TaskCollectionService mockService = mock(TaskCollectionService.class);
     final private String mockTCID = "1234";
     final private String mockTCName = "TaskCollection1";
     final private String mockTCTeamID = new ObjectId().toHexString();
@@ -55,85 +33,216 @@ class TaskCollectionControllerTest {
     final private TaskCollection mockTC = new TaskCollection(mockTCID, mockTCName, mockTCTeamID, mockTCOwnerID);
     final private String mockUserIds = "1";
     final private String mockListId = "1";
-    final private String mockTopic = "topic1";
+
     final private String mockTeam = "team1";
-    final private String mockPrio = "prio1";
-    final private String mockDesc = "desc1";
+
     final private String mockDeadline = "11-11-2022";
     final private ObjectId mockObjectId = new ObjectId();
-    final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic","mockPrio","mockDescription");
-    final private Task mockTask = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
+    final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic", "mockPrio", "mockDescription");
 
-    @BeforeEach
-    public void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(controller)
-                .setControllerAdvice(new ApiExceptionHandler())
-                .addFilters(springSecurityFilterChain)
-                .build();
-    }
 
     @Test
-    void createTaskCollection() throws Exception {
-        final String URL = "/tc";
-        TaskCollection taskCollection = new TaskCollection(mockTCID, mockTCName, mockTCTeamID, mockTCOwnerID);
-
+    void createNewTaskCollection() {
+        TaskCollectionController t = new TaskCollectionController(mockService);
+        TaskCollection taskCollection = new TaskCollection(this.mockTCID, this.mockTCName, this.mockTCTeamID, this.mockTCOwnerID);
 
         class Testcase {
-            final String requestBody;
-            final int httpStatus;
-            final String responseBody;
+            final TaskCollection mockTaskCollection;
 
-
-            public Testcase(String requestBody, int httpStatus, String responseBody) {
-                this.requestBody = requestBody;
-                this.httpStatus = httpStatus;
-                this.responseBody = responseBody;
+            public Testcase(TaskCollection taskCollection) {
+                this.mockTaskCollection = taskCollection;
             }
         }
 
         Testcase[] testcases = new Testcase[]{
-                new Testcase(new Gson().toJson(taskCollection), HttpStatus.CREATED.value(), new Gson().toJson(taskCollection)),
-                new Testcase(new Gson().toJson(taskCollection).substring(5,6), HttpStatus.BAD_REQUEST.value(), new Gson().toJson(taskCollection))
+                new Testcase(taskCollection)
         };
+        for (Testcase tc : testcases) {
+            when(mockService.createTaskCollection(tc.mockTaskCollection)).thenReturn(tc.mockTaskCollection);
 
-        for (Testcase tc: testcases){
-            when(service.createTaskCollection(taskCollection)).thenReturn(taskCollection);
-            this.mockMvc.perform(post(URL).with(csrf()).contentType("application/json").content(tc.requestBody)).andExpect(status().is(tc.httpStatus));
+
+            try {
+                ResponseEntity<TaskCollection> expected = new ResponseEntity<>(tc.mockTaskCollection, HttpStatus.CREATED);
+                ResponseEntity<TaskCollection> actual1 = t.createTaskCollectionEndpoint(tc.mockTaskCollection);
+                assertEquals(actual1.getStatusCode(), expected.getStatusCode());
+            } catch (HttpClientErrorException e) {
+                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
+                assertEquals(e.getClass(), expectedException.getClass());
+            }
         }
 
     }
-
     @Test
-    void getTaskCollectionsByUserID() throws Exception {
-        final String URL = "/tc";
-        List<Task> tasks = Arrays.asList(mockTask);
-        TaskCollectionGetQuery taskCollection = new TaskCollectionGetQuery(mockTCID, mockTCName, mockTCTeamID, mockTCOwnerID, tasks);
-        List<TaskCollectionGetQuery> taskCollectionGetQueries = Arrays.asList(taskCollection);
+    void getTaskCollectionByUserID() {
+        TaskCollectionController t = new TaskCollectionController(mockService);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
+        List<Task> taskList = Arrays.asList(task);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
 
         class Testcase {
-            final String userIDParam;
-            final int httpStatus;
-            final String responseBody;
+            final List<TaskCollectionGetQuery> mockTaskCollection;
+            final String mockUserID;
+            final Boolean notFound;
 
-
-            public Testcase(String userIDParam, int httpStatus, String responseBody) {
-                this.userIDParam = userIDParam;
-                this.httpStatus = httpStatus;
-                this.responseBody = responseBody;
+            public Testcase(List<TaskCollectionGetQuery> taskCollection, String mockUserID, Boolean notFound) {
+                this.mockTaskCollection = taskCollection;
+                this.mockUserID = mockUserID;
+                this.notFound = notFound;
             }
         }
 
         Testcase[] testcases = new Testcase[]{
-                new Testcase(mockUserIds, HttpStatus.OK.value(), new Gson().toJson(taskCollection)),
-                new Testcase(mockUserIds, HttpStatus.NOT_FOUND.value(), new Gson().toJson(taskCollection))
+                new Testcase(getQueries, mockUserIds, false),
+                new Testcase(getQueries, mockUserIds, true)
         };
+        for (Testcase tc : testcases) {
+            if (tc.notFound) {
+                when(mockService.getTaskCollectionsByUser(tc.mockUserID)).thenThrow(httpNotFoundError);
+            } else {
+                when(mockService.getTaskCollectionsByUser(tc.mockUserID)).thenReturn(tc.mockTaskCollection);
+            }
 
-        for (Testcase tc: testcases){
-            when(service.getTaskCollectionsByUser(mockUserIds)).thenReturn(taskCollectionGetQueries);
-            this.mockMvc.perform(get(URL).param(tc.userIDParam))
-                    .andExpect(status().is(tc.httpStatus));
+            try {
+                ResponseEntity<List<TaskCollectionGetQuery>> expected = new ResponseEntity<>(HttpStatus.OK);
+                ResponseEntity<List<TaskCollectionGetQuery>> actual1 = t.getTaskCollectionsByUserID(tc.mockUserID);
+                assertEquals(actual1.getStatusCode(), expected.getStatusCode());
+            } catch (HttpClientErrorException e) {
+                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
+                assertEquals(e.getClass(), expectedException.getClass());
+            }
         }
 
     }
+    @Test
+    void getTaskCollectionsByTeamID() {
+        TaskCollectionController t = new TaskCollectionController(mockService);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
+        List<Task> taskList = Arrays.asList(task);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
+
+        class Testcase {
+            final List<TaskCollectionGetQuery> mockTaskCollection;
+            final String mockTeamID;
+            final Boolean notFound;
+
+            public Testcase(List<TaskCollectionGetQuery> taskCollection, String mockTeamID, Boolean notFound) {
+                this.mockTaskCollection = taskCollection;
+                this.mockTeamID = mockTeamID;
+                this.notFound = notFound;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(getQueries, mockUserIds, false),
+                new Testcase(getQueries, mockUserIds, true)
+        };
+        for (Testcase tc : testcases) {
+            if (tc.notFound) {
+                when(mockService.getTaskCollectionByTeamID(tc.mockTeamID)).thenThrow(httpNotFoundError);
+            } else {
+                when(mockService.getTaskCollectionByTeamID(tc.mockTeamID)).thenReturn(tc.mockTaskCollection);
+            }
+
+            try {
+                ResponseEntity<List<TaskCollectionGetQuery>> expected = new ResponseEntity<>(HttpStatus.OK);
+                ResponseEntity<List<TaskCollectionGetQuery>> actual1 = t.getTaskCollectionsByTeamID(tc.mockTeamID);
+                assertEquals(actual1.getStatusCode(), expected.getStatusCode());
+            } catch (HttpClientErrorException e) {
+                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
+                assertEquals(e.getClass(), expectedException.getClass());
+            }
+        }
+
+    }
+    @Test
+    void getTaskCollectionsByID() {
+        TaskCollectionController t = new TaskCollectionController(mockService);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
+        List<Task> taskList = Arrays.asList(task);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+
+        class Testcase {
+            final TaskCollectionGetQuery mockTaskCollection;
+            final String mockID;
+            final Boolean notFound;
+
+            public Testcase(TaskCollectionGetQuery taskCollection, String mockID, Boolean notFound) {
+                this.mockTaskCollection = taskCollection;
+                this.mockID = mockID;
+                this.notFound = notFound;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(getQuery, mockUserIds, false),
+                new Testcase(getQuery, mockUserIds, true)
+        };
+        for (Testcase tc : testcases) {
+            if (tc.notFound) {
+                when(mockService.getTaskCollectionByID(tc.mockID)).thenThrow(httpNotFoundError);
+            } else {
+                when(mockService.getTaskCollectionByID(tc.mockID)).thenReturn(tc.mockTaskCollection);
+            }
+
+            try {
+                ResponseEntity<TaskCollectionGetQuery> expected = new ResponseEntity<>(HttpStatus.OK);
+                ResponseEntity<TaskCollectionGetQuery> actual1 = t.getTaskCollectionByID(tc.mockID);
+                assertEquals(actual1.getStatusCode(), expected.getStatusCode());
+            } catch (HttpClientErrorException e) {
+                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
+                assertEquals(e.getClass(), expectedException.getClass());
+            }
+        }
+
+    }
+    @Test
+    void deleteTaskCollection() {
+        TaskCollectionController t = new TaskCollectionController(mockService);
+        class Testcase {
+            final String mockID;
+
+            public Testcase(String mockID) {
+                this.mockID = mockID;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(mockUserIds),
+        };
+        for (Testcase tc : testcases) {
+            ResponseEntity<String> actual = t.deleteTaskCollectionByID(tc.mockID);
+            assertEquals(HttpStatus.ACCEPTED, actual.getStatusCode());
+            Mockito.verify(mockService, times(1)).deleteTaskCollectionByID(tc.mockID);
+
+        }
+
+    }
+    @Test
+    void updateTaskCollection() {
+        TaskCollectionController t = new TaskCollectionController(mockService);
+        class Testcase {
+            final String mockID;
+            final TaskCollection taskCollection;
+
+            public Testcase(String mockID, TaskCollection taskCollection) {
+                this.mockID = mockID;
+                this.taskCollection = taskCollection;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(mockUserIds, mockTC),
+        };
+        for (Testcase tc : testcases) {
+            ResponseEntity<TaskCollection> actual = t.patchTaskCollectionByID(tc.mockID, tc.taskCollection);
+            assertEquals(HttpStatus.ACCEPTED, actual.getStatusCode());
+            Mockito.verify(mockService, times(1)).updateTaskCollectionByID(tc.mockID, tc.taskCollection);
+
+        }
+
+    }
+
 
 }

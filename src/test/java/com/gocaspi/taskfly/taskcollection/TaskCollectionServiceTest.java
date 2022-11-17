@@ -1,10 +1,22 @@
 package com.gocaspi.taskfly.taskcollection;
 
 import com.gocaspi.taskfly.task.Task;
+import com.gocaspi.taskfly.task.TaskController;
+import com.gocaspi.taskfly.task.TaskService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 
-import static org.mockito.Mockito.mock;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.Optional.of;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 public class TaskCollectionServiceTest {
     final private TaskCollectionRepository mockRepo = mock(TaskCollectionRepository.class);
@@ -25,6 +37,176 @@ public class TaskCollectionServiceTest {
 
     @Test
     public void createTaskCollectionTest(){
-        
+        TaskCollectionService s = new TaskCollectionService(mockRepo);
+        TaskCollection taskCollection = new TaskCollection(this.mockTCID, this.mockTCName, this.mockTCTeamID, this.mockTCOwnerID);
+
+        class Testcase {
+            final TaskCollection mockTaskCollection;
+
+            public Testcase(TaskCollection taskCollection) {
+                this.mockTaskCollection = taskCollection;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(taskCollection)
+        };
+        for (Testcase tc : testcases) {
+            s.createTaskCollection(tc.mockTaskCollection);
+            Mockito.verify(mockRepo, times(1)).insert(tc.mockTaskCollection);
+        }
+    }
+    @Test
+    public void getTaskCollectionByIDTest(){
+        TaskCollectionService s = new TaskCollectionService(mockRepo);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
+        List<Task> taskList = Arrays.asList(task);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        class Testcase {
+            final TaskCollectionGetQuery mockTaskCollection;
+            final String mockID;
+
+            public Testcase(TaskCollectionGetQuery taskCollection, String mockID) {
+                this.mockTaskCollection = taskCollection;
+                this.mockID = mockID;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(getQuery, mockTCID),
+                new Testcase(null, mockTCID)
+        };
+        for (Testcase tc : testcases) {
+            try {
+                when(mockRepo.findByID(tc.mockID)).thenReturn(tc.mockTaskCollection);
+                TaskCollectionGetQuery actual = s.getTaskCollectionByID(tc.mockID);
+                assertEquals(actual, tc.mockTaskCollection);
+            } catch (Exception e) {
+
+            }
+
+        }
+    }
+    @Test
+    public void getTaskCollectionByOwnerIDTest(){
+        TaskCollectionService s = new TaskCollectionService(mockRepo);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
+        List<Task> taskList = Arrays.asList(task);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
+        List<TaskCollectionGetQuery> emptyList = Arrays.asList();
+
+        class Testcase {
+            final List<TaskCollectionGetQuery> mockTaskCollection;
+            final String mockID;
+
+            public Testcase(List<TaskCollectionGetQuery> taskCollection, String mockID) {
+                this.mockTaskCollection = taskCollection;
+                this.mockID = mockID;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(getQueries, mockTCID),
+                new Testcase(emptyList, mockTCID)
+        };
+        for (Testcase tc : testcases) {
+            try {
+                when(mockRepo.findByOwnerID(tc.mockID)).thenReturn(tc.mockTaskCollection);
+                List<TaskCollectionGetQuery> actual = s.getTaskCollectionsByUser(tc.mockID);
+                assertEquals(actual, tc.mockTaskCollection);
+            } catch (Exception e) {
+
+            }
+
+        }
+    }
+    @Test
+    public void getTaskCollectionByTeamID(){
+        TaskCollectionService s = new TaskCollectionService(mockRepo);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
+        List<Task> taskList = Arrays.asList(task);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
+        List<TaskCollectionGetQuery> emptyList = Arrays.asList();
+
+        class Testcase {
+            final List<TaskCollectionGetQuery> mockTaskCollection;
+            final String mockID;
+
+            public Testcase(List<TaskCollectionGetQuery> taskCollection, String mockID) {
+                this.mockTaskCollection = taskCollection;
+                this.mockID = mockID;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(getQueries, mockTCID),
+                new Testcase(emptyList, mockTCID)
+        };
+        for (Testcase tc : testcases) {
+            try {
+                when(mockRepo.findByTeamID(tc.mockID)).thenReturn(tc.mockTaskCollection);
+                List<TaskCollectionGetQuery> actual = s.getTaskCollectionByTeamID(tc.mockID);
+                assertEquals(actual, tc.mockTaskCollection);
+            } catch (Exception e) {
+
+            }
+
+        }
+    }
+    @Test
+    public void deleteTaskCollectionByID(){
+        TaskCollectionService s = new TaskCollectionService(mockRepo);
+
+        class Testcase {
+            final String mockID;
+
+            public Testcase(String mockID) {
+                this.mockID = mockID;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(mockTCID),
+        };
+        for (Testcase tc : testcases) {
+            s.deleteTaskCollectionByID(tc.mockID);
+            Mockito.verify(mockRepo, times(1)).deleteById(tc.mockID);
+        }
+    }
+    @Test
+    public void updateTaskCollection(){
+        TaskCollectionService s = new TaskCollectionService(mockRepo);
+
+        class Testcase {
+            final TaskCollection mockTaskCollection;
+            final String mockID;
+            final Boolean exists;
+
+            public Testcase(TaskCollection taskCollection, String mockID, Boolean exists) {
+                this.mockTaskCollection = taskCollection;
+                this.mockID = mockID;
+                this.exists = exists;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(mockTC, mockTCID, true),
+                new Testcase(mockTC, mockTCID, false),
+                new Testcase(new TaskCollection(mockTCID, "", "", ""), mockTCID, true)
+        };
+        for (Testcase tc : testcases) {
+            try {
+                Optional<TaskCollection> taskCollection = Optional.ofNullable(tc.mockTaskCollection);
+                when(mockRepo.findById(tc.mockID)).thenReturn(taskCollection);
+                when(mockRepo.existsById(tc.mockID)).thenReturn(tc.exists);
+                s.updateTaskCollectionByID(tc.mockID, tc.mockTaskCollection);
+                verify(mockRepo, times(1)).save(tc.mockTaskCollection);
+            } catch (Exception e) {
+
+            }
+
+        }
     }
 }

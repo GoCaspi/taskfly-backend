@@ -9,11 +9,10 @@ public class TaskCollectionGetQuery {
     private String id;
     private String ownerID;
     private List<Task> tasks;
-    public List<Task> getTasks() {
-        return tasks;
-    }
 
-    public TaskCollectionGetQuery(String name, String teamID, String id, String ownerID, List<Task> tasks){
+
+
+    public TaskCollectionGetQuery(String name, String teamID, String id, String ownerID, List<Task> tasks) {
         this.id = id;
         this.name = name;
         this.teamID = teamID;
@@ -21,9 +20,14 @@ public class TaskCollectionGetQuery {
         this.tasks = tasks;
     }
 
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
+
     public String getName() {
         return name;
     }
@@ -56,11 +60,4 @@ public class TaskCollectionGetQuery {
         this.ownerID = ownerID;
     }
 
-    public boolean isEmpty(){
-        if(this.id != "" && this.name != "" && this.tasks.size() != 0 && this.teamID != ""){
-            return false;
-        } else {
-            return true;
-        }
-    }
 }

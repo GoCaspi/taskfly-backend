@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -25,14 +26,20 @@ public class TaskCollectionController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @GetMapping(params = {"userid"})
-    public ResponseEntity<List<TaskCollectionGetQuery>> getTaskCollectionsByUserID(@RequestParam("userid") String userID){
+    @GetMapping("/user/{userID}")
+    public ResponseEntity<List<TaskCollectionGetQuery>> getTaskCollectionsByUserID(@PathVariable String userID){
         List<TaskCollectionGetQuery> tc = service.getTaskCollectionsByUser(userID);
         return new ResponseEntity<>(tc, HttpStatus.OK);
     }
-    @GetMapping(params = {"id"})
-    public ResponseEntity<TaskCollectionGetQuery> getTaskCollectionByID(@RequestParam ("id") String id){
+    @GetMapping("/id/{id}")
+    public ResponseEntity<TaskCollectionGetQuery> getTaskCollectionByID(@PathVariable String id){
         TaskCollectionGetQuery tc = service.getTaskCollectionByID(id);
+        return new ResponseEntity<>(tc, HttpStatus.OK);
+    }
+
+    @GetMapping("/team/{teamID}")
+    public ResponseEntity<List<TaskCollectionGetQuery>> getTaskCollectionsByTeamID(@PathVariable String teamID){
+        List<TaskCollectionGetQuery> tc = service.getTaskCollectionByTeamID(teamID);
         return new ResponseEntity<>(tc, HttpStatus.OK);
     }
 
