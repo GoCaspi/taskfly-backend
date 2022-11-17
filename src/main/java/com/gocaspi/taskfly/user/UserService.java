@@ -7,11 +7,10 @@ package com.gocaspi.taskfly.user;
         import org.springframework.security.crypto.password.PasswordEncoder;
         import org.springframework.stereotype.Service;
         import org.springframework.web.client.HttpClientErrorException;
-        import java.util.ArrayList;
-        import java.util.List;
-        import java.util.Objects;
-        import java.util.Optional;
-        @Service
+
+        import java.util.*;
+
+@Service
 public class UserService {
             @Autowired
        private PasswordEncoder passwordEncoder ;
@@ -81,7 +80,7 @@ public class UserService {
 
     public User getServicebyid(String id)throws HttpClientErrorException.NotFound{
         if(!getRepo().existsById(id)){ throw exceptionnotFound;}
-        return getRepo().findById(id).isPresent() ? getRepo().findById(id).get() : new User("","","","");
+        return getRepo().findById(id).isPresent() ? getRepo().findById(id).get() : new User("","","", "");
 
     }
     public List<User> getServiceAllUser(){

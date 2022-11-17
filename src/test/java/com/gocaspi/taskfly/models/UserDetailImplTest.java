@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
- class UserDetailTest {
+ class UserDetailImplTest {
     String mockid = "123";
     String mockEmail = "desc1";
     String mockUsername = "topic1";
