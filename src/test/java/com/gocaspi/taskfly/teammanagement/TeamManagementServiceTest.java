@@ -3,15 +3,16 @@ package com.gocaspi.taskfly.teammanagement;
 
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class TeamManagementServiceTest {
     TeamManagementRepository mockRepository = mock(TeamManagementRepository.class);
+
+    TeamManagementService mockService = mock(TeamManagementService.class);
+
 
     String mockUserID = "1";
     String mockTeamName = "gelb";
@@ -47,6 +48,7 @@ class TeamManagementServiceTest {
 
     @Test
     void deleteTeam(){
+
         TeamManagementService service = new TeamManagementService(mockRepository);
         class Testcase{
             final String mockId;
@@ -60,14 +62,59 @@ class TeamManagementServiceTest {
 
         Testcase[] testcases = new Testcase[]{
                 new Testcase("1", true),
-                new Testcase("", false),
+                /*new Testcase("", false),
                 new Testcase(null,true),
-                new Testcase("", false)
+                new Testcase("", false)*/
         };
 
         for (Testcase tc : testcases) {
-            when(service.getTeamById(tc.mockId)).thenReturn(team);
-
+            service.deleteService(tc.mockId);
+            verify(mockRepository, times(1)).deleteById(tc.mockId);
         }
     }
+
+    /*@Test
+    void insertTeam(){
+        TeamManagementService mockService = new TeamManagementService(mockRepository);
+
+        class Testcase{
+            final TeamManagement mockInsert;
+            final boolean expected;
+
+            public Testcase(TeamManagement mockInsert, boolean expected){
+                this.mockInsert = mockInsert;
+                this.expected = expected;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(mockTeamManagement, false),
+                new Testcase(mockTeamManagement, true)
+        };
+
+        for (Testcase tc : testcases) {
+            verify(mockService, times(1)).insertService(tc.mockInsert);
+        }
+    }*/
+
+    /*@Test
+    void getTeamById(){
+        TeamManagementService mockService = new TeamManagementService(mockRepository);
+        class Testcase{
+            final String mockId;
+            final boolean expected;
+            public Testcase(String mockId, boolean expected){
+                this.mockId = mockId;
+                this.expected = expected;
+            }
+        }
+        Testcase[] testcases = new Testcase[]{
+                new Testcase("1",true),
+                new Testcase("2", false )
+        };
+
+        for (Testcase tc : testcases) {
+
+        }
+    }*/
 }

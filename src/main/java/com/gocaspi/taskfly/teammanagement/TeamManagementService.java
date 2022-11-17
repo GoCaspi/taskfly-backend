@@ -32,7 +32,13 @@ public class TeamManagementService {
     public TeamManagement getTeamById(String id) throws HttpClientErrorException {
         //if(!getRepository().existsById(id)){ throw exceptionNotFound; }
 
-        return getRepository().findById(id).isPresent() ? getRepository().findById(id).get() : new TeamManagement(null,null,null,null);
+        Optional<TeamManagement> teamManagement = getRepository().findById(id);
+        if(teamManagement.isEmpty()){
+            throw exceptionNotFound;
+        }
+
+        return teamManagement.get();
+        //return getRepository().findById(id).isPresent() ? getRepository().findById(id).get() : new TeamManagement(null,null,null,null);
 
     }
 
@@ -52,7 +58,7 @@ public class TeamManagementService {
         updateService(id, team);
     }
     public void deleteMemberService(String id, String[] members, TeamManagement team, String member) throws HttpClientErrorException {
-        //if(!getRepository().existsById(id)){ throw exceptionNotFound; }
+        if(!getRepository().existsById(id)){ throw exceptionNotFound; }
 
         List<String> mem = new ArrayList<>();
         for (String t: members){
@@ -69,7 +75,6 @@ public class TeamManagementService {
         updateService(id, team);
     }
     public void deleteService(String id) throws HttpClientErrorException {
-        if(!getRepository().existsById(id)){ throw exceptionNotFound; }
         getRepository().deleteById(id);
     }
     public void updateService(String id, TeamManagement update) throws HttpClientErrorException{
@@ -95,7 +100,7 @@ public class TeamManagementService {
     public boolean validateTeamManagementFields(String jsonPayload){
         TeamManagement teamManagement = jsonToTeamManagement(jsonPayload);
 
-        return !Objects.equals(teamManagement.getId(), null) && !Objects.equals(teamManagement.getMembers(), null ) &&
+        return /*!Objects.equals(teamManagement.getId(), null) &&*/ !Objects.equals(teamManagement.getMembers(), null ) &&
                 !Objects.equals(teamManagement.getTeamName(), null) && !Objects.equals(teamManagement.getUserID(), null);
     }
     public TeamManagement jsonToTeamManagement(String jsonPayload){
