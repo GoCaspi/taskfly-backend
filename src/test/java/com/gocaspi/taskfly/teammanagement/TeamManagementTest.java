@@ -26,7 +26,6 @@ class TeamManagementTest {
 
     static class Testcase_getString {
         final String expected;
-
         Testcase_getString(String expected) {
             this.expected = expected;
         }

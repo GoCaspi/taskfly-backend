@@ -20,7 +20,6 @@ public class TeamManagementService {
         this.exceptionBadRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", new HttpHeaders(), "".getBytes(), null);
     }
     public TeamManagementRepository getRepository() { return repository; }
-
     public void insertService(TeamManagement insert) throws HttpClientErrorException {
         if(!validateTeamManagementFields(new Gson().toJson(insert))){
             throw exceptionBadRequest;
@@ -33,16 +32,12 @@ public class TeamManagementService {
         if(teamManagement.isEmpty()){
             throw exceptionNotFound;
         }
-
         return teamManagement.get();
-
     }
-
     public void addMemberService(String id, String[] members, String newMember, TeamManagement team) throws HttpClientErrorException {
         if(Arrays.asList(members).contains(newMember)){
             throw exceptionBadRequest;
         }
-
         List<String> newMembers = new ArrayList<>(Arrays.asList(members));
         newMembers.add(newMember);
         //Liste zu Array
@@ -102,5 +97,4 @@ public class TeamManagementService {
     public TeamManagement jsonToTeamManagement(String jsonPayload){
         return new Gson().fromJson(jsonPayload, TeamManagement.class);
     }
-
 }

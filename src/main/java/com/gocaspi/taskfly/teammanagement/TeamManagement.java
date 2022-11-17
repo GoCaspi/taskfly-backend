@@ -16,6 +16,8 @@ public class TeamManagement {
         this.members = members;
         this.id = id;
     }
+
+    public TeamManagement(){}
     public void setUserID(String str){
         this.userID = str;
     }
