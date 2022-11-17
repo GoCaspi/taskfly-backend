@@ -31,7 +31,7 @@ public class AuthController {
     PasswordEncoder encoder;
     @Autowired
     JwtUtils jwtUtils;
-    @PostMapping
+    @PostMapping("/signing")
     public ResponseEntity<?> authticateUser(@Validated @RequestBody LoginRequest loginRequest){
 
         Authentication authentication = authenticationManager.authenticate(

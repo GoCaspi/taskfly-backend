@@ -8,13 +8,13 @@ public class JwtResponse {
     private String id;
     private String username;
     private String email;
-    private List<String> srole;
-    public JwtResponse(String accessToken, String id, String username, String email, List<String> srole) {
+    private List<String> roles;
+    public JwtResponse(String accessToken, String id, String username, String email, List<String> roles) {
         this.token = accessToken;
         this.id = id;
         this.username = username;
         this.email = email;
-        this.srole = srole;
+        this.roles = roles;
     }
     public String getAccessToken(){
         return token;

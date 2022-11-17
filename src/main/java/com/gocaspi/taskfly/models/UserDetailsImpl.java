@@ -5,7 +5,7 @@ import com.gocaspi.taskfly.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
+
 
 
 import java.util.Collection;
@@ -91,7 +91,5 @@ public class UserDetailsImpl implements UserDetails {
         return Objects.equals(id, user.id);
     }
 
-    public Object toUserView(User user) {
-        return null;
-    }
+
 }
