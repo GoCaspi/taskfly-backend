@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "84a40b2f-17f2-4c43-940a-5ce822fe2b9e",
+		"_postman_id": "1cb07532-250d-41f7-80d2-0030b56a1204",
 		"name": "TaskFly",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21612803"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -590,6 +589,124 @@
 					"path": [
 						"employee",
 						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateTeam",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"2\",\n    \"teamName\": \"Rot\",\n    \"members\": [\"3,4,7\"],\n    \"userID\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/teammanagement",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teammanagement"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteTeam",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/teammanagement/2",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teammanagement",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateTeam",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"2\",\n    \"teamName\": \"Pink\",\n    \"members\": [\"3,4,7\"],\n    \"userID\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/teammanagement/2",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teammanagement",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddMembersTeam",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"members\": \"9\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/teammanagement/1/99",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teammanagement",
+						"1",
+						"99"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteMemberTeam",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/teammanagement/1/2",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teammanagement",
+						"1",
+						"2"
 					]
 				}
 			},
