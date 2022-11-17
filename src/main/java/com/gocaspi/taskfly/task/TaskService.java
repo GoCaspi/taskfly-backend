@@ -1,7 +1,6 @@
 package com.gocaspi.taskfly.task;
 
 import com.google.gson.Gson;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -62,8 +61,11 @@ public class TaskService {
     }
 
     public Task getServiceTaskById(String id) throws HttpClientErrorException.NotFound {
-        if(!getRepo().existsById(id)){ throw exceptionNotFound; }
-        return getRepo().findById(id).isPresent() ? getRepo().findById(id).get() : new Task(null,null,null,null,new ObjectId(),null);
+        Optional<Task> task = getRepo().findById(id);
+        if(task.isEmpty()){
+            throw exceptionNotFound;
+        }
+        return task.get();
     }
 
     public void deleteService(String id) throws HttpClientErrorException {

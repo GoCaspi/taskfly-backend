@@ -20,7 +20,6 @@ public class TeamManagementController {
         super();
         this.repository = repository;
         this.service = service;
-        //this.service = new TeamManagementService(repository);
     }
 
     public TeamManagementService getService() {

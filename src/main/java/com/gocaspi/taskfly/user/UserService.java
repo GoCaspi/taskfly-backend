@@ -76,9 +76,11 @@ public class UserService {
     public User jsonToUser(String jsonPayload){return new Gson().fromJson(jsonPayload, User.class);}
 
     public User getServicebyid(String id)throws HttpClientErrorException.NotFound{
-        if(!getRepo().existsById(id)){ throw exceptionnotFound;}
-        return getRepo().findById(id).isPresent() ? getRepo().findById(id).get() : new User("","","","","","","");
-
+        Optional<User> user = getRepo().findById(id);
+        if(user.isEmpty()){
+            throw exceptionnotFound;
+        }
+        return user.get();
     }
     public List<User> getServiceAllUser(){
         List<User> users = getRepo().findAll();

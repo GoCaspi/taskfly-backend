@@ -73,9 +73,9 @@ class TeamManagementServiceTest {
         }
     }
 
-    /*@Test
+   /* @Test
     void insertTeam(){
-        TeamManagementService mockService = new TeamManagementService(mockRepository);
+        TeamManagementService service = new TeamManagementService(mockRepository);
 
         class Testcase{
             final TeamManagement mockInsert;
@@ -93,7 +93,8 @@ class TeamManagementServiceTest {
         };
 
         for (Testcase tc : testcases) {
-            verify(mockService, times(1)).insertService(tc.mockInsert);
+            service.insertService(tc.mockInsert);
+            verify(mockRepository, times(1)).insert(tc.mockInsert);
         }
     }*/
 
