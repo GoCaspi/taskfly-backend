@@ -22,16 +22,15 @@ import static org.mockito.Mockito.when;
     UserRepository mockRepo = mock(UserRepository.class);
     UserService mockService = mock(UserService.class);
     String mockUserIds = "123";
-    String mockListId = "1";
     String mockFistName = "topic1";
     String mockTeam = "team1";
-    String mockUsername = "prio1";
+    String mocklastname = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     String mockSrole = "";
     ObjectId mockObject_Id = new ObjectId();
 
-     User mockUser = new User(mockUsername,mockEmail,mockPassword,mockSrole);
+     User mockUser = new User(mocklastname,mockEmail,mockPassword,mockFistName,mockTeam);
     User[] mockUseArr = new User[]{mockUser,mockUser};
      UserController ts = new UserController(mockRepo);
     @Test
@@ -82,7 +81,7 @@ import static org.mockito.Mockito.when;
     @Test
      void updateUser() {
         UserController t = new UserController(mockRepo);
-        User mockUpdate = new User(mockUserIds, mockEmail + "updated", mockPassword + "updated", mockFistName);
+        User mockUpdate = new User( mocklastname+"updated",mockEmail + "updated", mockPassword + "updated", mockTeam +"updated", mockFistName+"update");
 
         class Testcase {
             final String mockId;

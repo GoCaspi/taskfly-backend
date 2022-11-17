@@ -18,14 +18,14 @@ import static org.mockito.Mockito.when;
     HttpClientErrorException er = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "no User are assigned to the provided userId", null, null, null);
     String mockUserIds = "123";
     String mockListId = "1";
-    String mockUsername = "topic1";
+    String mockfirstName = "topic1";
     String mockTeam = "team1";
     String mockLastName = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     String mockSrole ="";
     ObjectId mockObject_Id = new ObjectId();
-    User mockUser = new User(mockUserIds, mockUsername, mockTeam, mockLastName);
+    User mockUser = new User(mockUserIds, mockfirstName, mockTeam, mockLastName,mockEmail);
     UserService ts = new UserService(mockRepo);
 
     @Test

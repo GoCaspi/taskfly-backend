@@ -74,13 +74,13 @@ public class UserService {
     }
     public boolean validateTaskFields(String jsonPayload){
         User user = jsonToUser(jsonPayload);
-        return !Objects.equals(user.getUsername(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getListId(), null) && !Objects.equals(user.getEmail(), null)&& !Objects.equals(user.getTeam(), null);
+        return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null)&& !Objects.equals(user.getEmail(), null)&& !Objects.equals(user.getTeam(), null)&&!Objects.equals(user.getPassword(), null);
     }
     public User jsonToUser(String jsonPayload){return new Gson().fromJson(jsonPayload, User.class);}
 
     public User getServicebyid(String id)throws HttpClientErrorException.NotFound{
         if(!getRepo().existsById(id)){ throw exceptionnotFound;}
-        return getRepo().findById(id).isPresent() ? getRepo().findById(id).get() : new User("","","", "");
+        return getRepo().findById(id).isPresent() ? getRepo().findById(id).get() : new User("","","", "","");
 
     }
     public List<User> getServiceAllUser(){

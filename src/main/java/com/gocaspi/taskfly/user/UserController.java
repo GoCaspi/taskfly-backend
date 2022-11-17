@@ -36,7 +36,7 @@ public class UserController<LoginRequest> {
     @PostMapping("/create")
     public ResponseEntity<String> handlerCreateUser(@RequestBody String body) throws HttpClientErrorException.BadRequest {
         User user = jsonToUser(body);
-        user.setPassword(encoder.encode(user.getPassword()));
+       user.setPassword(encoder.encode(user.getPassword()));
         getService().postService(user);
         String msg = "Successfully created User";
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);

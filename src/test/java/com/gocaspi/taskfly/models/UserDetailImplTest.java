@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
  class UserDetailImplTest {
-    String mockid = "123";
     String mockEmail = "desc1";
-    String mockUsername = "topic1";
     String mockPassword = "team1";
-    String mockSrole = "prio1";
+    String mockteam = "prio1";
+    String mockfirstname="bkjbk";
+    String mocklastname="ob";
 
-    User mockUser = new User(mockUsername,mockEmail,mockPassword,mockSrole);
+    User mockUser = new User(mockfirstname,mockEmail,mockPassword,mockteam,mocklastname);
 
     class Testcase_setString {
         final String newText;

@@ -12,6 +12,8 @@ import java.util.Set;
 public class User {
 
     private String username;
+
+    private String firstName;
     private String lastName;
     private String email;
     private String password;
@@ -24,19 +26,19 @@ public class User {
     private Set<Role> srole = new HashSet<>();
 
 
-    public User(String username, String email, String password, String team) {
-        this.userId = userId;
-        this.username = username;
+    public User(String lastName, String email, String password, String team,String firstName) {
+        this.firstName = firstName;
         this.email = email;
         this.password = password;
-        this.listId = listId;
         this.team = team;
-        this.srole = srole;
+        this.lastName=lastName;
+        //this.srole = srole;
     }
     public String getUserId(){return this.userId;}
 
     public String getUsername(){ return this.username;}
     public String getLastName(){ return  this.lastName;}
+    public String getFirstName(){ return  this.firstName;}
     public String getEmail(){ return this.email;}
     public String getListId(){ return this.listId;}
     public String getTeam(){ return this.team;}
@@ -45,6 +47,7 @@ public class User {
     public void setUserId(String str){ this.userId = str;}
     public void setUsername(String str){ this.username = str;}
     public void setLastName(String str){ this.lastName = str;}
+    public void setFirstName(String str){ this.firstName = str;}
     public void setEmail(String str){ this.email = str;}
     public void setListId(String str){ this.listId = str;}
     public void setTeam(String str){ this.team = str;}

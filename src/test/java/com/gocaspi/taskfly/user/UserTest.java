@@ -6,16 +6,14 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
   public class UserTest {
-    String mockUserIds = "123";
-    String mockListId = "1";
-    String mockUsername = "topic1";
+    String mockFistName = "topic1";
     String mockTeam = "team1";
     String mockLastName = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
-    String mockSrole ="";
+
     ObjectId mockObject_Id = new ObjectId();
-      User mockUser = new User(mockUsername,mockEmail,mockPassword,mockSrole);
+      User mockUser = new User(mockLastName,mockEmail,mockPassword,mockFistName,mockTeam);
     class Testcase_setString{
         final String newText;
 
