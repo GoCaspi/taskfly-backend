@@ -57,5 +57,9 @@ import static org.mockito.Mockito.when;
             assertEquals(tc.expected, actual);
         }
     }
+    @Test
+     void deleteUser(){
+
+    }
 
 }

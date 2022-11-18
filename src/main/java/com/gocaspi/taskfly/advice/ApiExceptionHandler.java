@@ -14,7 +14,7 @@ public class ApiExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(HttpClientErrorException.NotFound.class)
-    public Map<String, String> Handle_ResourceNotFound(HttpClientErrorException.NotFound na){
+    public Map<String, String> handleResourceNotFound(HttpClientErrorException.NotFound na){
         Map<String,String> errorMap = new HashMap<>();
         errorMap.put("local_msg",na.getLocalizedMessage());
         errorMap.put("status_txt",na.getStatusText());
@@ -24,21 +24,12 @@ public class ApiExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpClientErrorException.BadRequest.class)
-    public Map<String, String> Handle_BadRequest(HttpClientErrorException.BadRequest na){
+    public Map<String, String> handleBadRequest(HttpClientErrorException.BadRequest na){
         Map<String,String> errorMap = new HashMap<>();
         errorMap.put("local_msg",na.getLocalizedMessage());
         errorMap.put("status_txt",na.getStatusText());
         errorMap.put("error_msg","bad payload: missing field values in the provided data");
         return errorMap;
     }
-/*
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(RuntimeException.class)
-  public Map<String,String> Handle_InvalidArgument(MethodArgumentNotValidException ex){
-        Map<String,String> errorMap = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error ->{
-            errorMap.put(error.getField(),error.getDefaultMessage());
-        });
-        return errorMap;
-    }*/
+
 }

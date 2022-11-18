@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class UserDetailsImpl implements UserDetails {
@@ -32,7 +33,7 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities =authorities;
     }
     public static UserDetailsImpl build(User user){
-        List<GrantedAuthority> authorities = user.getSrole().stream().map(srole -> new SimpleGrantedAuthority(srole.getName().toString())).collect(Collectors.toList());
+        List<GrantedAuthority> authorities = user.getSrole().stream().map(role -> new SimpleGrantedAuthority(role.getName().toString())).collect(Collectors.toList());
 
         return new UserDetailsImpl(
                 user.getId(),
@@ -61,6 +62,7 @@ public class UserDetailsImpl implements UserDetails {
     public String getUsername() {
         return username;
     }
+
 
     @Override
     public boolean isAccountNonExpired() {

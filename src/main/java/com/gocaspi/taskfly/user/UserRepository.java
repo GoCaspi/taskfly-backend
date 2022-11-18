@@ -1,6 +1,6 @@
 package com.gocaspi.taskfly.user;
 
-import com.gocaspi.taskfly.models.ERole;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
