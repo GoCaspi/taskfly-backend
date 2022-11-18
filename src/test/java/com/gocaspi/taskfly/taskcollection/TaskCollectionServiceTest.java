@@ -161,18 +161,27 @@ class TaskCollectionServiceTest {
 
         class Testcase {
             final String mockID;
+            final Boolean exists;
 
-            public Testcase(String mockID) {
+            public Testcase(String mockID, Boolean exists) {
                 this.mockID = mockID;
+                this.exists = exists;
             }
         }
 
         Testcase[] testcases = new Testcase[]{
-                new Testcase(mockTCID),
+                new Testcase(mockTCID, true),
+                new Testcase(mockTCID, false)
         };
         for (Testcase tc : testcases) {
-            s.deleteTaskCollectionByID(tc.mockID);
-            Mockito.verify(mockRepo, times(1)).deleteById(tc.mockID);
+            try{
+                when(mockRepo.existsById(tc.mockID)).thenReturn(tc.exists);
+                s.deleteTaskCollectionByID(tc.mockID);
+                Mockito.verify(mockRepo, times(1)).deleteById(tc.mockID);
+            } catch (Exception e){
+
+            }
+
         }
     }
     @Test

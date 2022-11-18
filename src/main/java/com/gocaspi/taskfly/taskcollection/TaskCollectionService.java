@@ -52,6 +52,9 @@ public class TaskCollectionService {
 
 
     public void deleteTaskCollectionByID(String id){
+        if (!repo.existsById(id)){
+            throw httpNotFoundError;
+        }
         repo.deleteById(id);
     }
 

@@ -85,7 +85,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 	}
 
 	@Test
-	public void updateTaskCollection(){
+	public void updateTaskService(){
 		TaskService s = new TaskService(mockRepo);
 		var emptyBody = new Task.Taskbody("","","");
 		var emptyTask = new Task("", "", "", "", mockObjectId, emptyBody);
@@ -102,9 +102,9 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 		}
 
 		Testcase[] testcases = new Testcase[]{
+				new Testcase(emptyTask, mockObjectId.toHexString(), true),
 				new Testcase(mockTask, mockObjectId.toHexString(), true),
-				new Testcase(mockTask, mockObjectId.toHexString(), false),
-				new Testcase(emptyTask, mockObjectId.toHexString(), true)
+				new Testcase(mockTask, mockObjectId.toHexString(), false)
 		};
 		for (Testcase tc : testcases) {
 			try {
@@ -112,7 +112,9 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 				when(mockRepo.findById(tc.mockID)).thenReturn(taskCollection);
 				when(mockRepo.existsById(tc.mockID)).thenReturn(tc.exists);
 				s.updateService(tc.mockID, tc.mockTask);
-				verify(mockRepo, times(1)).save(tc.mockTask);
+				if (tc.exists){
+					verify(mockRepo, times(1)).save(tc.mockTask);
+				}
 			} catch (Exception e) {
 
 			}

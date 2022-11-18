@@ -80,13 +80,23 @@ public class TaskService {
 
         if(!repo.existsById(id)){ throw exceptionNotFound; }
         task.ifPresent( t->{
-            if(!Objects.equals(update.getBody().getDescription(), "")){t.getBody().setDescription(update.getBody().getDescription());}
-            if(!Objects.equals(update.getBody().getTopic(), "")){t.getBody().setTopic(update.getBody().getTopic());}
-            if(!Objects.equals(update.getTeam(), "")){t.setTeam(update.getTeam());}
-            if(!Objects.equals(update.getDeadline(), "")){t.setDeadline(update.getDeadline());}
-            if(!Objects.equals(update.getListId(), "")){t.setListId(update.getListId());}
+            if(!Objects.equals(update.getBody().getDescription(), "")) {
+                t.getBody().setDescription(update.getBody().getDescription());
+            }
+            if(!Objects.equals(update.getBody().getTopic(), "")){
+                t.getBody().setTopic(update.getBody().getTopic());
+            }
+            if(!Objects.equals(update.getTeam(), "")){
+                t.setTeam(update.getTeam());
+            }
+            if(!Objects.equals(update.getDeadline(), "")){
+                t.setDeadline(update.getDeadline());
+            }
+            if(!Objects.equals(update.getListId(), "")){
+                t.setListId(update.getListId());
+            }
             getRepo().save(t);
-                });
+        });
     }
 
     /**

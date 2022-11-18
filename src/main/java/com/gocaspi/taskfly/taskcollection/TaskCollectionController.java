@@ -41,8 +41,8 @@ public class TaskCollectionController {
         return new ResponseEntity<>(tc, HttpStatus.OK);
     }
 
-    @DeleteMapping
-    public ResponseEntity<String> deleteTaskCollectionByID(@RequestParam String id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTaskCollectionByID(@PathVariable String id){
         service.deleteTaskCollectionByID(id);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
