@@ -104,6 +104,107 @@ class TeamManagementServiceTest {
         }
     }
 
+    @Test
+    void updateTeam(){
+        TeamManagementService service = new TeamManagementService(mockRepository);
+        TeamManagement mockTeamTest = new TeamManagement();
+        class Testcase{
+            final String mockId;
+            final TeamManagement mockUpdate;
+            final boolean expected;
+            public Testcase(String mockId, TeamManagement mockUpdate, boolean expected){
+                this.mockId = mockId;
+                this.mockUpdate = mockUpdate;
+                this.expected = expected;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase("1",mockTeamManagement, false),
+                new Testcase("", mockTeamTest, true)
+        };
+
+        for (Testcase tc : testcases) {
+            try{
+                service.updateService(tc.mockId, tc.mockUpdate);
+                verify(mockRepository, times(1)).findById(tc.mockId);
+            } catch (Exception e){
+
+            }
+
+        }
+    }
+
+    @Test
+    void addTeamMember(){
+        TeamManagementService service = new TeamManagementService(mockRepository);
+        class Testcase{
+            final String mockId;
+            final String[] mockMember;
+            final String mockNewMember;
+            final TeamManagement mockTeam;
+            final boolean expected;
+
+            public Testcase(String mockId, String[] mockMember, String mockNewMember, TeamManagement mockTeam, boolean expected){
+                this.mockId = mockId;
+                this.mockMember = mockMember;
+                this.mockNewMember = mockNewMember;
+                this.mockTeam = mockTeam;
+                this.expected = expected;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase("1", mockMembers, "1", mockTeamManagement, true),
+                new Testcase("0", mockMembers, "1", mockTeamManagement, false),
+                new Testcase("1", mockMembers, "0", mockTeamManagement, false),
+        };
+
+        for (Testcase tc : testcases) {
+            try{
+                service.addMemberService(tc.mockId, tc.mockMember, tc.mockNewMember, tc.mockTeam);
+            } catch (Exception e){
+
+            }
+
+        }
+
+    }
+
+    @Test
+    void deleteTeamMember(){
+        TeamManagementService service = new TeamManagementService(mockRepository);
+        class Testcase{
+            final String mockId;
+            final String[] mockMember;
+            final String mockDeleteMember;
+            final TeamManagement mockTeam;
+            final boolean expected;
+
+            public Testcase(String mockId, String[] mockMember, String mockDeleteMember, TeamManagement mockTeam, boolean expected){
+                this.mockId = mockId;
+                this.mockMember = mockMember;
+                this.mockDeleteMember = mockDeleteMember;
+                this.mockTeam = mockTeam;
+                this.expected = expected;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase("1", mockMembers, "1", mockTeamManagement, true),
+                new Testcase("0", mockMembers, "1", mockTeamManagement, false),
+                new Testcase("1", mockMembers, "0", mockTeamManagement, false),
+        };
+
+        for (Testcase tc : testcases) {
+            try{
+                service.deleteMemberService(tc.mockId, tc.mockMember, tc.mockTeam, tc.mockDeleteMember);
+            } catch (Exception e){
+
+            }
+
+        }
+    }
     /*@Test
     void getTeamById(){
         TeamManagementService mockService = new TeamManagementService(mockRepository);
