@@ -120,8 +120,8 @@ class TeamManagementServiceTest {
         }
 
         Testcase[] testcases = new Testcase[]{
-                new Testcase("1",mockTeamManagement, false),
-                new Testcase("", mockTeamTest, true)
+                new Testcase("1",mockTeamManagement, true),
+                new Testcase("", mockTeamTest, false)
         };
 
         for (Testcase tc : testcases) {
@@ -163,6 +163,7 @@ class TeamManagementServiceTest {
         for (Testcase tc : testcases) {
             try{
                 service.addMemberService(tc.mockId, tc.mockMember, tc.mockNewMember, tc.mockTeam);
+                verify(mockService, times(1)).updateService(tc.mockId, tc.mockTeam);
             } catch (Exception e){
 
             }
@@ -199,15 +200,17 @@ class TeamManagementServiceTest {
         for (Testcase tc : testcases) {
             try{
                 service.deleteMemberService(tc.mockId, tc.mockMember, tc.mockTeam, tc.mockDeleteMember);
+                verify(mockService, times(1)).updateService(tc.mockId, tc.mockTeam);
             } catch (Exception e){
 
             }
 
         }
     }
-    /*@Test
+
+    @Test
     void getTeamById(){
-        TeamManagementService mockService = new TeamManagementService(mockRepository);
+        TeamManagementService service = new TeamManagementService(mockRepository);
         class Testcase{
             final String mockId;
             final boolean expected;
@@ -222,7 +225,12 @@ class TeamManagementServiceTest {
         };
 
         for (Testcase tc : testcases) {
+            try{
+                service.getTeamById(tc.mockId);
+            } catch (Exception e){
+
+            }
 
         }
-    }*/
+    }
 }

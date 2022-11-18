@@ -14,14 +14,17 @@ class TeamManagementTest {
     static class Testcase_setString {
         final String newText;
 
-        Testcase_setString(String newText) {
+        final String[] newTText;
+
+        Testcase_setString(String newText, String[] newTText) {
             this.newText = newText;
+            this.newTText = newTText;
         }
     }
     TeamManagementTest.Testcase_setString[] testcases = new TeamManagementTest.Testcase_setString[]{
-            new Testcase_setString("abc"),
-            new Testcase_setString(null),
-            new Testcase_setString(""),
+            new Testcase_setString("abc", mockMembers),
+            new Testcase_setString(null, mockMembers),
+            new Testcase_setString("", mockMembers),
     };
 
     static class Testcase_getString {
@@ -45,6 +48,14 @@ class TeamManagementTest {
         }
     }
 
+    @Test
+    void setMembers(){
+        TeamManagement team = mockTeamManagement;
+        for (Testcase_setString tc : testcases){
+            team.setMembers(tc.newTText);
+            assertEquals(team.getMembers(),tc.newTText);
+        }
+    }
 
     @Test
     void setTeamName(){
@@ -93,17 +104,5 @@ class TeamManagementTest {
             assertEquals(actual,tc.expected);
         }
     }
-
-    /*@Test
-    void setMembers(){
-        TeamManagement team = mockTeamManagement;
-        for (Testcase_setString tc : testcases){
-            team.setMembers(tc.newText);
-            assertEquals(team.getMembers(),tc.newText);
-        }
-    }*/
-
-
-
 }
 

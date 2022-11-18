@@ -49,9 +49,7 @@ public class TeamManagementService {
         updateService(id, team);
     }
     public void deleteMemberService(String id, String[] members, TeamManagement team, String member) throws HttpClientErrorException {
-        if(Arrays.asList(members).contains(member)){
-            throw exceptionBadRequest;
-        }
+        if(!getRepository().existsById(id)){ throw exceptionNotFound; }
 
         List<String> mem = new ArrayList<>();
         for (String t: members){
