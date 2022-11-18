@@ -5,6 +5,8 @@ import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -107,7 +109,7 @@ class TeamManagementServiceTest {
     @Test
     void updateTeam(){
         TeamManagementService service = new TeamManagementService(mockRepository);
-        TeamManagement mockTeamTest = new TeamManagement();
+        TeamManagement emptyTeam = new TeamManagement(null, null, null,null);
         class Testcase{
             final String mockId;
             final TeamManagement mockUpdate;
@@ -121,13 +123,17 @@ class TeamManagementServiceTest {
 
         Testcase[] testcases = new Testcase[]{
                 new Testcase("1",mockTeamManagement, true),
-                new Testcase("", mockTeamTest, false)
+                new Testcase("1", mockTeamManagement, false),
+                new Testcase("1", emptyTeam, true),
         };
 
         for (Testcase tc : testcases) {
             try{
+                Optional<TeamManagement> optionalTeamManagement = Optional.ofNullable(tc.mockUpdate);
+                when(mockRepository.findById(tc.mockId)).thenReturn(optionalTeamManagement);
+                when(mockRepository.existsById(tc.mockId)).thenReturn(tc.expected);
                 service.updateService(tc.mockId, tc.mockUpdate);
-                verify(mockRepository, times(1)).findById(tc.mockId);
+                verify(mockRepository, times(1)).save(tc.mockUpdate);
             } catch (Exception e){
 
             }
@@ -175,6 +181,8 @@ class TeamManagementServiceTest {
     @Test
     void deleteTeamMember(){
         TeamManagementService service = new TeamManagementService(mockRepository);
+
+        TeamManagement mockTeamTest = new TeamManagement();
         class Testcase{
             final String mockId;
             final String[] mockMember;
@@ -193,14 +201,15 @@ class TeamManagementServiceTest {
 
         Testcase[] testcases = new Testcase[]{
                 new Testcase("1", mockMembers, "1", mockTeamManagement, true),
-                new Testcase("0", mockMembers, "1", mockTeamManagement, false),
-                new Testcase("1", mockMembers, "0", mockTeamManagement, false),
+                new Testcase("", mockMembers, "1", mockTeamTest, true),
+                new Testcase("1", mockMembers, "", mockTeamManagement, false),
         };
 
         for (Testcase tc : testcases) {
             try{
+                when(mockRepository.existsById(tc.mockId)).thenReturn(tc.expected);
                 service.deleteMemberService(tc.mockId, tc.mockMember, tc.mockTeam, tc.mockDeleteMember);
-                verify(mockService, times(1)).updateService(tc.mockId, tc.mockTeam);
+                //verify(mockRepository, times(1)).existsById(tc.mockId);
             } catch (Exception e){
 
             }
