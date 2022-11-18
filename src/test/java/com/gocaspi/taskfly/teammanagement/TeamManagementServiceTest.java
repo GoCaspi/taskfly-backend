@@ -209,7 +209,7 @@ class TeamManagementServiceTest {
             try{
                 when(mockRepository.existsById(tc.mockId)).thenReturn(tc.expected);
                 service.deleteMemberService(tc.mockId, tc.mockMember, tc.mockTeam, tc.mockDeleteMember);
-                //verify(mockRepository, times(1)).existsById(tc.mockId);
+                verify(mockRepository, times(1)).save(tc.mockTeam);
             } catch (Exception e){
 
             }
@@ -236,6 +236,7 @@ class TeamManagementServiceTest {
         for (Testcase tc : testcases) {
             try{
                 service.getTeamById(tc.mockId);
+                verify(mockService, times(1)).getTeamById(tc.mockId);
             } catch (Exception e){
 
             }
