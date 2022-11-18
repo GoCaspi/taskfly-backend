@@ -1,5 +1,7 @@
 package com.gocaspi.taskfly.task;
 
+import com.gocaspi.taskfly.taskcollection.TaskCollection;
+import com.gocaspi.taskfly.taskcollection.TaskCollectionService;
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.*;
@@ -8,6 +10,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -78,6 +81,42 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 		for (Testcase tc : testcases) {
 			boolean actualOut = t.validateTaskFields(new Gson().toJson(tc.taskInput));
 			assertEquals(tc.expected, actualOut);
+		}
+	}
+
+	@Test
+	public void updateTaskCollection(){
+		TaskService s = new TaskService(mockRepo);
+		var emptyBody = new Task.Taskbody("","","");
+		var emptyTask = new Task("", "", "", "", mockObjectId, emptyBody);
+		class Testcase {
+			final Task mockTask;
+			final String mockID;
+			final Boolean exists;
+
+			public Testcase(Task task, String mockID, Boolean exists) {
+				this.mockTask = task;
+				this.mockID = mockID;
+				this.exists = exists;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase(mockTask, mockObjectId.toHexString(), true),
+				new Testcase(mockTask, mockObjectId.toHexString(), false),
+				new Testcase(emptyTask, mockObjectId.toHexString(), true)
+		};
+		for (Testcase tc : testcases) {
+			try {
+				Optional<Task> taskCollection = Optional.ofNullable(tc.mockTask);
+				when(mockRepo.findById(tc.mockID)).thenReturn(taskCollection);
+				when(mockRepo.existsById(tc.mockID)).thenReturn(tc.exists);
+				s.updateService(tc.mockID, tc.mockTask);
+				verify(mockRepo, times(1)).save(tc.mockTask);
+			} catch (Exception e) {
+
+			}
+
 		}
 	}
 }

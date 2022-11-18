@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 
-public class TaskCollectionTest {
+class TaskCollectionTest {
     private final String mockID = new ObjectId().toHexString();
     private final String mockName = "TaskCollection1";
     private final String mockTeamID = new ObjectId().toHexString();
@@ -16,19 +16,19 @@ public class TaskCollectionTest {
     @Test
     void TaskCollectionTestPopulatedConstructor(){
         TaskCollection taskCollection = new TaskCollection(mockID, mockName, mockTeamID, mockOwnerID);
-        assertEquals(taskCollection.getName(), mockName);
-        assertEquals(taskCollection.getId(), mockID);
-        assertEquals(taskCollection.getTeamID(), mockTeamID);
-        assertEquals(taskCollection.getOwnerID(), mockOwnerID);
+        assertEquals(mockName, taskCollection.getName());
+        assertEquals(mockID, taskCollection.getId());
+        assertEquals(mockTeamID, taskCollection.getTeamID());
+        assertEquals(mockOwnerID, taskCollection.getOwnerID());
     }
 
     @Test
     void TaskCollectionTestEmptyConstructor(){
         TaskCollection taskCollection = new TaskCollection();
-        assertEquals(taskCollection.getName(), null);
-        assertEquals(taskCollection.getId(), null);
-        assertEquals(taskCollection.getTeamID(), null);
-        assertEquals(taskCollection.getOwnerID(), null);
+        assertEquals(null, taskCollection.getName());
+        assertEquals(null, taskCollection.getId());
+        assertEquals(null, taskCollection.getTeamID());
+        assertEquals(null, taskCollection.getOwnerID());
     }
 
     @Test
@@ -38,10 +38,10 @@ public class TaskCollectionTest {
         taskCollection.setId(mockID);
         taskCollection.setTeamID(mockTeamID);
         taskCollection.setOwnerID(mockOwnerID);
-        assertEquals(taskCollection.getName(), mockName);
-        assertEquals(taskCollection.getId(), mockID);
-        assertEquals(taskCollection.getTeamID(), mockTeamID);
-        assertEquals(taskCollection.getOwnerID(), mockOwnerID);
+        assertEquals(mockName, taskCollection.getName());
+        assertEquals(mockID, taskCollection.getId());
+        assertEquals(mockTeamID, taskCollection.getTeamID());
+        assertEquals(mockOwnerID, taskCollection.getOwnerID());
 
     }
 }

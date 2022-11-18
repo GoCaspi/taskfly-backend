@@ -18,7 +18,7 @@ import static java.util.Optional.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class TaskCollectionServiceTest {
+class TaskCollectionServiceTest {
     final private TaskCollectionRepository mockRepo = mock(TaskCollectionRepository.class);
     final private String mockTCID = "1234";
     final private String mockTCName = "TaskCollection1";
@@ -36,7 +36,7 @@ public class TaskCollectionServiceTest {
     final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic","mockPrio","mockDescription");
 
     @Test
-    public void createTaskCollectionTest(){
+    void createTaskCollectionTest(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
         TaskCollection taskCollection = new TaskCollection(this.mockTCID, this.mockTCName, this.mockTCTeamID, this.mockTCOwnerID);
 
@@ -57,7 +57,7 @@ public class TaskCollectionServiceTest {
         }
     }
     @Test
-    public void getTaskCollectionByIDTest(){
+    void getTaskCollectionByIDTest(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
@@ -88,7 +88,7 @@ public class TaskCollectionServiceTest {
         }
     }
     @Test
-    public void getTaskCollectionByOwnerIDTest(){
+    void getTaskCollectionByOwnerIDTest(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
@@ -122,7 +122,7 @@ public class TaskCollectionServiceTest {
         }
     }
     @Test
-    public void getTaskCollectionByTeamID(){
+    void getTaskCollectionByTeamID(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
@@ -156,7 +156,7 @@ public class TaskCollectionServiceTest {
         }
     }
     @Test
-    public void deleteTaskCollectionByID(){
+    void deleteTaskCollectionByID(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
 
         class Testcase {
@@ -176,7 +176,7 @@ public class TaskCollectionServiceTest {
         }
     }
     @Test
-    public void updateTaskCollection(){
+    void updateTaskCollection(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
 
         class Testcase {

@@ -1,6 +1,5 @@
 package com.gocaspi.taskfly.taskcollection;
 
-import com.gocaspi.taskfly.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -22,7 +20,7 @@ public class TaskCollectionController {
     }
     @PostMapping
     public ResponseEntity<TaskCollection> createTaskCollectionEndpoint(@Valid @RequestBody TaskCollection tc){
-        TaskCollection result = service.createTaskCollection(tc);
+        var result = service.createTaskCollection(tc);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 

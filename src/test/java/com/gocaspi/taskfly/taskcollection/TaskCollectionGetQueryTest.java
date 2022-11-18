@@ -1,7 +1,6 @@
 package com.gocaspi.taskfly.taskcollection;
 
 import com.gocaspi.taskfly.task.Task;
-import org.assertj.core.util.Arrays;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaskCollectionGetQueryTest {
+class TaskCollectionGetQueryTest {
     private final String mockID = new ObjectId().toHexString();
     private final String mockName = "TaskCollection1";
     private final String mockTeamID = new ObjectId().toHexString();

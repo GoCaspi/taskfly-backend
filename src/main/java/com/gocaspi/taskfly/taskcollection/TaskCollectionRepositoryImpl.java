@@ -12,6 +12,10 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
     private final MongoTemplate mongoTemplate;
 
     private static final String OBJECTID = "objId";
+    private static final String LISTID = "listId";
+    private static final String COLLECTIONNAME = "taskCollection";
+    private static final String FOREIGNCOLLECTION = "task";
+    private static final String LOOKUPFIELD = "tasks";
     @Autowired
     public TaskCollectionRepositoryImpl(MongoTemplate mongoTemplate){
         this.mongoTemplate = mongoTemplate;
@@ -19,47 +23,47 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
 
     private AggregationOperation addConvertedIDField(){
         return aggregationOperation -> {
-            Document toString = new Document("$toString", "$_id");
-            Document id = new Document(OBJECTID, toString);
+            var toString = new Document("$toString", "$_id");
+            var id = new Document(OBJECTID, toString);
             return new Document("$addFields", id);
         };
     }
     @Override
     public List<TaskCollectionGetQuery> findByOwnerID(String userID){
-        MatchOperation match = Aggregation.match(new Criteria("ownerID").is(userID));
+        var match = Aggregation.match(new Criteria("ownerID").is(userID));
 
-        LookupOperation lookupOperation = LookupOperation.newLookup()
-                .from("task")
+        var lookupOperation = LookupOperation.newLookup()
+                .from(FOREIGNCOLLECTION)
                 .localField(OBJECTID)
-                .foreignField("listId")
-                .as("tasks");
-        Aggregation aggregation = Aggregation.newAggregation(match, addConvertedIDField(), lookupOperation);
-        return mongoTemplate.aggregate(aggregation, "taskCollection", TaskCollectionGetQuery.class).getMappedResults();
+                .foreignField(LISTID)
+                .as(LOOKUPFIELD);
+        var aggregation = Aggregation.newAggregation(match, addConvertedIDField(), lookupOperation);
+        return mongoTemplate.aggregate(aggregation, COLLECTIONNAME, TaskCollectionGetQuery.class).getMappedResults();
     }
 
     @Override
     public TaskCollectionGetQuery findByID(String collectionId){
-        MatchOperation match = Aggregation.match(new Criteria("_id").is(collectionId));
+        var match = Aggregation.match(new Criteria("_id").is(collectionId));
 
-        LookupOperation lookupOperation = LookupOperation.newLookup()
-                .from("task")
+        var lookupOperation = LookupOperation.newLookup()
+                .from(FOREIGNCOLLECTION)
                 .localField(OBJECTID)
-                .foreignField("listId")
-                .as("tasks");
-        Aggregation aggregation = Aggregation.newAggregation(match, addConvertedIDField(), lookupOperation);
-        return mongoTemplate.aggregate(aggregation, "taskCollection", TaskCollectionGetQuery.class).getUniqueMappedResult();
+                .foreignField(LISTID)
+                .as(LOOKUPFIELD);
+        var aggregation = Aggregation.newAggregation(match, addConvertedIDField(), lookupOperation);
+        return mongoTemplate.aggregate(aggregation, COLLECTIONNAME, TaskCollectionGetQuery.class).getUniqueMappedResult();
     }
 
     @Override
     public List<TaskCollectionGetQuery> findByTeamID(String teamID){
         MatchOperation match = Aggregation.match(new Criteria("teamID").is(teamID));
 
-        LookupOperation lookupOperation = LookupOperation.newLookup()
-                .from("task")
+        var lookupOperation = LookupOperation.newLookup()
+                .from(FOREIGNCOLLECTION)
                 .localField(OBJECTID)
-                .foreignField("listId")
-                .as("tasks");
-        Aggregation aggregation = Aggregation.newAggregation(match, addConvertedIDField(), lookupOperation);
-        return mongoTemplate.aggregate(aggregation, "taskCollection", TaskCollectionGetQuery.class).getMappedResults();
+                .foreignField(LISTID)
+                .as(LOOKUPFIELD);
+        var aggregation = Aggregation.newAggregation(match, addConvertedIDField(), lookupOperation);
+        return mongoTemplate.aggregate(aggregation, COLLECTIONNAME, TaskCollectionGetQuery.class).getMappedResults();
     }
 }
