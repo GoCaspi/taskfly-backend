@@ -28,7 +28,7 @@ public class TeamManagementService {
     }
 
     public TeamManagement getTeamById(String id) throws HttpClientErrorException {
-        Optional<TeamManagement> teamManagement = getRepository().findById(id);
+        var teamManagement = getRepository().findById(id);
         if(teamManagement.isEmpty()){
             throw exceptionNotFound;
         }
@@ -38,10 +38,10 @@ public class TeamManagementService {
         if(Arrays.asList(members).contains(newMember)){
             throw exceptionBadRequest;
         }
-        List<String> newMembers = new ArrayList<>(Arrays.asList(members));
+        var newMembers = new ArrayList<>(Arrays.asList(members));
         newMembers.add(newMember);
         //Liste zu Array
-        String[] a = new String[newMembers.size()];
+        var a = new String[newMembers.size()];
         newMembers.toArray(a);
 
         team.setMembers(a);
@@ -58,7 +58,7 @@ public class TeamManagementService {
             }
         }
 
-        String[] a = new String[mem.size()];
+        var a = new String[mem.size()];
         mem.toArray(a);
 
         team.setMembers(a);
@@ -69,7 +69,7 @@ public class TeamManagementService {
         getRepository().deleteById(id);
     }
     public void updateService(String id, TeamManagement update) throws HttpClientErrorException{
-        Optional<TeamManagement> teammanagement = getRepository().findById(id);
+        var teammanagement = getRepository().findById(id);
 
         if (!getRepository().existsById(id)) {
             throw exceptionNotFound;
@@ -89,7 +89,7 @@ public class TeamManagementService {
         });
     }
     public boolean validateTeamManagementFields(String jsonPayload){
-        TeamManagement teamManagement = jsonToTeamManagement(jsonPayload);
+        var teamManagement = jsonToTeamManagement(jsonPayload);
 
         return /*!Objects.equals(teamManagement.getId(), null) &&*/ !Objects.equals(teamManagement.getMembers(), null ) &&
                 !Objects.equals(teamManagement.getTeamName(), null) && !Objects.equals(teamManagement.getUserID(), null);
