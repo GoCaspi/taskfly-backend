@@ -11,7 +11,6 @@ public class Task {
     private ObjectId id;
     private String taskId;
     private Taskbody body;
-
    public static class Taskbody {
         private String topic;
         private String priority;
