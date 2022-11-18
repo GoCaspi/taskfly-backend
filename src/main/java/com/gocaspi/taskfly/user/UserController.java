@@ -22,9 +22,9 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<String> handlerCreateUser(@RequestBody String body) throws HttpClientErrorException.BadRequest {
-        User user = jsonToUser(body);
+        var user = jsonToUser(body);
         getService().postService(user);
-        String msg = "Successfully created User";
+        var msg = "Successfully created User";
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
@@ -40,7 +40,7 @@ public class UserController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<User> handlerGetUsreById(@PathVariable String id) throws HttpClientErrorException.NotFound {
-        User user = getService().getServicebyid(id);
+        var user = getService().getServicebyid(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -52,7 +52,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable String id) throws HttpClientErrorException.NotFound {
         getService().deleteService(id);
-        String msg = "Successfully deleted User with id: " + id;
+        var msg = "Successfully deleted User with id: " + id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
@@ -67,15 +67,15 @@ public class UserController {
      */
     @GetMapping()
     public ResponseEntity<List<User>> handleGetAllUsers() throws HttpClientErrorException.NotFound {
-        List<User> users = getService().getServiceAllUser();
+        var users = getService().getServiceAllUser();
         if (users.isEmpty()) {throw  getService().getNotFound();}
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
     @PutMapping("/{id}")
     public ResponseEntity<String> handleUpdateUser(@PathVariable String id, @RequestBody String body) throws HttpClientErrorException.NotFound {
-        User update = jsonToUser(body);
+        var update = jsonToUser(body);
         getService().updateService(id, update);
-        String msg = "Successfully update User with id :" + id;
+        var msg = "Successfully update User with id :" + id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 }
