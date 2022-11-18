@@ -1,6 +1,7 @@
 package com.gocaspi.taskfly.user;
 
         import com.google.gson.Gson;
+        import org.bson.types.ObjectId;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.http.HttpHeaders;
         import org.springframework.http.HttpStatus;
@@ -70,17 +71,19 @@ public class UserService {
         getRepo().insert(t);
     }
     public boolean validateTaskFields(String jsonPayload){
-        User user = jsonToUser(jsonPayload);
+        var user = jsonToUser(jsonPayload);
         return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getListId(), null) && !Objects.equals(user.getEmail(), null)&& !Objects.equals(user.getTeam(), null);
     }
     public User jsonToUser(String jsonPayload){return new Gson().fromJson(jsonPayload, User.class);}
 
     public User getServicebyid(String id)throws HttpClientErrorException.NotFound{
-        Optional<User> user = getRepo().findById(id);
-        if(user.isEmpty()){
+        if(!getRepo().existsById(id)){ throw exceptionnotFound;}
+        var user = getRepo().findById(id);
+        if (user.isEmpty()){
             throw exceptionnotFound;
         }
         return user.get();
+
     }
     public List<User> getServiceAllUser(){
         List<User> users = getRepo().findAll();

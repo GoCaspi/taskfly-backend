@@ -12,7 +12,7 @@ public class User {
     private String password;
     private String team;
     private String listId;
-@Id
+    @Id
     private String id;
     private String userId;
 
@@ -41,8 +41,7 @@ public class User {
     public void setEmail(String str){ this.email = str;}
     public void setListId(String str){ this.listId = str;}
     public void setTeam(String str){ this.team = str;}
-   public void setId(String id){this.id = id;}
-
+    public void setId(String id){this.id = id;}
     public void setPassword(String password) {
         this.password = password;
     }

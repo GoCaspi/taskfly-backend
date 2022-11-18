@@ -44,7 +44,7 @@ public class TaskController {
      */
     @PostMapping
     public ResponseEntity<String> handleCreateNewTask(@RequestBody String body) throws HttpClientErrorException.BadRequest {
-        Task task = jsonToTask(body);
+        var task = jsonToTask(body);
         getService().postService(task);
         String msg = "successfully created task with id: " + task.getTaskIdString();
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
@@ -76,7 +76,7 @@ public class TaskController {
      */
     @GetMapping("/taskId/{id}")
     public ResponseEntity<Task> handleGetTaskById(@PathVariable String id) throws HttpClientErrorException.NotFound {
-        Task task = getService().getServiceTaskById(id);
+        var task = getService().getServiceTaskById(id);
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
@@ -90,7 +90,7 @@ public class TaskController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> handleDeleteTask(@PathVariable String id) throws HttpClientErrorException.NotFound {
         getService().deleteService(id);
-        String msg = "successfully deleted task with id: "+id;
+        var msg = "successfully deleted task with id: "+id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
@@ -108,9 +108,9 @@ public class TaskController {
     @PutMapping("/{id}")
     public ResponseEntity<String> handleUpdateTask(@PathVariable String id,@RequestBody String body) throws HttpClientErrorException.NotFound {
 
-        Task update = jsonToTask(body);
+        var update = jsonToTask(body);
         getService().updateService(id,update);
-        String msg = "successfully updated task with id: "+id;
+        var msg = "successfully updated task with id: "+id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
@@ -122,7 +122,7 @@ public class TaskController {
      */
 
     public boolean validateTaskFields(String jsonPayload){
-        Task task = jsonToTask(jsonPayload);
+        var task = jsonToTask(jsonPayload);
         return !Objects.equals(task.getUserId(), null) && !Objects.equals(task.getListId(), null) && !Objects.equals(task.getBody().getTopic(), null) && !Objects.equals(task.getBody().getDescription(), null);
     }
 
