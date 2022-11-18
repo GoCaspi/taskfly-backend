@@ -1,5 +1,7 @@
 package com.gocaspi.taskfly.task;
 
+import com.gocaspi.taskfly.taskcollection.TaskCollection;
+import com.gocaspi.taskfly.taskcollection.TaskCollectionService;
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.*;
@@ -8,6 +10,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -16,31 +19,15 @@ import static org.mockito.Mockito.*;
 public class TaskServiceTest {
 
 	TaskRepository mockRepo = mock(TaskRepository.class);
-	TaskService mockService = mock(TaskService.class);
 	HttpClientErrorException er = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "no tasks are assigned to the provided userId", null, null, null);
 	String mockUserIds = "123";
 	String mockListId = "1";
-	String mockTopic = "topic1";
 	String mockTeam = "team1";
-	String mockPrio = "prio1";
-	String mockDesc = "desc1";
 	String mockDeadline = "11-11-2022";
 	ObjectId mockObjectId = new ObjectId();
-//	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
 Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescription");
 	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObjectId,mockbody);
 
-	TaskService ts = new TaskService(mockRepo);
-	/*
-	@Test
-	public void postService() throws HttpClientErrorException {
-		TaskService t2 = mockService; // TODO Replace default value.
-		Task t = mockTask; // TODO Replace default value.
-		ts.postService(t);
-		verify(t2, times(1));
-	}
-
-	 */
 
 	@Test
 	public void getService_AllTasksOfUser() {
@@ -94,6 +81,44 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 		for (Testcase tc : testcases) {
 			boolean actualOut = t.validateTaskFields(new Gson().toJson(tc.taskInput));
 			assertEquals(tc.expected, actualOut);
+		}
+	}
+
+	@Test
+	public void updateTaskService(){
+		TaskService s = new TaskService(mockRepo);
+		var emptyBody = new Task.Taskbody("","","");
+		var emptyTask = new Task("", "", "", "", mockObjectId, emptyBody);
+		class Testcase {
+			final Task mockTask;
+			final String mockID;
+			final Boolean exists;
+
+			public Testcase(Task task, String mockID, Boolean exists) {
+				this.mockTask = task;
+				this.mockID = mockID;
+				this.exists = exists;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase(emptyTask, mockObjectId.toHexString(), true),
+				new Testcase(mockTask, mockObjectId.toHexString(), true),
+				new Testcase(mockTask, mockObjectId.toHexString(), false)
+		};
+		for (Testcase tc : testcases) {
+			try {
+				Optional<Task> taskCollection = Optional.ofNullable(tc.mockTask);
+				when(mockRepo.findById(tc.mockID)).thenReturn(taskCollection);
+				when(mockRepo.existsById(tc.mockID)).thenReturn(tc.exists);
+				s.updateService(tc.mockID, tc.mockTask);
+				if (tc.exists){
+					verify(mockRepo, times(1)).save(tc.mockTask);
+				}
+			} catch (Exception e) {
+
+			}
+
 		}
 	}
 }

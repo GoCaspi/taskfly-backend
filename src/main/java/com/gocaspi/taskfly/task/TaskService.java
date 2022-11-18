@@ -1,13 +1,13 @@
 package com.gocaspi.taskfly.task;
 
 import com.google.gson.Gson;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.*;
+
 
 public class TaskService {
     @Autowired
@@ -63,7 +63,11 @@ public class TaskService {
 
     public Task getServiceTaskById(String id) throws HttpClientErrorException.NotFound {
         if(!getRepo().existsById(id)){ throw exceptionNotFound; }
-        return getRepo().findById(id).isPresent() ? getRepo().findById(id).get() : new Task(null,null,null,null,new ObjectId(),null);
+        var task = repo.findById(id);
+        if (task.isEmpty()){
+            throw exceptionNotFound;
+        }
+        return task.get();
     }
 
     public void deleteService(String id) throws HttpClientErrorException {
@@ -72,17 +76,27 @@ public class TaskService {
     }
 
     public void updateService(String id,Task update) throws HttpClientErrorException {
-        Optional<Task> task =  getRepo().findById(id);
+        var task =  repo.findById(id);
 
-        if(!getRepo().existsById(id)){ throw exceptionNotFound; }
+        if(!repo.existsById(id)){ throw exceptionNotFound; }
         task.ifPresent( t->{
-            if(!Objects.equals(update.getBody().getDescription(), "")){t.getBody().setDescription(update.getBody().getDescription());}
-            if(!Objects.equals(update.getBody().getTopic(), "")){t.getBody().setTopic(update.getBody().getTopic());}
-            if(!Objects.equals(update.getTeam(), "")){t.setTeam(update.getTeam());}
-            if(!Objects.equals(update.getDeadline(), "")){t.setDeadline(update.getDeadline());}
-            if(!Objects.equals(update.getListId(), "")){t.setListId(update.getListId());}
+            if(!Objects.equals(update.getBody().getDescription(), "")) {
+                t.getBody().setDescription(update.getBody().getDescription());
+            }
+            if(!Objects.equals(update.getBody().getTopic(), "")){
+                t.getBody().setTopic(update.getBody().getTopic());
+            }
+            if(!Objects.equals(update.getTeam(), "")){
+                t.setTeam(update.getTeam());
+            }
+            if(!Objects.equals(update.getDeadline(), "")){
+                t.setDeadline(update.getDeadline());
+            }
+            if(!Objects.equals(update.getListId(), "")){
+                t.setListId(update.getListId());
+            }
             getRepo().save(t);
-                });
+        });
     }
 
     /**
@@ -91,7 +105,7 @@ public class TaskService {
      * @return true if the mentioned criteria holds for that Task-payload, else return false
      */
     public boolean validateTaskFields(String jsonPayload){
-        Task task = jsonToTask(jsonPayload);
+        var task = jsonToTask(jsonPayload);
         return !Objects.equals(task.getUserId(), null) && !Objects.equals(task.getListId(), null) && !Objects.equals(task.getBody().getTopic(), null) && !Objects.equals(task.getBody().getDescription(), null);
     }
 
