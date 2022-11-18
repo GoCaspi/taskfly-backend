@@ -43,5 +43,4 @@ public class ApiExceptionHandler {
         ce.getConstraintViolations().forEach(error -> errors.put(error.getPropertyPath().toString(), error.getMessage()));
         return errors;
     }
-
 }

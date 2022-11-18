@@ -2,8 +2,7 @@
 	"info": {
 		"_postman_id": "84a40b2f-17f2-4c43-940a-5ce822fe2b9e",
 		"name": "TaskFly",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21612803"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -128,6 +127,7 @@
 					"host": [
 						"{{host}}"
 					],
+					"port": "8080",
 					"path": [
 						"user",
 						"create"
@@ -228,13 +228,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{host}}/user/63773343094b4d6d2ec651f9",
+					"raw": "{{host}}/user/6364b4648d1ba634ae236728",
 					"host": [
 						"{{host}}"
 					],
 					"path": [
 						"user",
-						"63773343094b4d6d2ec651f9"
+						"6364b4648d1ba634ae236728"
 					]
 				}
 			},
@@ -451,25 +451,12 @@
 		},
 		{
 			"name": "UpdateTask",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Check if Valid Request Passes Controller\", () => {",
-							"    pm.response.to.have.status(200)",
-							"})"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
 			"request": {
 				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userId\":\"6368c112642b964cb6e371a7\",\n    \"listId\":\"2\",\n    \"team\":\"blue\",\n    \"deadline\":\"11-11-2022\",\n    \"body\":{\n        \"topic\":\"new topic\",\n        \"priority\":\"new priority\",\n        \"description\":\"new description text\"\n    }\n}",
+					"raw": "{\n    \"userIds\":[\"3\",\"addedUserID again\"],\n    \"listId\":\"2\",\n    \"topic\":\" updated new topic again and again\",\n    \"team\":\"blue\",\n    \"priority\":\"high\",\n    \"description\":\"updated Task again! lorem ipsum anima mea omnipotentis\",\n    \"deadline\":\"11-11-2022\",\n    \"test\":\"success\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -477,13 +464,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{host}}/task/{{tcTempID}}",
+					"raw": "{{host}}/task/6359537a3981e25a5980f860",
 					"host": [
 						"{{host}}"
 					],
 					"path": [
 						"task",
-						"{{tcTempID}}"
+						"6359537a3981e25a5980f860"
 					]
 				}
 			},
@@ -504,13 +491,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{host}}/task/6368c0f3642b964cb6e371a6",
+					"raw": "{{host}}/task/6359537a3981e25a5980f860",
 					"host": [
 						"{{host}}"
 					],
 					"path": [
 						"task",
-						"6368c0f3642b964cb6e371a6"
+						"6359537a3981e25a5980f860"
 					]
 				}
 			},
@@ -557,16 +544,10 @@
 			"name": "CreateNewTask",
 			"request": {
 				"method": "POST",
-				"header": [
-					{
-						"key": "X-XSRF-TOKEN",
-						"value": "2BD61488AC0031631BF5DC7234E80023",
-						"type": "text"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userId\":\"6368c011642b964cb6e371a5\",\n    \"listId\":\"2\",\n    \"team\":\"blue\",\n    \"deadline\":\"11-11-2022\",\n    \"body\":{\n        \"topic\":\"new topic\",\n        \"priority\":\"new priority\",\n        \"description\":\"new description text\"\n    },\n    \"testid\": \"6368c011642b964cb6e371a5\"\n}",
+					"raw": "{\n    \"userId\":\"1\",\n    \"listId\":\"1\",\n    \"topic\":\"new topic\",\n    \"team\":\"blue\",\n    \"priority\":\"high\",\n    \"description\":\"description of the task\",\n    \"deadline\":\"11-11-2022\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -607,6 +588,302 @@
 					"path": [
 						"employee",
 						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateTeam",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create Team\", function(){",
+							"    pm.response.to.have.status(202)",
+							"})",
+							"",
+							"",
+							"var body2 = JSON.stringify([{",
+							"    \"teamname\": \"Rot\",",
+							"    \"members\": [\"3\",\"4\",\"7\"],",
+							"    \"userID\": \"1\"",
+							"}])",
+							"",
+							"",
+							"pm.sendRequest({",
+							"    url:pm.environment.get(\"host\")+\"/teammanagement/\",",
+							"    method: \"POST\",",
+							"    body: body2,",
+							"}, (err, res) => {",
+							"    pm.test(\"Body error\", function(){",
+							"        pm.expect(res).to.have.status(500)",
+							"       ",
+							"    })",
+							"    ",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"teamName\": \"Rot\",\n    \"members\": [\"3\",\"4\",\"7\"],\n    \"userID\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/teammanagement",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teammanagement"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteTeam",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Team Status check\", () => {",
+							"    pm.response.to.have.status(202)",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/teammanagement/\" + \"123\",",
+							"    method: \"DELETE\",",
+							"    ",
+							"}, (err, res) =>{",
+							"    pm.test(\"Team does not exist\", () => {",
+							"        pm.expect(res).to.have.status(404)",
+							"    })",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/teammanagement/6376011f7a4f5027912c869d",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teammanagement",
+						"6376011f7a4f5027912c869d"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateTeam",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Update Team Status\", () => {",
+							"    pm.response.to.have.status(202)",
+							"})",
+							"",
+							"",
+							"var body = JSON.stringify([{",
+							"    \"teamname\": \"Rot\",",
+							"    \"members\": [\"3\",\"4\",\"7\"],",
+							"    \"userID\": \"1\"",
+							"}])",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/teammanagement/1\",",
+							"    method: \"PUT\",",
+							"    ",
+							"}, (err, res) =>{",
+							"    pm.test(\"Team does not exist\", () => {",
+							"        pm.expect(res).to.have.status(404)",
+							"    })",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/teammanagement/\",",
+							"    method: \"PUT\",",
+							"}, (err, res) =>{",
+							"    pm.test(\"Please Enter Team\", () => {",
+							"        pm.expect(res).to.have.status(405)",
+							"    })",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/teammanagement\",",
+							"    method: \"PUT\",",
+							"}, (err, res) => {",
+							"    pm.test(\"Body error\", () => {",
+							"        pm.expect(res).to.have.status(500)",
+							"    })",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"teamName\": \"OKAPI\",\n    \"members\": [\"3\",\"4\",\"7\"],\n    \"userID\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/teammanagement/1",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teammanagement",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddMembersTeam",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Team and Member Status check\", function(){",
+							"    pm.response.to.have.status(202)",
+							"})",
+							"",
+							"",
+							"var body2 = JSON.stringify([{",
+							"    \"_id\": \"637601207a4f5027912c869e\",",
+							"    \"teamname\": \"Rot\",",
+							"    \"members\": [\"3\",\"4\",\"7\"],",
+							"    \"userID\": \"1\"",
+							"}])",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/teammanagement/\" + \"123\",",
+							"    method: \"POST\",",
+							"}, (err, res) =>{",
+							"    pm.test(\"Add Team Member\", () => {",
+							"        pm.expect(res).to.have.status(405)",
+							"    })",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url:pm.environment.get(\"host\")+\"/teammanagement/\",",
+							"    method: \"POST\",",
+							"}, (err, res) => {",
+							"    pm.test(\"Enter the Team\", function(){",
+							"        pm.expect(res).to.have.status(400)",
+							"       ",
+							"    })",
+							"    ",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/teammanagement/637601217a4f5027912c869f/999",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teammanagement",
+						"637601217a4f5027912c869f",
+						"999"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteMemberTeam",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Team and Member Status check\", () => {",
+							"    pm.response.to.have.status(202)",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/teammanagement/\" + \"123\",",
+							"    method: \"DELETE\",",
+							"}, (err, res) =>{",
+							"    pm.test(\"Team does not exist\", () => {",
+							"        pm.expect(res).to.have.status(404)",
+							"    })",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/teammanagement/\" + \"123\" + \"55\",",
+							"    method: \"DELETE\",",
+							"}, (err, res) =>{",
+							"    pm.test(\"Team Member does not exist\", () => {",
+							"        pm.expect(res).to.have.status(404)",
+							"    })",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/teammanagement/637601207a4f5027912c869e/3",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teammanagement",
+						"637601207a4f5027912c869e",
+						"3"
 					]
 				}
 			},
