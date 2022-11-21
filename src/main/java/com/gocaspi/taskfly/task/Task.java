@@ -9,20 +9,19 @@ public class Task {
     private String team;
     private String deadline;
     private ObjectId id;
-    private String taskId;
     private Taskbody body;
    public static class Taskbody {
         private String topic;
-        private String priority;
+        private Boolean priority;
         private String description;
 
-        public Taskbody(String topic, String priority,String description){
+        public Taskbody(String topic, Boolean priority,String description){
             this.topic = topic;
             this.priority = priority;
             this.description = description;
         }
 
-        public void setPriority(String str){
+        public void setPriority(Boolean str){
             this.priority = str;
         }
         public void setDescription(String str){
@@ -38,7 +37,7 @@ public class Task {
         public String getDescription(){
             return this.description;
         }
-        public String getPriority(){
+        public Boolean getPriority(){
             return this.priority;
         }
 
@@ -52,7 +51,6 @@ public class Task {
         this.team = team;
         this.deadline = deadline;
         this.id = id;
-        this.taskId = id.toString();
         this.body = body;
     }
 
@@ -62,34 +60,6 @@ public class Task {
     }
     public Taskbody getBody(){
         return this.body;
-    }
-
-
-    /**
-     * returns the id string of the ObjectId of the task
-     *
-     * @return String, id string of the ObjectId _id
-     */
-    public String getTaskId(){
-        return this.taskId;
-    }
-
-    /**
-     * sets the description of the task to a provided string (text)
-     *
-     * @param text, new description of the task
-     */
-    public void setTaskId(String text){
-        this.taskId = text;
-    }
-
-    /**
-     * returns the id string of the ObjectId of the task
-     *
-     * @return String, id string of the ObjectId _id
-     */
-    public String getTaskIdString(){
-        return this.id.toString();
     }
 
 
@@ -109,6 +79,13 @@ public class Task {
      */
     public String getUserId(){ return this.userId; }
 
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
 
     /**
      * sets the team of a task to a new team (team)

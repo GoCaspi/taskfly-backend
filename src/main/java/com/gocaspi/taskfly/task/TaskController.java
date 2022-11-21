@@ -16,12 +16,9 @@ import java.util.*;
 @RequestMapping("/task")
 public class TaskController {
     @Autowired
-    private TaskRepository repository;
     private final TaskService service;
 
    public TaskController (TaskRepository repository){
-       super();
-       this.repository = repository;
        this.service = new TaskService(repository);
    }
 
@@ -30,9 +27,6 @@ public class TaskController {
      *
      * @return TaskService that is injected in the Controller
      */
-    public TaskService getService() {
-        return this.service;
-    }
 
     /**
      * given a request body this endpoint converts the body to a Task and validates the input Data against set criteria (see method below)
@@ -45,8 +39,8 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<String> handleCreateNewTask(@RequestBody String body) throws HttpClientErrorException.BadRequest {
         var task = jsonToTask(body);
-        getService().postService(task);
-        String msg = "successfully created task with id: " + task.getTaskIdString();
+        service.postService(task);
+        String msg = "successfully created task with id: " + task.getId().toHexString();
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
@@ -61,8 +55,8 @@ public class TaskController {
      */
     @GetMapping("/userId/{id}")
     public ResponseEntity<List<Task>> handleGetAllTasks(@PathVariable String id) throws HttpClientErrorException.NotFound {
-        List<Task> tasks = getService().getServiceAllTasksOfUser(id);
-        if(tasks.isEmpty()){ throw getService().getNotFound();}
+        List<Task> tasks = service.getServiceAllTasksOfUser(id);
+        if(tasks.isEmpty()){ throw service.getNotFound();}
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
@@ -76,8 +70,14 @@ public class TaskController {
      */
     @GetMapping("/taskId/{id}")
     public ResponseEntity<Task> handleGetTaskById(@PathVariable String id) throws HttpClientErrorException.NotFound {
-        var task = getService().getServiceTaskById(id);
+        var task = service.getServiceTaskById(id);
         return new ResponseEntity<>(task, HttpStatus.OK);
+    }
+
+    @GetMapping("/priority/{id}")
+    public ResponseEntity<List<Task>> handleGetTaskByUserIDandPriority(@PathVariable String userid) throws HttpClientErrorException.NotFound{
+        var taskList = service.getTasksByPriorityService(userid);
+        return new ResponseEntity<>(taskList, HttpStatus.OK);
     }
 
     /**
@@ -89,7 +89,7 @@ public class TaskController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> handleDeleteTask(@PathVariable String id) throws HttpClientErrorException.NotFound {
-        getService().deleteService(id);
+        service.deleteService(id);
         var msg = "successfully deleted task with id: "+id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
@@ -109,7 +109,7 @@ public class TaskController {
     public ResponseEntity<String> handleUpdateTask(@PathVariable String id,@RequestBody String body) throws HttpClientErrorException.NotFound {
 
         var update = jsonToTask(body);
-        getService().updateService(id,update);
+        service.updateService(id,update);
         var msg = "successfully updated task with id: "+id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }

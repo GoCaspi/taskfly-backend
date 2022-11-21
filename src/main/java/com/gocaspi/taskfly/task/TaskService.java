@@ -1,13 +1,15 @@
 package com.gocaspi.taskfly.task;
 
 import com.google.gson.Gson;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.*;
-
+@Service
 public class TaskService {
     @Autowired
     private TaskRepository repo;
@@ -96,6 +98,10 @@ public class TaskService {
             }
             getRepo().save(t);
         });
+    }
+
+    public List<Task> getTasksByPriorityService(String userid) {
+        return repo.getTaskByIdAndBody_Priority(new ObjectId(userid), true);
     }
 
     /**

@@ -25,7 +25,7 @@ public class TaskServiceTest {
 	String mockTeam = "team1";
 	String mockDeadline = "11-11-2022";
 	ObjectId mockObjectId = new ObjectId();
-Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescription");
+Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObjectId,mockbody);
 
 
@@ -87,7 +87,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 	@Test
 	public void updateTaskService(){
 		TaskService s = new TaskService(mockRepo);
-		var emptyBody = new Task.Taskbody("","","");
+		var emptyBody = new Task.Taskbody("",null,"");
 		var emptyTask = new Task("", "", "", "", mockObjectId, emptyBody);
 		class Testcase {
 			final Task mockTask;

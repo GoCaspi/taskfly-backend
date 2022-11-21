@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 	String mockDeadline = "11-11-2022";
 	ObjectId mockObjectId = new ObjectId();
 
-	Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescription");
+	Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 
 	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObjectId,mockbody);
 //	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
@@ -244,7 +244,7 @@ import static org.mockito.Mockito.when;
 			}
 
 			try {
-				ResponseEntity<String> expected = new ResponseEntity<>("successfully created task with id: " + tc.mockTask.getTaskIdString(), HttpStatus.ACCEPTED);
+				ResponseEntity<String> expected = new ResponseEntity<>("successfully created task with id: " + tc.mockTask.getId().toHexString(), HttpStatus.ACCEPTED);
 				ResponseEntity<String> actual1 = t.handleCreateNewTask(tc.mockPayload);
 				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
 			} catch (HttpClientErrorException e) {

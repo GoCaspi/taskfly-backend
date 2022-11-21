@@ -18,7 +18,7 @@ class TaskCollectionGetQueryTest {
     final private ObjectId mockObjectID = new ObjectId();
 
     private final String mockDeadline = "11-11-2022";
-    private final Task.Taskbody mockBody = new Task.Taskbody("mockTopic", "mockPrio", "mockDescription");
+    private final Task.Taskbody mockBody = new Task.Taskbody("mockTopic", true, "mockDescription");
     @Test
     void TestTaskCollectionGetQueryConstructor(){
         Task task1 = new Task(mockUserID, mockListID, mockTeamID, mockDeadline, mockObjectID, mockBody);

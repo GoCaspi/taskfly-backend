@@ -38,7 +38,7 @@ class TaskCollectionControllerTest {
 
     final private String mockDeadline = "11-11-2022";
     final private ObjectId mockObjectId = new ObjectId();
-    final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic", "mockPrio", "mockDescription");
+    final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic", true, "mockDescription");
 
 
     @Test

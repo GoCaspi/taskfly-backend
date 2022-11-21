@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 	String mockUserIds = "1"; String mockListId = ""; String mockTopic = ""; String mockTeam = "";
 	String mockPrio = ""; String mockDesc = ""; String mockDeadline = ""; ObjectId mockObjectId = new ObjectId();
 //	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
-Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescription");
+Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObjectId,mockbody);
 
 	class Testcase_setString{
@@ -71,8 +71,8 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObject
 	 void setPriority() {
 		Task t = mockTask;
 		for (Testcase_setString tc : testcases){
-			t.getBody().setPriority(tc.newText);
-			assertEquals(t.getBody().getPriority(),tc.newText);
+			t.getBody().setPriority(false);
+			assertEquals(t.getBody().getPriority(),false);
 		}
 	}
 
@@ -117,9 +117,9 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObject
 	 void getPriority(){
 		Task t = mockTask;
 		for (Testcase_getString tc : testcases_get){
-			t.getBody().setPriority(tc.expected);
-			String actual = t.getBody().getPriority();
-			assertEquals(actual,tc.expected);
+			t.getBody().setPriority(true);
+			Boolean actual = t.getBody().getPriority();
+			assertEquals(actual,true);
 		}
 	}
 
@@ -144,16 +144,6 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObject
 	}
 
 	@Test
-	 void getTaskIdString(){
-		Task t = mockTask;
-		for (Testcase_getString tc : testcases_get){
-			t.getBody().setTopic(tc.expected);
-			String actual = t.getTaskIdString();
-			assertEquals(actual,t.getTaskIdString());
-		}
-	}
-
-	@Test
 	 void getListId(){
 		Task t = mockTask;
 		for (Testcase_getString tc : testcases_get){
@@ -162,14 +152,13 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObject
 			assertEquals(actual,tc.expected);
 		}
 	}
+
 	 @Test
-	 void getTaskId(){
+	 void getID(){
 		 Task t = mockTask;
-		 for (Testcase_getString tc : testcases_get){
-			 t.setTaskId(tc.expected);
-			 String actual = t.getTaskId();
-			 assertEquals(actual,tc.expected);
-		 }
+		 ObjectId oID = new ObjectId();
+		 t.setId(oID);
+		 assertEquals(t.getId(), oID);
 	 }
 
 	@Test
@@ -181,10 +170,18 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObject
 		}
 	}
 
+	@Test
+	void setID(){
+		Task t = mockTask;
+		ObjectId oID = new ObjectId();
+		t.setId(oID);
+		assertEquals(t.getId(), oID);
+	}
+
 	 @Test
 	 void setBody() {
 		 Task t = mockTask;
-		 Task.Taskbody mockbody =  new Task.Taskbody("mockTopic","mockPrio","mockDescription");
+		 Task.Taskbody mockbody =  new Task.Taskbody("mockTopic",true,"mockDescription");
 		 t.setBody(mockbody);
 		 Task.Taskbody actual = t.getBody();
 		 assertEquals(actual,mockbody);
