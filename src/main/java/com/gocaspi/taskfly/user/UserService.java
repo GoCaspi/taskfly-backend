@@ -5,6 +5,8 @@ package com.gocaspi.taskfly.user;
         import org.springframework.http.HttpHeaders;
         import org.springframework.http.HttpStatus;
         import org.springframework.web.client.HttpClientErrorException;
+
+        import java.security.NoSuchAlgorithmException;
         import java.util.ArrayList;
         import java.util.List;
         import java.util.Objects;
@@ -63,12 +65,14 @@ public class UserService {
 
         });
     }
-    public void postService(User t) throws HttpClientErrorException {
+    public void postService(User t) throws HttpClientErrorException, NoSuchAlgorithmException {
         if(!validateTaskFields(new Gson().toJson(t))){
             throw exceptionbadRequest;
         }
+        t.setEmail(t.hashStr(t.getEmail()));
         getRepo().insert(t);
     }
+
     public boolean validateTaskFields(String jsonPayload){
         var user = jsonToUser(jsonPayload);
         return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getListId(), null) && !Objects.equals(user.getEmail(), null)&& !Objects.equals(user.getTeam(), null);

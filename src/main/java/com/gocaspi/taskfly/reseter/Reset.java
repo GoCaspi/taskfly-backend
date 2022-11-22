@@ -18,10 +18,17 @@ public class Reset {
     public String getLastName(){
         return this.lastName;
     }
+    public String getEmail(){return this.email;}
+    public void setLastName(String str){
+        this.lastName = str;
+    }
+    public void setEmail(String str){
+        this.email = str;
+    }
 
-    public byte[] hashStr(String str) throws NoSuchAlgorithmException {
+    public String hashStr(String str) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         return digest.digest(
-                str.getBytes(StandardCharsets.UTF_8));
+                str.getBytes(StandardCharsets.UTF_8)).toString();
     }
 }

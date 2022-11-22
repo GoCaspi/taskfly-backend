@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @ResponseBody
@@ -37,9 +39,11 @@ public class ResetController {
     }
 
     @PostMapping
-    public ResponseEntity<List> handleReset(@RequestBody String body){
+    public ResponseEntity<List> handleReset(@RequestBody String body) throws NoSuchAlgorithmException {
         Reset resetRequest = jsonToReset(body);
-        List<User> users = getService().getRepo().findUserByName(resetRequest.getLastName());
+       String hashMail = resetRequest.hashStr(resetRequest.getEmail());
+        if(Objects.equals(resetRequest.getLastName(), "")){}
+        List<User> users = getService().getRepo().findUserByEmail(hashMail);
         return new ResponseEntity<>(users, HttpStatus.ACCEPTED);
     }
 

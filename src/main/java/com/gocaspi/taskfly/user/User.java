@@ -3,8 +3,12 @@ package com.gocaspi.taskfly.user;
 
 
 import org.springframework.data.annotation.Id;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.validation.constraints.Email;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 
 public class User {
@@ -48,6 +52,16 @@ public class User {
         this.password = password;
     }
 
+    public String hashStr(String str) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+        String check = digest.digest(
+                str.getBytes(StandardCharsets.UTF_8)).toString();
+
+
+        return digest.digest(
+                str.getBytes(StandardCharsets.UTF_8)).toString();
+    }
 
 
 }
