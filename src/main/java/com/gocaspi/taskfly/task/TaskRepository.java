@@ -7,6 +7,6 @@ import java.util.List;
 
 
 public interface TaskRepository extends MongoRepository<Task, String> {
-    List<Task> getTaskByIdAndBody_Priority(ObjectId id, Boolean priority);
+    List<Task> getTaskByUserIdAndBody_Priority(String userid, Boolean priority);
 }
 

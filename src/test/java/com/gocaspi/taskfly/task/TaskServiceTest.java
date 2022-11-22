@@ -121,5 +121,36 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 
 		}
 	}
+	@Test
+	public void getTaskByUserIDandPriorityTest(){
+		TaskService s = new TaskService(mockRepo);
+		List<Task> taskList = new ArrayList<>();
+		taskList.add(mockTask);
+		class Testcase {
+			final List<Task> mockTasks;
+			final String mockID;
+
+			public Testcase(List<Task> task, String mockID) {
+				this.mockTasks = task;
+				this.mockID = mockID;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase(taskList, mockObjectId.toHexString()),
+				new Testcase(new ArrayList<>(), mockObjectId.toHexString())
+		};
+		for (Testcase tc : testcases) {
+			try {
+
+				when(mockRepo.getTaskByUserIdAndBody_Priority(tc.mockID, true)).thenReturn(tc.mockTasks);
+				var actual = s.getTasksByPriorityService(tc.mockID);
+				assertEquals(tc.mockTasks, actual);
+			} catch (Exception e) {
+
+			}
+
+		}
+	}
 }
 

@@ -101,7 +101,11 @@ public class TaskService {
     }
 
     public List<Task> getTasksByPriorityService(String userid) {
-        return repo.getTaskByIdAndBody_Priority(new ObjectId(userid), true);
+        var taskList = repo.getTaskByUserIdAndBody_Priority(userid, true);
+        if(taskList.isEmpty()){
+            throw exceptionNotFound;
+        }
+        return repo.getTaskByUserIdAndBody_Priority(userid, true);
     }
 
     /**

@@ -1,13 +1,19 @@
 package com.gocaspi.taskfly.task;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+
+import javax.validation.constraints.NotBlank;
 
 
 public class Task {
+    @NotBlank
     private String userId;
+    @NotBlank
     private String listId;
     private String team;
     private String deadline;
+    @Id
     private ObjectId id;
     private Taskbody body;
    public static class Taskbody {

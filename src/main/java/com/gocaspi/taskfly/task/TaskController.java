@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import org.springframework.web.client.HttpClientErrorException;
 
+import javax.validation.Valid;
 import java.util.*;
 
 @RestController
@@ -37,7 +38,7 @@ public class TaskController {
      * @throws HttpClientErrorException.BadRequest Exception if the provided requestbody is missing fields
      */
     @PostMapping
-    public ResponseEntity<String> handleCreateNewTask(@RequestBody String body) throws HttpClientErrorException.BadRequest {
+    public ResponseEntity<String> handleCreateNewTask(@Valid @RequestBody String body) throws HttpClientErrorException.BadRequest {
         var task = jsonToTask(body);
         service.postService(task);
         String msg = "successfully created task with id: " + task.getId().toHexString();
@@ -74,7 +75,7 @@ public class TaskController {
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
-    @GetMapping("/priority/{id}")
+    @GetMapping("/priority/{userid}")
     public ResponseEntity<List<Task>> handleGetTaskByUserIDandPriority(@PathVariable String userid) throws HttpClientErrorException.NotFound{
         var taskList = service.getTasksByPriorityService(userid);
         return new ResponseEntity<>(taskList, HttpStatus.OK);
