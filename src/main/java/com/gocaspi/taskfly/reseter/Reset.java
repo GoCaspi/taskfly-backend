@@ -6,14 +6,17 @@ import java.security.NoSuchAlgorithmException;
 
 public class Reset {
 
-    private String userId;
-    private String password;
+
+    private String lastName;
     private String email;
 
-    public Reset(String userId,String password, String email){
-        this.userId = userId;
+    public Reset(String lastName, String email){
         this.email = email;
-        this.password = password;
+        this.lastName = lastName;
+    }
+
+    public String getLastName(){
+        return this.lastName;
     }
 
     public byte[] hashStr(String str) throws NoSuchAlgorithmException {

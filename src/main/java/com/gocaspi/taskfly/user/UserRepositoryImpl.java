@@ -13,9 +13,9 @@ public class UserRepositoryImpl {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public List findUserByName(){
+    public List findUserByName(String lastName){
         Query query = new Query();
-        query.addCriteria(Criteria.where("firstName").is("john"));
+        query.addCriteria(Criteria.where("lastName").is(lastName));
         List<User> users = mongoTemplate.find(query, User.class);
         return users;
     }

@@ -1,16 +1,15 @@
 package com.gocaspi.taskfly.reseter;
 
+import com.gocaspi.taskfly.task.Task;
 import com.gocaspi.taskfly.user.User;
 import com.gocaspi.taskfly.user.UserRepository;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,9 +37,17 @@ public class ResetController {
     }
 
     @PostMapping
-    public ResponseEntity<List> findUserByEmail(){
-
-        List<User> users = getService().getRepo().findUserByName();
+    public ResponseEntity<List> handleReset(@RequestBody String body){
+        Reset resetRequest = jsonToReset(body);
+        List<User> users = getService().getRepo().findUserByName(resetRequest.getLastName());
         return new ResponseEntity<>(users, HttpStatus.ACCEPTED);
     }
+
+    /**
+     * returns a Reset(body) from a Json
+     *
+     * @param jsonPayload String
+     * @return Task fetched from the jsonPayload
+     */
+    public Reset jsonToReset(String jsonPayload){ return new Gson().fromJson(jsonPayload, Reset.class);}
 }
