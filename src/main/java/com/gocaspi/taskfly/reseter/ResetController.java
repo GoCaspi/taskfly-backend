@@ -45,6 +45,11 @@ public class ResetController {
         if(Objects.equals(resetRequest.getLastName(), "")){
         }
         List<User> users = getService().getUserByEmail(hashMail,resetRequest.getLastName());
+
+        // return only userId in the messagge
+        // send email (!!!to the email of the resetRequest.getEmail() !!!) with the userId in the text and a link to the frontend-form
+        // next-next step: create new post-handler: posting userId and password and retypedd password to the handler will update the password assigned to the userId if the user to the userId has the field: reseted true
+
         return new ResponseEntity<>(users, HttpStatus.ACCEPTED);
     }
 
