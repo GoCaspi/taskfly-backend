@@ -54,11 +54,21 @@ public class UserService {
             throw exceptionnotFound;
         }
         user.ifPresent(t -> {
-   /*         if (update.getEmail() != null) {
-                t.setEmail(update.getEmail());
+           if (update.getEmail() != null) {
+               try {
+                   t.setEmail(hashStr(update.getEmail()));
+               } catch (NoSuchAlgorithmException e) {
+                   throw new RuntimeException(e);
+               }
+           }
+           if(!update.getReseted()){
+               t.setReseted(false);
+           }
+            if(update.getReseted()){
+                t.setReseted(true);
             }
 
-    */
+
             if (update.getTeam() != null) {
                 t.setTeam(update.getTeam());
             }

@@ -42,8 +42,9 @@ public class ResetController {
     public ResponseEntity<List> handleReset(@RequestBody String body) throws NoSuchAlgorithmException {
         Reset resetRequest = jsonToReset(body);
        String hashMail = resetRequest.hashStr(resetRequest.getEmail());
-        if(Objects.equals(resetRequest.getLastName(), "")){}
-        List<User> users = getService().getRepo().findUserByEmail(hashMail);
+        if(Objects.equals(resetRequest.getLastName(), "")){
+        }
+        List<User> users = getService().getUserByEmail(hashMail,resetRequest.getLastName());
         return new ResponseEntity<>(users, HttpStatus.ACCEPTED);
     }
 
