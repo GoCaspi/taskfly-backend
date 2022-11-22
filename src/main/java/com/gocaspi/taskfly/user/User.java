@@ -4,6 +4,8 @@ package com.gocaspi.taskfly.user;
 
 import org.springframework.data.annotation.Id;
 
+import javax.validation.constraints.Email;
+
 
 public class User {
     private String firstName;
