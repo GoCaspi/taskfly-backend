@@ -19,8 +19,8 @@ public class TaskController {
     @Autowired
     private final TaskService service;
 
-   public TaskController (TaskRepository repository){
-       this.service = new TaskService(repository);
+   public TaskController (TaskService service){
+       this.service = service;
    }
 
     /**

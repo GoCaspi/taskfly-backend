@@ -1,8 +1,5 @@
 package com.gocaspi.taskfly.task;
 
-
-
-/*
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -16,12 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
-
- class TaskControllerTest {
+class TaskControllerTest {
 	TaskRepository mockRepo = mock(TaskRepository.class);
 	TaskService mockService = mock(TaskService.class);
 	String mockUserIds = "1";
@@ -43,7 +38,7 @@ import static org.mockito.Mockito.when;
 
 	@Test
 	 void updateTask() {
-		TaskController t = new TaskController(mockRepo);
+		TaskController t = new TaskController(mockService);
 	//	Task mockUpdate = new Task(mockUserIds, mockListId, mockTopic + "updated", mockTeam + "updated", mockPrio, mockDesc + "updated", mockDeadline, mockObjectId);
 		Task mockUpdate = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObjectId,mockbody);
 		class Testcase {
@@ -100,7 +95,7 @@ import static org.mockito.Mockito.when;
 
 	@Test
 	 void validateTaskFields() {
-		TaskController t = new TaskController(mockRepo);
+		TaskController t = new TaskController(mockService);
 		class Testcase {
 			final Task taskInput;
 			final boolean expected;
@@ -125,7 +120,9 @@ import static org.mockito.Mockito.when;
 
 	@Test
 	 void getAllTasksDB() {
-		TaskController t = new TaskController(mockRepo);
+
+		TaskService s = new TaskService(mockRepo);
+		TaskController t = new TaskController(s);
 		ArrayList<Task> mockList = new ArrayList<>();
 		for (Task task : mockTaskArr) {
 			mockList.add(task);
@@ -172,7 +169,7 @@ import static org.mockito.Mockito.when;
 
 	@Test
 	 void getAllTasksById() {
-		TaskController t = new TaskController(mockRepo);
+		TaskController t = new TaskController(mockService);
 
 		class Testcase {
 			final String userId;
@@ -217,7 +214,7 @@ import static org.mockito.Mockito.when;
 
 	@Test
 	 void Handle_createNewTask() {
-		TaskController t = new TaskController(mockRepo);
+		TaskController t = new TaskController(mockService);
 
 		class Testcase {
 			final String userId;
@@ -262,7 +259,7 @@ import static org.mockito.Mockito.when;
 
 	@Test
 	 void Handle_deleteTask() {
-		TaskController t = new TaskController(mockRepo);
+		TaskController t = new TaskController(mockService);
 
 		class Testcase {
 			final String userId;
@@ -303,7 +300,38 @@ import static org.mockito.Mockito.when;
 			}
 		}
 	}
+     @Test
+     void GetTasksByPriority() {
+         TaskController t = new TaskController(mockService);
+		 List<Task> taskList =  new ArrayList<Task>();
+		 taskList.add(mockTask);
+         class Testcase {
+             final String userId;
+             final List<Task> mockTasks;
+             final String expectedOutput;
+
+             public Testcase(String userId, List<Task> mockTasks, String expectedOutput) {
+                 this.userId = userId;
+                 this.mockTasks = mockTasks;
+                 this.expectedOutput = expectedOutput;
+             }
+         }
+
+         Testcase[] testcases = new Testcase[]{
+                 new Testcase("1", taskList, new Gson().toJson(taskList)),
+         };
+         for (Testcase tc : testcases) {
+             try {
+				 when(mockService.getTasksByPriorityService(tc.userId)).thenReturn(tc.mockTasks);
+                 ResponseEntity<String> expected = new ResponseEntity<>(tc.expectedOutput, HttpStatus.OK);
+                 ResponseEntity<List<Task>> actual1 = t.handleGetTaskByUserIDandPriority(tc.userId);
+                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
+             } catch (HttpClientErrorException e) {
+
+             }
+         }
+     }
 }
-*/
+
 
 
