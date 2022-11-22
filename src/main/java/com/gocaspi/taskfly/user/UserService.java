@@ -1,11 +1,16 @@
 package com.gocaspi.taskfly.user;
 
+        import com.gocaspi.taskfly.PasswordEncoder;
+
+        import com.google.common.hash.Hashing;
         import com.google.gson.Gson;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.http.HttpHeaders;
         import org.springframework.http.HttpStatus;
         import org.springframework.web.client.HttpClientErrorException;
 
+        import java.nio.charset.StandardCharsets;
+        import java.security.MessageDigest;
         import java.security.NoSuchAlgorithmException;
         import java.util.ArrayList;
         import java.util.List;
@@ -15,12 +20,15 @@ public class UserService {
 
     @Autowired
     private UserRepository repo;
+    @Autowired
+    private PasswordEncoder encoder;
     private final HttpClientErrorException exceptionnotFound;
     private final HttpClientErrorException exceptionbadRequest;
-    public UserService(UserRepository repo){
 
-        this.repo = repo ;
-        this.exceptionnotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
+    public UserService(UserRepository repo, PasswordEncoder encoder) {
+        this.encoder =encoder;
+        this.repo = repo;
+        this.exceptionnotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(), null);
         this.exceptionbadRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", new HttpHeaders(), "".getBytes(), null);
     }
 
@@ -29,13 +37,17 @@ public class UserService {
         return this.exceptionbadRequest;
     }
 
-    public UserRepository getRepo(){
+    public UserRepository getRepo() {
         return repo;
     }
-    public void deleteService(String id) throws HttpClientErrorException.NotFound{
-        if (!getRepo().existsById(id)){throw exceptionnotFound; }
+
+    public void deleteService(String id) throws HttpClientErrorException.NotFound {
+        if (!getRepo().existsById(id)) {
+            throw exceptionnotFound;
+        }
         getRepo().deleteById(id);
     }
+
     public void updateService(String id, User update) throws HttpClientErrorException {
         Optional<User> user = getRepo().findById(id);
 
@@ -43,9 +55,11 @@ public class UserService {
             throw exceptionnotFound;
         }
         user.ifPresent(t -> {
-            if (update.getEmail() != null) {
+   /*         if (update.getEmail() != null) {
                 t.setEmail(update.getEmail());
             }
+
+    */
             if (update.getTeam() != null) {
                 t.setTeam(update.getTeam());
             }
@@ -65,36 +79,54 @@ public class UserService {
 
         });
     }
+
     public void postService(User t) throws HttpClientErrorException, NoSuchAlgorithmException {
-        if(!validateTaskFields(new Gson().toJson(t))){
+        if (!validateTaskFields(new Gson().toJson(t))) {
             throw exceptionbadRequest;
         }
-        t.setEmail(t.hashStr(t.getEmail()));
+        t.setEmail(hashStr(t.getEmail().toString()));
         getRepo().insert(t);
     }
 
-    public boolean validateTaskFields(String jsonPayload){
+    public boolean validateTaskFields(String jsonPayload) {
         var user = jsonToUser(jsonPayload);
-        return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getListId(), null) && !Objects.equals(user.getEmail(), null)&& !Objects.equals(user.getTeam(), null);
+        return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getListId(), null) && !Objects.equals(user.getEmail(), null) && !Objects.equals(user.getTeam(), null);
     }
-    public User jsonToUser(String jsonPayload){return new Gson().fromJson(jsonPayload, User.class);}
 
-    public User getServicebyid(String id)throws HttpClientErrorException.NotFound{
-        if(!getRepo().existsById(id)){ throw exceptionnotFound;}
+    public User jsonToUser(String jsonPayload) {
+        return new Gson().fromJson(jsonPayload, User.class);
+    }
+
+    public User getServicebyid(String id) throws HttpClientErrorException.NotFound {
+        if (!getRepo().existsById(id)) {
+            throw exceptionnotFound;
+        }
         var user = getRepo().findById(id);
-        if (user.isEmpty()){
+        if (user.isEmpty()) {
             throw exceptionnotFound;
         }
         return user.get();
 
     }
-    public List<User> getServiceAllUser(){
+
+    public List<User> getServiceAllUser() {
         List<User> users = getRepo().findAll();
         List<User> usersToId = new ArrayList<>();
-        for (User t : users){
-                usersToId.add(t);
+        for (User t : users) {
+            usersToId.add(t);
         }
         return usersToId;
+    }
+
+
+    public String hashStr(String str) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        String sha256hex = Hashing.sha256()
+                .hashString(str, StandardCharsets.UTF_8)
+                .toString();
+
+    return  sha256hex;
+
     }
 }
 

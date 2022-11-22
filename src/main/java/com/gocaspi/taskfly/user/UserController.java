@@ -1,4 +1,5 @@
 package com.gocaspi.taskfly.user;
+import com.gocaspi.taskfly.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,13 @@ public class UserController {
     @Autowired
     private UserRepository repository;
     private final UserService service;
-
-    public UserController(UserRepository repository) {
+    @Autowired
+    private PasswordEncoder encoder;
+    public UserController(UserRepository repository, PasswordEncoder encoder) {
         super();
+        this.encoder = encoder;
         this.repository = repository;
-        this.service = new UserService(repository);
+        this.service = new UserService(repository,encoder);
     }
 
     @PostMapping("/create")
@@ -33,6 +36,7 @@ public class UserController {
     public User jsonToUser(String jsonPayload) {
         return new Gson().fromJson(jsonPayload, User.class);
     }
+
 
     /**
      * This endpoint couverts to get a User Data with UserID.
