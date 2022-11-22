@@ -1,6 +1,6 @@
 package com.gocaspi.taskfly.user;
 
-        import com.gocaspi.taskfly.PasswordEncoder;
+
 
         import com.google.common.hash.Hashing;
         import com.google.gson.Gson;
@@ -20,13 +20,12 @@ public class UserService {
 
     @Autowired
     private UserRepository repo;
-    @Autowired
-    private PasswordEncoder encoder;
+
     private final HttpClientErrorException exceptionnotFound;
     private final HttpClientErrorException exceptionbadRequest;
 
-    public UserService(UserRepository repo, PasswordEncoder encoder) {
-        this.encoder =encoder;
+    public UserService(UserRepository repo) {
+
         this.repo = repo;
         this.exceptionnotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(), null);
         this.exceptionbadRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", new HttpHeaders(), "".getBytes(), null);
@@ -120,7 +119,6 @@ public class UserService {
 
 
     public String hashStr(String str) throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
         String sha256hex = Hashing.sha256()
                 .hashString(str, StandardCharsets.UTF_8)
                 .toString();

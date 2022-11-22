@@ -1,5 +1,7 @@
 package com.gocaspi.taskfly.reseter;
 
+import com.google.common.hash.Hashing;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -27,8 +29,11 @@ public class Reset {
     }
 
     public String hashStr(String str) throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        return digest.digest(
-                str.getBytes(StandardCharsets.UTF_8)).toString();
+        String sha256hex = Hashing.sha256()
+                .hashString(str, StandardCharsets.UTF_8)
+                .toString();
+
+        return  sha256hex;
+
     }
 }

@@ -1,5 +1,5 @@
 package com.gocaspi.taskfly.user;
-import com.gocaspi.taskfly.PasswordEncoder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +16,12 @@ public class UserController {
     @Autowired
     private UserRepository repository;
     private final UserService service;
-    @Autowired
-    private PasswordEncoder encoder;
-    public UserController(UserRepository repository, PasswordEncoder encoder) {
+
+    public UserController(UserRepository repository) {
         super();
-        this.encoder = encoder;
+
         this.repository = repository;
-        this.service = new UserService(repository,encoder);
+        this.service = new UserService(repository);
     }
 
     @PostMapping("/create")
