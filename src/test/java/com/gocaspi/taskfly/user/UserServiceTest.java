@@ -14,7 +14,6 @@ import static org.mockito.Mockito.when;
 
  class UserServiceTest {
     UserRepository mockRepo = mock(UserRepository.class);
-    UserService mockService = mock(UserService.class);
     HttpClientErrorException er = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "no User are assigned to the provided userId", null, null, null);
     String mockUserIds = "123";
     String mockListId = "1";
@@ -23,8 +22,9 @@ import static org.mockito.Mockito.when;
     String mockLastName = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
+    String mocksrole ="ADMIN";
     ObjectId mockObject_Id = new ObjectId();
-    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword);
+    User mockUser = new User(mockUserIds, mockFistName, mockLastName, mockEmail, mockPassword,mockTeam,mockListId,mocksrole);
     UserService ts = new UserService(mockRepo);
 
     @Test

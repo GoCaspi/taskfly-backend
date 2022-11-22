@@ -2,6 +2,7 @@ package com.gocaspi.taskfly.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import org.springframework.web.client.HttpClientErrorException;
@@ -11,6 +12,8 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
     @Autowired
+    private PasswordEncoder encoder;
+    @Autowired
     private UserRepository repository;
     private final UserService service;
 
@@ -18,14 +21,38 @@ public class UserController {
         super();
         this.repository = repository;
         this.service = new UserService(repository);
-    }
 
+    }
+    /**
+     * Any user can access this API - No Authentication required
+     * @param body
+     * @return
+     */
     @PostMapping("/create")
     public ResponseEntity<String> handlerCreateUser(@RequestBody String body) throws HttpClientErrorException.BadRequest {
         var user = jsonToUser(body);
+        user.setPassword(encoder.encode(user.getPassword()));
         getService().postService(user);
         var msg = "Successfully created User";
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
+    }
+    /**
+     * User who has logged in successfully can access this API
+     * @param email
+     * @return
+     */
+    @GetMapping("/userInfo")
+    public User getUserInfo(@RequestParam("email")String email){
+        return service.getDetails(email);
+    }
+    /**
+     * User who has the role ROLE_WRITE can only access this API
+     * @param email
+     * @return
+     */
+    @GetMapping("/getUserRoles")
+    public String getUserRoles(@RequestParam("email")String email){
+        return service.getUserRoles(email);
     }
 
     public User jsonToUser(String jsonPayload) {

@@ -12,12 +12,12 @@ package com.gocaspi.taskfly.user;
 public class UserService {
 
     @Autowired
-    private UserRepository repo;
+    private UserRepository userRepository;
     private final HttpClientErrorException exceptionnotFound;
     private final HttpClientErrorException exceptionbadRequest;
     public UserService(UserRepository repo){
 
-        this.repo = repo ;
+        this.userRepository = repo ;
         this.exceptionnotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
         this.exceptionbadRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", new HttpHeaders(), "".getBytes(), null);
     }
@@ -28,7 +28,7 @@ public class UserService {
     }
 
     public UserRepository getRepo(){
-        return repo;
+        return userRepository;
     }
     public void deleteService(String id) throws HttpClientErrorException.NotFound{
         if (!getRepo().existsById(id)){throw exceptionnotFound; }
@@ -91,6 +91,12 @@ public class UserService {
                 usersToId.add(t);
         }
         return usersToId;
+    }
+    public User getDetails(String email){
+        return userRepository.findByEmail(email);
+    }
+    public String getUserRoles(String email){
+        return userRepository.findByEmail(email).getSrole();
     }
 }
 
