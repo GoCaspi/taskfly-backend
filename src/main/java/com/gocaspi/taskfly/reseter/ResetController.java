@@ -39,8 +39,8 @@ public class ResetController {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
-        mailSender.setUsername("my.gmail@gmail.com");
-        mailSender.setPassword("password");
+        mailSender.setUsername("taskfly.info@gmail.com");
+        mailSender.setPassword("employeeregister");
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
@@ -84,7 +84,7 @@ public class ResetController {
 
     public void sendResetMail(String to, String subject, String text){
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("noreply@taskfly.com");
+        message.setFrom("taskfly.info@gmail.com");
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
