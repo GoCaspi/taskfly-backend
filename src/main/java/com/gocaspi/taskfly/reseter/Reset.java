@@ -28,7 +28,7 @@ public class Reset {
         this.email = str;
     }
 
-    public String hashStr(String str) throws NoSuchAlgorithmException {
+    public String hashStr(String str) {
         String sha256hex = Hashing.sha256()
                 .hashString(str, StandardCharsets.UTF_8)
                 .toString();
