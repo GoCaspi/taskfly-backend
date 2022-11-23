@@ -70,6 +70,7 @@ class TeamManagementServiceTest {
         };
 
         for (Testcase tc : testcases) {
+            when(mockRepository.existsById(tc.mockId)).thenReturn(tc.expected);
             service.deleteService(tc.mockId);
             verify(mockRepository, times(1)).deleteById(tc.mockId);
         }

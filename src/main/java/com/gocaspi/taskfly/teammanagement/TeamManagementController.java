@@ -50,18 +50,18 @@ public class TeamManagementController {
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<String> updateTeam(@PathVariable String id,@RequestBody String body) throws HttpClientErrorException.NotFound {
         var update = jsonToTeamManagement(body);
         getService().updateService(id,update);
-        var msg = "successfully updated task";
+        var msg = "successfully updated Team";
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTeam(@PathVariable String id) throws HttpClientErrorException.NotFound {
         getService().deleteService(id);
-        var msg = "successfully deleted team";
+        var msg = "successfully deleted Team";
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 

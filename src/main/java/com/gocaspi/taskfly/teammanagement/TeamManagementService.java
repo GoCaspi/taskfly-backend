@@ -66,6 +66,9 @@ public class TeamManagementService {
         updateService(id, team);
     }
     public void deleteService(String id) throws HttpClientErrorException {
+        if (!getRepository().existsById(id)) {
+            throw exceptionNotFound;
+        }
         getRepository().deleteById(id);
     }
     public void updateService(String id, TeamManagement update) throws HttpClientErrorException{
