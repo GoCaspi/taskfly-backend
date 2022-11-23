@@ -63,12 +63,7 @@ public class UserService {
 
         });
     }
-    public void postService(User t) throws HttpClientErrorException {
-        if(!validateTaskFields(new Gson().toJson(t))){
-            throw exceptionbadRequest;
-        }
-        getRepo().insert(t);
-    }
+
     public boolean validateTaskFields(String jsonPayload){
         var user = jsonToUser(jsonPayload);
         return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getListId(), null) && !Objects.equals(user.getEmail(), null)&& !Objects.equals(user.getTeam(), null);
@@ -97,6 +92,12 @@ public class UserService {
     }
     public String getUserRoles(String email){
         return userRepository.findByEmail(email).getSrole();
+    }
+    public void postService(User t) throws HttpClientErrorException {
+        if(!validateTaskFields(new Gson().toJson(t))){
+            throw exceptionbadRequest;
+        }
+        getRepo().insert(t);
     }
 }
 

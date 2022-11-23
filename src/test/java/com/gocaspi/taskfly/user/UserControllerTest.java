@@ -4,8 +4,11 @@ package com.gocaspi.taskfly.user;
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
@@ -14,11 +17,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
- class UserControllerTest {
+class UserControllerTest {
     UserRepository mockRepo = mock(UserRepository.class);
     UserService mockService = mock(UserService.class);
     String mockUserIds = "123";
@@ -31,6 +33,7 @@ import static org.mockito.Mockito.when;
     String mocksrole ="ADMIN";
     ObjectId mockObject_Id = new ObjectId();
     User mockUser = new User(mockUserIds, mockFistName, mockLastName, mockEmail, mockPassword,mockTeam,mockListId,mocksrole);
+    PasswordEncoder mockencoder = mock(PasswordEncoder.class);
     User[] mockUseArr = new User[]{mockUser,mockUser};
     @Test
      void deleteUser() {
@@ -201,9 +204,11 @@ import static org.mockito.Mockito.when;
     for (Testcase tc : testcases) {
         if (tc.badPayload) {
             when(mockService.validateTaskFields(tc.mockPayload)).thenReturn(false);
+            when(mockencoder.encode(tc.mockPayload)).thenReturn("0123");
         } else {
             when(mockService.validateTaskFields(tc.mockPayload)).thenReturn(true);
             when(mockRepo.insert(tc.mockUser)).thenReturn(mockUser);
+            when(mockencoder.encode(tc.mockPayload)).thenReturn("");
         }
 
         try {
@@ -263,20 +268,76 @@ import static org.mockito.Mockito.when;
         }
     }
      @Test
-     void getUserrole() {
-
+     void getUserRole() {
 
          UserController t = new UserController(mockRepo);
 
          class Testcase {
-
              final String email;
+             final boolean dbReturnSize0;
+
+
+             public Testcase(String email, boolean dbReturnSize0) {
+                 this.email = email;
+                 this.dbReturnSize0 = dbReturnSize0;
+
+             }
+         }
+
+         Testcase[] testcases = new Testcase[]{
+                 new Testcase("1", false ),
+                 new Testcase("1", true),
+         };
+         for (Testcase tc : testcases) {
+             when(mockRepo.findByEmail(tc.email)).thenReturn(mockUser);
+             when(mockService.getUserRoles(tc.email)).thenReturn(tc.email);
+             String actual = t.getUserRoles(tc.email);
+             assertEquals(actual,actual);
+             }
+     }
+   /*  @Test
+     void login() {
+         UserController t = new UserController(mockRepo);
+
+         class Testcase {
+
+             public Testcase() {
+             }
+         }
+
+         Testcase[] testcases = new Testcase[]{
+
+         };
+         for (Testcase tc : testcases) {
+             if (tc.) {
+                 when(mockRepo.existsById(tc.userId)).thenReturn(false);
+             } else {
+                 when(mockRepo.existsById(tc.userId)).thenReturn(true);
+                 when(mockRepo.findById(tc.userId)).thenReturn(Optional.ofNullable(mockUser));
+             }
+
+             try {
+                 ResponseEntity<User> expected = new ResponseEntity<>(tc.mockUser, HttpStatus.OK);
+                 ResponseEntity<> actual1 = t.login();
+                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
+             } catch (HttpClientErrorException e) {
+                 HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
+                 assertEquals(e.getClass(), expectedException.getClass());
+             }
+         }
+     }*/
+    /* @Test
+     void UserInfo() {
+         UserController t = new UserController(mockRepo);
+
+         class Testcase {
+             final String userId;
              final boolean dbReturnSize0;
              final User mockUser;
              final String expectedOutput;
 
              public Testcase(String userId, boolean dbReturnSize0, User mockUser, String expectedOutput) {
-                 this.email = userId;
+                 this.userId = userId;
                  this.dbReturnSize0 = dbReturnSize0;
                  this.mockUser = mockUser;
                  this.expectedOutput = expectedOutput;
@@ -292,21 +353,21 @@ import static org.mockito.Mockito.when;
          };
          for (Testcase tc : testcases) {
              if (tc.dbReturnSize0) {
-                 when(mockRepo.existsById(tc.email)).thenReturn(false);
+                 when(mockRepo.existsById(tc.userId)).thenReturn(false);
              } else {
-                 when(mockRepo.existsById(tc.email)).thenReturn(true);
-                 //	when(mockRepo.deleteById(tc.userId)).thenReturn(mockTask);
+                 when(mockRepo.existsById(tc.userId)).thenReturn(true);
+                 when(mockRepo.findById(tc.userId)).thenReturn(Optional.ofNullable(mockUser));
              }
 
              try {
-                 ResponseEntity<String> expected = new ResponseEntity<>("successfully getUserRole user with email: " + tc.email, HttpStatus.ACCEPTED);
-                 ResponseEntity<String> actual1 = t.getUserRoles(email);
+                 ResponseEntity<User> expected = new ResponseEntity<>(tc.mockUser, HttpStatus.OK);
+                 ResponseEntity<User> actual1 = t.getUserInfo(tc.userId);
                  assertEquals(actual1.getStatusCode(), expected.getStatusCode());
              } catch (HttpClientErrorException e) {
                  HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
                  assertEquals(e.getClass(), expectedException.getClass());
              }
          }
-     }
-
+     }*/
 }
+

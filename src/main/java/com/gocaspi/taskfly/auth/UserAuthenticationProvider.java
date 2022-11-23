@@ -29,7 +29,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
  }
 
     /**
-     * Get the username and password from authentication object and validate with password encoders matching method
+     * Get the email and password from authentication object and validate with password encoders matching method
      * @param authentication
      * @return
      * @throws AuthenticationException

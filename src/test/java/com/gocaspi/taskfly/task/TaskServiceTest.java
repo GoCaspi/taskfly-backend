@@ -1,7 +1,5 @@
 package com.gocaspi.taskfly.task;
 
-import com.gocaspi.taskfly.taskcollection.TaskCollection;
-import com.gocaspi.taskfly.taskcollection.TaskCollectionService;
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.*;

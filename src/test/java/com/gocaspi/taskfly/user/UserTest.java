@@ -51,10 +51,9 @@ import org.junit.jupiter.api.Test;
     @Test
     public void setUserId(){
         User t = mockUser;
-        for (TestcasegetString tc : testcases_get){
-            t.setUserId(tc.expected);
-            String actual = t.getUserId();
-            assertEquals(actual,t.getUserId());
+        for (TestcasesetString tc : testcases){
+            t.setUserId(tc.newText);
+            assertEquals(t.getUserId(),tc.newText);
         }
     }
 

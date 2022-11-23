@@ -51,10 +51,31 @@ public class User implements UserDetails {
 
     public String getPassword(){return this.password;}
 
+
+
+    public void setUserId(String str){ this.userId = str;}
+    public void setFirstName(String str){ this.firstName = str;}
+    public void setLastName(String str){ this.lastName = str;}
+    public void setEmail(String str){ this.email = str;}
+    public void setListId(String str){ this.listId = str;}
+    public void setTeam(String str){ this.team = str;}
+   public void setId(String id){this.id = id;}
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public String getSrole() {
+        return srole;
+    }
+
+    public void setSrole(String srole) {
+        this.srole = srole;
+    }
     @Override
     public String getUsername() {
         return null;
     }
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -75,25 +96,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
-
-    public void setUserId(String str){ this.userId = str;}
-    public void setFirstName(String str){ this.firstName = str;}
-    public void setLastName(String str){ this.lastName = str;}
-    public void setEmail(String str){ this.email = str;}
-    public void setListId(String str){ this.listId = str;}
-    public void setTeam(String str){ this.team = str;}
-   public void setId(String id){this.id = id;}
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    public String getSrole() {
-        return srole;
-    }
-
-    public void setSrole(String srole) {
-        this.srole = srole;
-    }
-
 
 }

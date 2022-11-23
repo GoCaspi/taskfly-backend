@@ -2,6 +2,8 @@ package com.gocaspi.taskfly.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
@@ -21,7 +23,7 @@ public class UserController {
         super();
         this.repository = repository;
         this.service = new UserService(repository);
-
+        this.encoder = new BCryptPasswordEncoder();
     }
     /**
      * Any user can access this API - No Authentication required
@@ -44,6 +46,15 @@ public class UserController {
     @GetMapping("/userInfo")
     public User getUserInfo(@RequestParam("email")String email){
         return service.getDetails(email);
+    }
+
+    /**
+     * User Login
+     * @return
+     */
+    @PostMapping("/login")
+    public String login(){
+        return "Successfully logged in by user :"+ SecurityContextHolder.getContext().getAuthentication().getName();
     }
     /**
      * User who has the role ROLE_WRITE can only access this API

@@ -1,5 +1,8 @@
 package com.gocaspi.taskfly.user;
 
+import com.gocaspi.taskfly.task.Task;
+import com.gocaspi.taskfly.task.TaskService;
+import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -56,5 +59,36 @@ import static org.mockito.Mockito.when;
             assertEquals(tc.expected, actual);
         }
     }
+     @Test
+     public void postservice() {
+         UserService t = new UserService(mockRepo);
+         class Testcase {
+
+         }
+     }
+     @Test
+     public void validateTaskFields() {
+         UserService t = new UserService(mockRepo);
+         class Testcase {
+             final User userInput;
+             final boolean expected;
+
+             public Testcase(User testUser, boolean expected) {
+                 this.userInput = testUser;
+                 this.expected = expected;
+             }
+         }
+
+         Testcase[] testcases = new Testcase[]{
+                 new Testcase(mockUser, true),
+                 new Testcase(new User(null,null,null,null,null,null,null,null),false),
+                 new Testcase(new User("test","test","test","test","test","test","test","test"),true)
+         };
+
+         for (Testcase tc : testcases) {
+             boolean actualOut = t.validateTaskFields(new Gson().toJson(tc.userInput));
+             assertEquals(tc.expected, actualOut);
+         }
+     }
 
 }
