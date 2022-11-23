@@ -1,11 +1,11 @@
 package com.gocaspi.taskfly.task;
 
-import com.gocaspi.taskfly.taskcollection.TaskCollection;
-import com.gocaspi.taskfly.taskcollection.TaskCollectionService;
+import com.gocaspi.taskfly.teammanagement.TeamManagement;
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ import static org.mockito.Mockito.*;
 public class TaskServiceTest {
 
 	TaskRepository mockRepo = mock(TaskRepository.class);
+	TaskService mockService = mock(TaskService.class);
 	HttpClientErrorException er = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "no tasks are assigned to the provided userId", null, null, null);
 	String mockUserIds = "123";
 	String mockListId = "1";
@@ -84,7 +85,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 		}
 	}
 
-	@Test
+	/*@Test
 	public void updateTaskService(){
 		TaskService s = new TaskService(mockRepo);
 		var emptyBody = new Task.Taskbody("","","");
@@ -119,6 +120,73 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 
 			}
 
+		}
+	}*/
+
+	@Test
+	public void updateService(){
+		TaskService service = new TaskService(mockRepo);
+		Task emptyTeam = new Task(null, null, null,null, mockObjectId, null);
+		class Testcase{
+			final String mockId;
+			final Task mockUpdate;
+			final boolean expected;
+			public Testcase(String mockId, Task mockUpdate, boolean expected){
+				this.mockId = mockId;
+				this.mockUpdate = mockUpdate;
+				this.expected = expected;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase("1",mockTask, true),
+				new Testcase("1", mockTask, false),
+				new Testcase("1", emptyTeam, true),
+		};
+
+		for (Testcase tc : testcases) {
+			try{
+				Optional<Task> optionalTask = Optional.ofNullable(tc.mockUpdate);
+				when(mockRepo.findById(tc.mockId)).thenReturn(optionalTask);
+				when(mockRepo.existsById(tc.mockId)).thenReturn(tc.expected);
+				service.updateService(tc.mockId, tc.mockUpdate);
+				verify(mockRepo, times(1)).save(tc.mockUpdate);
+			} catch (Exception e){
+
+			}
+		}
+	}
+
+	@Test
+	public void getServiceTaskById(){
+		TaskService service = new TaskService(mockRepo);
+		class Testcase{
+			final String mockId;
+			final boolean expected;
+			public Testcase(String mockId, boolean expected){
+				this.mockId = mockId;
+				this.expected = expected;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase("1",true),
+				new Testcase("2", false )
+		};
+
+		for (Testcase tc : testcases) {
+			try{
+				Optional<Task> optionalTask = Optional.ofNullable(mockTask);
+				when(mockRepo.existsById(tc.mockId)).thenReturn(tc.expected);
+				service.getServiceTaskById(tc.mockId);
+				verify(mockRepo, times(1)).findById(tc.mockId);
+			} catch (Exception e){
+
+			}
+			/*Optional<Task> optionalTask = Optional.ofNullable(mockTask);
+			when(mockRepo.existsById(tc.mockId)).thenReturn(tc.expected);
+			service.getServiceTaskById(tc.mockId);
+			verify(mockRepo, times(1)).findById(tc.mockId);*/
 		}
 	}
 }
