@@ -7,12 +7,13 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
- class UserServiceTest {
+class UserServiceTest {
     UserRepository mockRepo = mock(UserRepository.class);
     UserService mockService = mock(UserService.class);
     HttpClientErrorException er = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "no User are assigned to the provided userId", null, null, null);
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.when;
     User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword);
     UserService ts = new UserService(mockRepo);
 
-    @Test
+     @Test
      void getService_AllUser() {
 
         UserService t = new UserService(mockRepo);
@@ -56,5 +57,42 @@ import static org.mockito.Mockito.when;
             assertEquals(tc.expected, actual);
         }
     }
+
+     @Test
+     void updateUser(){
+         UserService service = new UserService(mockRepo);
+         User emptyTeam = new User(null, null ,null, null, null, null, null);
+
+         class Testcase{
+             final String mockId;
+             final User mockUpdate;
+             final boolean expected;
+
+             public Testcase(String mockId, User mockUpdate, boolean expected){
+                 this.mockId = mockId;
+                 this.mockUpdate = mockUpdate;
+                 this.expected = expected;
+             }
+         }
+
+         Testcase[] testcases = new Testcase[]{
+                 new Testcase("1", mockUser,true),
+                 new Testcase("1", mockUser, false),
+                 new Testcase("1", emptyTeam, true),
+         };
+
+         for (Testcase tc : testcases) {
+             try{
+                 Optional<User> optionalUser = Optional.ofNullable(tc.mockUpdate);
+                 when(mockRepo.findById(tc.mockId)).thenReturn(optionalUser);
+                 when(mockRepo.existsById(tc.mockId)).thenReturn(tc.expected);
+                 service.updateService(tc.mockId, tc.mockUpdate);
+                 verify(mockRepo, times(1)).save(tc.mockUpdate);
+             } catch (Exception e){
+
+             }
+
+         }
+     }
 
 }
