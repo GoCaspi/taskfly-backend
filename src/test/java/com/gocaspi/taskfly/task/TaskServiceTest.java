@@ -17,8 +17,7 @@ import static org.mockito.Mockito.*;
 public class TaskServiceTest {
 
 	TaskRepository mockRepo = mock(TaskRepository.class);
-	TaskService mockService = mock(TaskService.class);
-	HttpClientErrorException er = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "no tasks are assigned to the provided userId", null, null, null);
+
 	String mockUserIds = "123";
 	String mockListId = "1";
 	String mockTeam = "team1";
@@ -49,7 +48,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 		}
 		Testcase[] testcases = new Testcase[]{
 				new Testcase("123", mockList,mockList),
-				new Testcase("1",new ArrayList<Task>(),new ArrayList<Task>())
+				new Testcase("1",new ArrayList<>(),new ArrayList<>())
 		};
 		for(Testcase tc : testcases){
 				when(mockRepo.findAll()).thenReturn(tc.dbReturn);
@@ -74,7 +73,8 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 		Testcase[] testcases = new Testcase[]{
 				new Testcase(mockTask, true),
 				new Testcase(new Task(null,null,null,null,new ObjectId(),mockbody),false),
-				new Testcase(new Task("test","test","test","test",new ObjectId(),mockbody),true)
+				new Testcase(new Task("test","test","test","test",new ObjectId(),mockbody),true),
+				new Testcase(new Task("","","","",new ObjectId(),mockbody),true)
 		};
 
 		for (Testcase tc : testcases) {
