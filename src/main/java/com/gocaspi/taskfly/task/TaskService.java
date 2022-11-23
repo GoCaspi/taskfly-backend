@@ -108,6 +108,10 @@ public class TaskService {
         return repo.getTaskByUserIdAndBody_Priority(userid, true);
     }
 
+    public List<Task> getPrivateTasks(String userid){
+
+    }
+
     /**
      * given a requestbody (Json of a Task) the method checks if all fields are null-safe with the exception of the fields: priority and deadline, which must not be set.
      * @param jsonPayload, request body
