@@ -76,13 +76,15 @@ public class ResetController {
             this.sendResetMail(resetRequest.getEmail(), "Password reset for TaskFly","Your Password has been reseted. Please copy your userId : "+users.get(0) +" and follow the link: to assign a new password. ");
         }
 
+
+
         //
         return new ResponseEntity<>(users, HttpStatus.ACCEPTED);
     }
 
     public void sendResetMail(String to, String subject, String text){
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("noreply@baeldung.com");
+        message.setFrom("noreply@taskfly.com");
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
