@@ -75,9 +75,9 @@ public class TaskService {
     }
 
     public void updateService(String id,Task update) throws HttpClientErrorException {
-        var task =  repo.findById(id);
+        var task =  getRepo().findById(id);
 
-        if(!repo.existsById(id)){ throw exceptionNotFound; }
+        if(!getRepo().existsById(id)){ throw exceptionNotFound; }
         task.ifPresent( t->{
             if(update.getBody().getDescription() != null ) {
                 t.getBody().setDescription(update.getBody().getDescription());

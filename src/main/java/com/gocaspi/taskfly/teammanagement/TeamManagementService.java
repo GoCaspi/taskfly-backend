@@ -94,8 +94,8 @@ public class TeamManagementService {
     public boolean validateTeamManagementFields(String jsonPayload){
         var teamManagement = jsonToTeamManagement(jsonPayload);
 
-        return /*!Objects.equals(teamManagement.getId(), null) &&*/ !Objects.equals(teamManagement.getMembers(), null ) &&
-                !Objects.equals(teamManagement.getTeamName(), null) && !Objects.equals(teamManagement.getUserID(), null);
+        return  teamManagement.getMembers() != null  && teamManagement.getTeamName() != null
+                && teamManagement.getUserID() != null;
     }
     public TeamManagement jsonToTeamManagement(String jsonPayload){
         return new Gson().fromJson(jsonPayload, TeamManagement.class);

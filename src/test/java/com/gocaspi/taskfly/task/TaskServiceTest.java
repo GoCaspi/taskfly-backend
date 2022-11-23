@@ -1,11 +1,9 @@
 package com.gocaspi.taskfly.task;
 
-import com.gocaspi.taskfly.teammanagement.TeamManagement;
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
@@ -126,7 +124,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 	@Test
 	public void updateService(){
 		TaskService service = new TaskService(mockRepo);
-		Task emptyTeam = new Task(null, null, null,null, mockObjectId, null);
+		Task emptyTeam = new Task(null, null, null, null, mockObjectId, null);
 		class Testcase{
 			final String mockId;
 			final Task mockUpdate;
@@ -177,7 +175,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 		for (Testcase tc : testcases) {
 			try{
 				Optional<Task> optionalTask = Optional.ofNullable(mockTask);
-				when(mockRepo.existsById(tc.mockId)).thenReturn(tc.expected);
+				when(mockRepo.findById(tc.mockId)).thenReturn(optionalTask);
 				service.getServiceTaskById(tc.mockId);
 				verify(mockRepo, times(1)).findById(tc.mockId);
 			} catch (Exception e){

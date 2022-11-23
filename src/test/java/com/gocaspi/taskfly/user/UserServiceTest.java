@@ -1,9 +1,6 @@
 package com.gocaspi.taskfly.user;
 
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +12,7 @@ import static org.mockito.Mockito.times;
 
 class UserServiceTest {
     UserRepository mockRepo = mock(UserRepository.class);
-    UserService mockService = mock(UserService.class);
-    HttpClientErrorException er = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "no User are assigned to the provided userId", null, null, null);
+
     String mockUserIds = "123";
     String mockListId = "1";
     String mockFistName = "topic1";
@@ -24,9 +20,8 @@ class UserServiceTest {
     String mockLastName = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
-    ObjectId mockObject_Id = new ObjectId();
+
     User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword);
-    UserService ts = new UserService(mockRepo);
 
      @Test
      void getService_AllUser() {
@@ -49,7 +44,7 @@ class UserServiceTest {
         }
         Testcase[] testcases = new Testcase[]{
                 new Testcase("123", mockList,mockList),
-                new Testcase("1",new ArrayList<User>(),new ArrayList<User>())
+                new Testcase("1",new ArrayList<>(),new ArrayList<>())
         };
         for(Testcase tc : testcases){
             when(mockRepo.findAll()).thenReturn(tc.dbReturn);
@@ -94,5 +89,39 @@ class UserServiceTest {
 
          }
      }
+
+    @Test
+    void getTeamById(){
+        UserService service = new UserService(mockRepo);
+
+        class Testcase{
+            final String mockId;
+            final boolean expected;
+            final User mockTeam;
+            public Testcase(String mockId, boolean expected, User mockTeam){
+                this.mockId = mockId;
+                this.expected = expected;
+                this.mockTeam = mockTeam;
+            }
+        }
+        Testcase[] testcases = new Testcase[]{
+                new Testcase("1",true, mockUser),
+                new Testcase("1",true, null),
+                new Testcase("", false, null )
+        };
+
+        for (Testcase tc : testcases) {
+            try{
+                when(mockRepo.existsById(tc.mockId)).thenReturn(tc.expected);
+                Optional<User> optionalUser = Optional.ofNullable(tc.mockTeam);
+                when(mockRepo.findById(tc.mockId)).thenReturn(optionalUser);
+                service.getServicebyid(tc.mockId);
+                verify(mockRepo, times(1)).findById(tc.mockId);
+            } catch (Exception e){
+
+            }
+
+        }
+    }
 
 }

@@ -2,7 +2,6 @@ package com.gocaspi.taskfly.task;
 
 import org.bson.types.ObjectId;
 
-
 public class Task {
     private String userId;
     private String listId;
@@ -21,7 +20,6 @@ public class Task {
             this.priority = priority;
             this.description = description;
         }
-
         public void setPriority(String str){
             this.priority = str;
         }
@@ -44,8 +42,6 @@ public class Task {
 
     }
 
-
-
     public Task(String userId, String listId, String team,  String deadline, ObjectId id, Taskbody body){
         this.userId = userId;
         this.listId = listId;
@@ -55,7 +51,6 @@ public class Task {
         this.taskId = id.toString();
         this.body = body;
     }
-
 
     public void setBody(Taskbody body){
         this.body = body;

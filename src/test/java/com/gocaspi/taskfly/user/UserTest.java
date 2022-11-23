@@ -13,6 +13,7 @@ public class UserTest {
     String mockLastName = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
+
     User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword);
     class Testcase_setString{
         final String newText;
@@ -40,20 +41,19 @@ public class UserTest {
     };
     @Test
     public void getUserId(){
-        User t = mockUser;
-        for (Testcase_getString tc : testcases_get){
-            t.setUserId(tc.expected);
-            String actual = t.getUserId();
-            assertEquals(actual,t.getUserId());
+        User user = mockUser;
+        for (UserTest.Testcase_getString tc : testcases_get){
+            user.setUserId(tc.expected);
+            String actual = user.getUserId();
+            Assertions.assertEquals(actual,tc.expected);
         }
     }
     @Test
     public void setUserId(){
-        User t = mockUser;
-        for (Testcase_getString tc : testcases_get){
-            t.setUserId(tc.expected);
-            String actual = t.getUserId();
-            assertEquals(actual,t.getUserId());
+        User user = mockUser;
+        for (UserTest.Testcase_setString tc : testcases){
+            user.setUserId(tc.newText);
+            Assertions.assertEquals(user.getUserId(),tc.newText);
         }
     }
     @Test
