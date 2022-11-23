@@ -59,15 +59,9 @@ import static org.mockito.Mockito.when;
             assertEquals(tc.expected, actual);
         }
     }
-     @Test
-     public void postservice() {
-         UserService t = new UserService(mockRepo);
-         class Testcase {
 
-         }
-     }
      @Test
-     public void validateTaskFields() {
+      void validateTaskFields() {
          UserService t = new UserService(mockRepo);
          class Testcase {
              final User userInput;

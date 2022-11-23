@@ -39,7 +39,7 @@ import org.junit.jupiter.api.Test;
             new TestcasegetString(""),
     };
     @Test
-    public void getUserId(){
+     void getUserId(){
         User t = mockUser;
         for (TestcasegetString tc : testcases_get){
             t.setUserId(tc.expected);
@@ -49,7 +49,7 @@ import org.junit.jupiter.api.Test;
     }
 
     @Test
-    public void setUserId(){
+     void setUserId(){
         User t = mockUser;
         for (TestcasesetString tc : testcases){
             t.setUserId(tc.newText);
@@ -58,7 +58,7 @@ import org.junit.jupiter.api.Test;
     }
 
     @Test
-    public void getId(){
+     void getId(){
         User t = mockUser;
 
         String oId = new String("");
