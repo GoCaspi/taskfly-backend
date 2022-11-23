@@ -9,11 +9,15 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 
 @RestController
 @ResponseBody
@@ -22,11 +26,29 @@ public class ResetController {
     @Autowired
     private UserRepository repository;
     private final ResetService service;
+    private JavaMailSender emailSender;
 
     public ResetController (UserRepository repository){
         super();
         this.repository = repository;
         this.service = new ResetService(repository);
+        this.emailSender = getJavaMailSender();
+    }
+    public JavaMailSender getJavaMailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost("smtp.gmail.com");
+        mailSender.setPort(587);
+
+        mailSender.setUsername("my.gmail@gmail.com");
+        mailSender.setPassword("password");
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
+
+        return mailSender;
     }
 
     /**
@@ -44,13 +66,27 @@ public class ResetController {
        String hashMail = resetRequest.hashStr(resetRequest.getEmail());
         if(Objects.equals(resetRequest.getLastName(), "")){
         }
-        List<User> users = getService().getUserByEmail(hashMail,resetRequest.getLastName());
+        List users = getService().getUserByEmail(hashMail,resetRequest.getLastName());
 
         // return only userId in the messagge
         // send email (!!!to the email of the resetRequest.getEmail() !!!) with the userId in the text and a link to the frontend-form
         // next-next step: create new post-handler: posting userId and password and retypedd password to the handler will update the password assigned to the userId if the user to the userId has the field: reseted true
 
+        if(users.size() == 1){
+            this.sendResetMail(resetRequest.getEmail(), "Password reset for TaskFly","Your Password has been reseted. Please copy your userId : "+users.get(0) +" and follow the link: to assign a new password. ");
+        }
+
+        //
         return new ResponseEntity<>(users, HttpStatus.ACCEPTED);
+    }
+
+    public void sendResetMail(String to, String subject, String text){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("noreply@baeldung.com");
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        emailSender.send(message);
     }
 
     /**

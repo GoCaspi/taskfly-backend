@@ -1,10 +1,14 @@
 package com.gocaspi.taskfly.reseter;
 
 import com.google.common.hash.Hashing;
+import org.springframework.context.annotation.Bean;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Properties;
 
 public class Reset {
 
@@ -36,4 +40,7 @@ public class Reset {
         return  sha256hex;
 
     }
+
+
+
 }
