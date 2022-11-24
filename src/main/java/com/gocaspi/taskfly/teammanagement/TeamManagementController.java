@@ -47,7 +47,7 @@ public class TeamManagementController {
     }
 
     /**
-     * if there is a team to the provided id (path variable), then the method calls the service to validate that there
+     * If there is a team to the provided id (path variable), then the method calls the service to validate that there
      * is a team assigned to the provided id and adds a new team member to the team.
      * If the service doesn't throw an exception then a success message and HttpStatus:202 will be returned,
      * else the exception from the service is thrown.
@@ -65,7 +65,10 @@ public class TeamManagementController {
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
     /**
-     *
+     * If there is a team to the provided id (path variable), then the method calls the service to validate that there
+     * is a team assigned to the provided id and delete a team member to the team.
+     * If the service doesn't throw an exception then a success message and HttpStatus:202 will be returned,
+     * else the exception from the service is thrown.
      * @param id id of the team that should be updated
      * @param member delete of the team Member to the provided id
      * @return ResponseEntity containing a success message along with the http status code

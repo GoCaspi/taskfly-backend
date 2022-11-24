@@ -19,7 +19,18 @@ public class TeamManagementService {
         this.exceptionNotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
         this.exceptionBadRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", new HttpHeaders(), "".getBytes(), null);
     }
+    /**
+     * returns the TaskRepository that was set in the constructor
+     *
+     * @return TaskRepository
+     */
     public TeamManagementRepository getRepository() { return repository; }
+    /**
+     * throws an error if not all necessary fields of the provided team are assigned. If all fields are validated the team is saved to the db
+     *
+     * @param insert team to get validated and saved
+     * @throws RuntimeException Exception if not all fields are filled
+     */
     public void insertService(TeamManagement insert) throws HttpClientErrorException {
         if(!validateTeamManagementFields(new Gson().toJson(insert))){
             throw exceptionBadRequest;
@@ -27,6 +38,12 @@ public class TeamManagementService {
         getRepository().insert(insert);
     }
 
+    /**
+     * returns a team that are assigned to the provided id. If there are no teams assigned to the id then
+     * an exception is thrown.
+     * @param id of the team
+     * @return the new team what was created
+     */
     public TeamManagement getTeamById(String id) throws HttpClientErrorException {
         var teamManagement = getRepository().findById(id);
         if(teamManagement.isEmpty()){
@@ -91,12 +108,22 @@ public class TeamManagementService {
             getRepository().save(t);
         });
     }
+    /**
+     * given a requestbody (Json of a team) the method checks if all fields are null-safe.
+     * @param jsonPayload, request body
+     * @return true if the mentioned criteria holds for that team-payload, else return false
+     */
     public boolean validateTeamManagementFields(String jsonPayload){
         var teamManagement = jsonToTeamManagement(jsonPayload);
 
         return  teamManagement.getMembers() != null  && teamManagement.getTeamName() != null
                 && teamManagement.getUserID() != null;
     }
+    /**
+     * returns a team from a json String
+     * @param jsonPayload String
+     * @return team
+     */
     public TeamManagement jsonToTeamManagement(String jsonPayload){
         return new Gson().fromJson(jsonPayload, TeamManagement.class);
     }
