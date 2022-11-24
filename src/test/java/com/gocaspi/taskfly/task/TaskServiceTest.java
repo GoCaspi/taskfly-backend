@@ -161,20 +161,24 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 		class Testcase{
 			final String mockId;
 			final boolean expected;
-			public Testcase(String mockId, boolean expected){
+			final Task task;
+			public Testcase(String mockId, boolean expected, Task task){
 				this.mockId = mockId;
 				this.expected = expected;
+				this.task = task;
 			}
 		}
 
 		Testcase[] testcases = new Testcase[]{
-				new Testcase("1",true),
-				new Testcase("2", false )
+				new Testcase("1",true, mockTask),
+				new Testcase("1", true, null),
+				new Testcase("", false, null)
 		};
 
 		for (Testcase tc : testcases) {
 			try{
-				Optional<Task> optionalTask = Optional.ofNullable(mockTask);
+				when(mockRepo.existsById(tc.mockId)).thenReturn(tc.expected);
+				Optional<Task> optionalTask = Optional.ofNullable(tc.task);
 				when(mockRepo.findById(tc.mockId)).thenReturn(optionalTask);
 				service.getServiceTaskById(tc.mockId);
 				verify(mockRepo, times(1)).findById(tc.mockId);
