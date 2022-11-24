@@ -43,9 +43,9 @@ public class  Gmailer{
     private static Credential getCredentials(final NetHttpTransport httpTransport, GsonFactory jsonFactory)
             throws IOException {
         // Load client secrets.
-        InputStream in = Gmailer.class.getResourceAsStream("/taskfly/...json");
+        InputStream in = Gmailer.class.getResourceAsStream("/gmailCredentials.json");
         if (in == null) {
-            throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
+            throw new FileNotFoundException("Resource not found: " + "/gmailCredentials.json");
         }
         GoogleClientSecrets clientSecrets =
                 GoogleClientSecrets.load(jsonFactory, new InputStreamReader(Gmailer.class.getResourceAsStream("/taskfly/...json")));
@@ -107,7 +107,10 @@ public class  Gmailer{
 
 
     }
+    /*
     public static void main(String[] args) throws GeneralSecurityException, IOException, MessagingException {
         new Gmailer().sendMail("A new reset message","Your password has been resetted");
     }
+
+     */
 }

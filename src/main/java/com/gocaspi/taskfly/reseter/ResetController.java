@@ -1,5 +1,6 @@
 package com.gocaspi.taskfly.reseter;
 
+import com.gocaspi.taskfly.mailing.Gmailer;
 import com.gocaspi.taskfly.task.Task;
 import com.gocaspi.taskfly.user.User;
 import com.gocaspi.taskfly.user.UserRepository;
@@ -14,6 +15,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Objects;
@@ -26,30 +30,16 @@ public class ResetController {
     @Autowired
     private UserRepository repository;
     private final ResetService service;
-    private JavaMailSender emailSender;
+    private Gmailer emailService;
+
 
     public ResetController (UserRepository repository){
         super();
         this.repository = repository;
         this.service = new ResetService(repository);
-        this.emailSender = getJavaMailSender();
+
     }
-    public JavaMailSender getJavaMailSender() {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(587);
 
-        mailSender.setUsername("taskfly.info@gmail.com");
-        mailSender.setPassword("employeeregister");
-
-        Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true");
-
-        return mailSender;
-    }
 
     /**
      * returns the service  of type ResetService
@@ -61,7 +51,7 @@ public class ResetController {
     }
 
     @PostMapping
-    public ResponseEntity<List> handleReset(@RequestBody String body) throws NoSuchAlgorithmException {
+    public ResponseEntity<List> handleReset(@RequestBody String body) throws GeneralSecurityException, IOException, MessagingException {
         Reset resetRequest = jsonToReset(body);
        String hashMail = resetRequest.hashStr(resetRequest.getEmail());
         if(Objects.equals(resetRequest.getLastName(), "")){
@@ -73,7 +63,8 @@ public class ResetController {
         // next-next step: create new post-handler: posting userId and password and retypedd password to the handler will update the password assigned to the userId if the user to the userId has the field: reseted true
 
         if(users.size() == 1){
-            this.sendResetMail(resetRequest.getEmail(), "Password reset for TaskFly","Your Password has been reseted. Please copy your userId : "+users.get(0) +" and follow the link: to assign a new password. ");
+            new Gmailer().sendMail("Password reset for TaskFly","Please copy your userId : +users.get(0) + and follow the link");
+     //       this.sendResetMail(resetRequest.getEmail(), "Password reset for TaskFly","Your Password has been reseted. Please copy your userId : "+users.get(0) +" and follow the link: to assign a new password. ");
         }
 
 
@@ -82,14 +73,7 @@ public class ResetController {
         return new ResponseEntity<>(users, HttpStatus.ACCEPTED);
     }
 
-    public void sendResetMail(String to, String subject, String text){
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("taskfly.info@gmail.com");
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(text);
-        emailSender.send(message);
-    }
+
 
     /**
      * returns a Reset(body) from a Json
