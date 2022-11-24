@@ -36,17 +36,18 @@ public class ResetController {
     }
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(587);
+        mailSender.setHost("smtp.sendgrid.net");
+        mailSender.setPort(465);
 
-        mailSender.setUsername("my.gmail@gmail.com");
-        mailSender.setPassword("password");
+        mailSender.setUsername("apikey");
+        mailSender.setPassword("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");
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
+   //     props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.debug", "true");
+        props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
 
         return mailSender;
     }
@@ -73,7 +74,8 @@ public class ResetController {
         // next-next step: create new post-handler: posting userId and password and retypedd password to the handler will update the password assigned to the userId if the user to the userId has the field: reseted true
 
         if(users.size() == 1){
-            this.sendResetMail(resetRequest.getEmail(), "Password reset for TaskFly","Your Password has been reseted. Please copy your userId : "+users.get(0) +" and follow the link: to assign a new password. ");
+        //    this.sendResetMail(resetRequest.getEmail(), "Password reset for TaskFly","Your Password has been reseted. Please copy your userId : "+users.get(0) +" and follow the link: to assign a new password. ");
+            this.sendResetMail("taskfly.info@gmail.com", "Password reset for TaskFly","Your Password has been reseted. Please copy your userId : "+users.get(0) +" and follow the link: to assign a new password. ");
         }
 
 
@@ -84,7 +86,7 @@ public class ResetController {
 
     public void sendResetMail(String to, String subject, String text){
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("noreply@taskfly.com");
+        message.setFrom("taskfly.info@gmail.com");
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
