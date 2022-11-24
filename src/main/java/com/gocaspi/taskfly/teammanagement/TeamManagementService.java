@@ -20,14 +20,14 @@ public class TeamManagementService {
         this.exceptionBadRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", new HttpHeaders(), "".getBytes(), null);
     }
     /**
-     * returns the TaskRepository that was set in the constructor
+     * returns the TeamRepository that was set in the constructor
      *
-     * @return TaskRepository
+     * @return TeamRepository
      */
     public TeamManagementRepository getRepository() { return repository; }
     /**
      * throws an error if not all necessary fields of the provided team are assigned. If all fields are validated the
-     * team is saved to the db
+     * team will be saved to the mongodb
      * @param insert team to get validated and saved
      * @throws RuntimeException Exception if not all fields are filled
      */
@@ -41,7 +41,7 @@ public class TeamManagementService {
      * returns a team that are assigned to the provided id. If there are no teams assigned to the id then
      * an exception is thrown.
      * @param id of the team
-     * @return the new team what was created
+     * @return the team to the provided id
      */
     public TeamManagement getTeamById(String id) throws HttpClientErrorException {
         var teamManagement = getRepository().findById(id);
@@ -105,7 +105,7 @@ public class TeamManagementService {
 
     /**
      * If there is no team to the provided id then an exception is thrown that the team does not exist else
-     * that team is removed from the mongoDB
+     * that team will be removed from the mongoDB
      * @param id id of the team
      * @throws HttpClientErrorException throws an exception when the team does not exist
      */
