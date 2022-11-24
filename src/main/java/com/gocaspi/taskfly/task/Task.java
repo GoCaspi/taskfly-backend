@@ -51,7 +51,8 @@ public class Task {
         this.taskId = id.toString();
         this.body = body;
     }
-
+    public Task(){
+    }
     public void setBody(Taskbody body){
         this.body = body;
     }

@@ -1,19 +1,15 @@
 package com.gocaspi.taskfly.task;
 
+import com.gocaspi.taskfly.teammanagement.TeamManagement;
+import com.gocaspi.taskfly.teammanagement.TeamManagementService;
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
-
 public class TaskServiceTest {
 
 	TaskRepository mockRepo = mock(TaskRepository.class);
@@ -25,8 +21,6 @@ public class TaskServiceTest {
 	ObjectId mockObjectId = new ObjectId();
 Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescription");
 	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObjectId,mockbody);
-
-
 	@Test
 	public void getService_AllTasksOfUser() {
 
@@ -56,7 +50,6 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 			assertEquals(tc.expected, actual);
 		}
 	}
-
 	@Test
 	public void validateTaskFields() {
 		TaskService t = new TaskService(mockRepo);
@@ -82,45 +75,6 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 			assertEquals(tc.expected, actualOut);
 		}
 	}
-
-	/*@Test
-	public void updateTaskService(){
-		TaskService s = new TaskService(mockRepo);
-		var emptyBody = new Task.Taskbody("","","");
-		var emptyTask = new Task("", "", "", "", mockObjectId, emptyBody);
-		class Testcase {
-			final Task mockTask;
-			final String mockID;
-			final Boolean exists;
-
-			public Testcase(Task task, String mockID, Boolean exists) {
-				this.mockTask = task;
-				this.mockID = mockID;
-				this.exists = exists;
-			}
-		}
-
-		Testcase[] testcases = new Testcase[]{
-				new Testcase(emptyTask, mockObjectId.toHexString(), true),
-				new Testcase(mockTask, mockObjectId.toHexString(), true),
-				new Testcase(mockTask, mockObjectId.toHexString(), false)
-		};
-		for (Testcase tc : testcases) {
-			try {
-				Optional<Task> taskCollection = Optional.ofNullable(tc.mockTask);
-				when(mockRepo.findById(tc.mockID)).thenReturn(taskCollection);
-				when(mockRepo.existsById(tc.mockID)).thenReturn(tc.exists);
-				s.updateService(tc.mockID, tc.mockTask);
-				if (tc.exists){
-					verify(mockRepo, times(1)).save(tc.mockTask);
-				}
-			} catch (Exception e) {
-
-			}
-
-		}
-	}*/
-
 	@Test
 	public void updateService(){
 		TaskService service = new TaskService(mockRepo);
@@ -154,7 +108,6 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 			}
 		}
 	}
-
 	@Test
 	public void getServiceTaskById(){
 		TaskService service = new TaskService(mockRepo);
@@ -189,6 +142,65 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 			when(mockRepo.existsById(tc.mockId)).thenReturn(tc.expected);
 			service.getServiceTaskById(tc.mockId);
 			verify(mockRepo, times(1)).findById(tc.mockId);*/
+		}
+	}
+	@Test
+	public void deleteTask(){
+
+		TaskService service = new TaskService(mockRepo);
+		class Testcase{
+			final String mockId;
+			final boolean expected;
+
+			public Testcase(String mockId, boolean expected){
+				this.mockId = mockId;
+				this.expected = expected;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase("1", true),
+				new Testcase("", false),
+		};
+
+		for (Testcase tc : testcases) {
+			try {
+				when(mockRepo.existsById(tc.mockId)).thenReturn(tc.expected);
+				service.deleteService(tc.mockId);
+				verify(mockRepo, times(1)).deleteById(tc.mockId);
+			} catch (Exception e){
+
+			}
+		}
+	}
+	@Test
+	public void insertTeam(){
+		TaskService service = new TaskService(mockRepo);
+		Task mockTeamTest = new Task();
+
+		class Testcase{
+			final Task mockInsert;
+			final boolean expected;
+
+			public Testcase(Task mockInsert, boolean expected){
+				this.mockInsert = mockInsert;
+				this.expected = expected;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase(mockTask, false),
+				new Testcase(mockTeamTest, true)
+		};
+
+		for (Testcase tc : testcases) {
+			try{
+				service.postService(tc.mockInsert);
+				verify(mockRepo, times(1)).insert(tc.mockInsert);
+			} catch (Exception e){
+
+			}
+
 		}
 	}
 }

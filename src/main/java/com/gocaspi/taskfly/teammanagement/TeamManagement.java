@@ -18,24 +18,63 @@ public class TeamManagement {
     }
 
     public TeamManagement(){}
-    public void setUserID(String str){
-        this.userID = str;
+    /**
+     * sets the userID of a Team to a new userID
+     *
+     * @param userID, new value of team-field: userID
+     */
+    public void setUserID(String userID){
+        this.userID = userID;
     }
-    public void setTeamName(String str){
-        this.teamName = str;
+    /**
+     * sets the teamName of a Team to a new teamName
+     *
+     * @param teamName, new value of team-field: teamName
+     */
+    public void setTeamName(String teamName){
+        this.teamName = teamName;
     }
-    public void setMembers(String[] str) { this.members = str; }
-    public void setId(String str) { id = str; }
-
+    /**
+     * sets the members of a Team to a new members
+     *
+     * @param members, new value of team-field: members
+     */
+    public void setMembers(String[] members) { this.members = members; }
+    /**
+     * sets the id of a Team to an id
+     *
+     * @param id, new value of team-field: id
+     */
+    public void setId(String id) { this.id = id; }
+    /**
+     * returns the UserID of the team
+     *
+     * @return String, UserID of the team
+     */
     public String getUserID(){
         return this.userID;
     }
+    /**
+     * returns the team Name of the team
+     *
+     * @return String, teamName of the team
+     */
     public String getTeamName(){
         return this.teamName;
     }
+    /**
+     * returns an array of members that are assigned to that team
+     *
+     * @return String[], members that are assigned to that team
+     */
     public String[] getMembers(){
         return this.members;
     }
+    /**
+     * returns the UserID of the team
+     *
+     * @return String, UserID of the team
+     */
     public String getId(){return id;}
 
 }

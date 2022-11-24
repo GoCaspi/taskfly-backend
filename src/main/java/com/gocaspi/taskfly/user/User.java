@@ -26,6 +26,7 @@ public class User {
         this.listId = listId;
         this.team = team;
     }
+    public User(){}
     public String getUserId(){return this.userId;}
 
     public String getFirstName(){ return this.firstName;}

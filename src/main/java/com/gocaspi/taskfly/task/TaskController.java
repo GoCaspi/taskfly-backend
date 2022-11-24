@@ -115,20 +115,6 @@ public class TaskController {
     }
 
     /**
-     * given a requestbody (Json of a Task) the method checks if all fields are null-safe with the exception of the fields: priority and deadline, which must not be set.
-     *
-     * @param jsonPayload, request body
-     * @return true if the mentioned criteria holds for that Task-payload, else return false
-     */
-
-    public boolean validateTaskFields(String jsonPayload){
-        var task = jsonToTask(jsonPayload);
-        return !Objects.equals(task.getUserId(), null) && !Objects.equals(task.getListId(), null) && !Objects.equals(task.getBody().getTopic(), null) && !Objects.equals(task.getBody().getDescription(), null);
-    }
-
-
-
-    /**
      * returns a Task from a Json
      *
      * @param jsonPayload String

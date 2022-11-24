@@ -92,32 +92,6 @@ import static org.mockito.Mockito.when;
 		}
 	}
 
-
-	@Test
-	 void validateTaskFields() {
-		TaskController t = new TaskController(mockRepo);
-		class Testcase {
-			final Task taskInput;
-			final boolean expected;
-
-			public Testcase(Task testTask, boolean expected) {
-				this.taskInput = testTask;
-				this.expected = expected;
-			}
-		}
-
-		Testcase[] testcases = new Testcase[]{
-				new Testcase(mockTask, true),
-		new Testcase(new Task(null,null,null,null,new ObjectId(),null),false)
-		};
-
-		for (Testcase tc : testcases) {
-			boolean actualOut = t.validateTaskFields(new Gson().toJson(tc.taskInput));
-			assertEquals(tc.expected, actualOut);
-		}
-	}
-
-
 	@Test
 	 void getAllTasksDB() {
 		TaskController t = new TaskController(mockRepo);
@@ -163,8 +137,6 @@ import static org.mockito.Mockito.when;
 			}
 		}
 	}
-
-
 	@Test
 	 void getAllTasksById() {
 		TaskController t = new TaskController(mockRepo);
