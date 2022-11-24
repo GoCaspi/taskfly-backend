@@ -27,7 +27,7 @@ public class User {
         this.password = password;
         this.listId = listId;
         this.team = team;
-        this.reseted = false;
+        this.reseted = reseted;
     }
 
     public boolean getReseted(){

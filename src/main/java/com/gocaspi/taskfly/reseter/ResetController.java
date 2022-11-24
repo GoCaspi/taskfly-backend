@@ -58,6 +58,40 @@ public class ResetController {
     public ResetService getService() {
         return this.service;
     }
+    public class uIdAndPwdBody{
+        private String pwd;
+        private String userId;
+        public uIdAndPwdBody(String pwd, String userId){
+            this.userId = userId;
+            this.pwd = pwd;
+        }
+
+        public void setPwd(String pwd) {
+            this.pwd = pwd;
+        }
+
+        public String getPwd() {
+            return pwd;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+    }
+    @PostMapping("/setNew")
+    public ResponseEntity handleSetNewUserPwd(@RequestBody String body){
+        // cast body in { userId, password }
+        uIdAndPwdBody jsonPayload = new Gson().fromJson(body, uIdAndPwdBody.class);
+        // call service to update the users (userId) new password if user.reset == true
+        getService().resetPwdOfUser(jsonPayload.getUserId(), jsonPayload.getPwd());
+        return new ResponseEntity("healthy",HttpStatus.OK);
+    }
+
+
 
     @PostMapping
     public ResponseEntity<List> handleReset(@RequestBody String body) {

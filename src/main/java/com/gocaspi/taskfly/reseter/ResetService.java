@@ -1,6 +1,5 @@
 package com.gocaspi.taskfly.reseter;
 
-import com.gocaspi.taskfly.task.TaskRepository;
 import com.gocaspi.taskfly.user.User;
 import com.gocaspi.taskfly.user.UserRepository;
 import com.google.common.hash.Hashing;
@@ -35,6 +34,24 @@ public class ResetService {
         return repo;
     }
 
+    public Optional<User> resetPwdOfUser(String userId, String newPwd){
+        var user = getRepo().findById(userId);
+
+        if (!getRepo().existsById(userId)) {
+            throw exceptionNotFound;
+        }
+
+        user.ifPresent(t -> {
+            if (t.getReseted()){
+              t.setPassword(newPwd);
+               // t.setPassword(hashStr(newPwd));
+              t.setReseted(false);
+              getRepo().save(t);
+            }
+        });
+        return user;
+    }
+
     public List<User> getUserByEmail(String hashMail, String lastName) throws HttpClientErrorException{
         List<User> users = getRepo().findUserByEmail(hashMail);
         if (users.isEmpty()){
@@ -67,7 +84,7 @@ public class ResetService {
         });
 
     }
-    public String hashStr(String str) throws NoSuchAlgorithmException {
+    public String hashStr(String str)  {
         String sha256hex = Hashing.sha256()
                 .hashString(str, StandardCharsets.UTF_8)
                 .toString();
