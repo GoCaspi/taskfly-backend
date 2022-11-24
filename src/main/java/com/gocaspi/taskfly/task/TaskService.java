@@ -56,7 +56,12 @@ public class TaskService {
         }
         return tasksToId;
     }
-
+    /**
+     * returns a task that are assigned to the provided id. If there are no task assigned to the id then
+     * an exception is thrown.
+     * @param id of the task
+     * @return the task to the provided id
+     */
     public Task getServiceTaskById(String id) throws HttpClientErrorException.NotFound {
         if(!getRepo().existsById(id)){ throw exceptionNotFound; }
         var task = repo.findById(id);
@@ -65,12 +70,23 @@ public class TaskService {
         }
         return task.get();
     }
-
+    /**
+     * If there is no task to the provided id then an exception is thrown that the task does not exist else
+     * that task will be removed from the mongoDB
+     * @param id id of the task
+     * @throws HttpClientErrorException throws an exception when the task does not exist
+     */
     public void deleteService(String id) throws HttpClientErrorException {
         if(!getRepo().existsById(id)){ throw exceptionNotFound; }
         getRepo().deleteById(id);
     }
-
+    /**
+     * If there is no task to the provided id then an exception is thrown that the task does not exist else
+     * the task will be updated to the existing task assigned to the id
+     * @param id id of the task
+     * @param update the task what should be updated
+     * @throws HttpClientErrorException throws an exception when the task does not exist
+     */
     public void updateService(String id,Task update) throws HttpClientErrorException {
         var task =  getRepo().findById(id);
 

@@ -47,7 +47,7 @@ public class UserService {
     }
     /**
      * If there is no user to the provided id then an exception is thrown that the user does not exist else
-     * the user will be updated to the existing team assigned to the id
+     * the user will be updated to the existing task assigned to the id
      * @param id id of the user
      * @param update the user what should be updated
      * @throws HttpClientErrorException throws an exception when the user does not exist
@@ -126,7 +126,7 @@ public class UserService {
     /**
      * returns all users. If there are no user assigned the length of the list will be 0
      *
-     * @return ArrayList containing the tasks of the user with the id id
+     * @return ArrayList containing the users
      */
     public List<User> getServiceAllUser(){
         List<User> users = getRepo().findAll();
