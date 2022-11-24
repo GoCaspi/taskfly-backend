@@ -46,6 +46,16 @@ public class TeamManagementController {
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
+    /**
+     * if there is a team to the provided id (path variable), then the method calls the service to validate that there
+     * is a team assigned to the provided id and adds a new team member to the team.
+     * If the service doesn't throw an exception then a success message and HttpStatus:202 will be returned,
+     * else the exception from the service is thrown.
+     * @param id id of the team that should be insert a team Member to the team
+     * @param body id of the new team Member for the team
+     * @return ResponseEntity containing a success message along with the http status code
+     * @throws HttpClientErrorException.BadRequest Exception if the provided requestbody is missing fields
+     */
     @PostMapping("/{id}/{body}")
     public ResponseEntity<String> addTeamMember(@PathVariable String id, @PathVariable String body) throws HttpClientErrorException.BadRequest {
         String newMemberId = body;
@@ -54,6 +64,13 @@ public class TeamManagementController {
         var msg = "successfully created new Member in Team";
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
+    /**
+     *
+     * @param id id of the team that should be updated
+     * @param member delete of the team Member to the provided id
+     * @return ResponseEntity containing a success message along with the http status code
+     * @throws HttpClientErrorException.BadRequest Exception if the provided requestbody is missing fields
+     */
     @DeleteMapping("/{id}/{member}")
     public ResponseEntity<String> deleteTeamMember(@PathVariable String id, @PathVariable String member) throws HttpClientErrorException.BadRequest {
         var team = getService().getTeamById(id);
