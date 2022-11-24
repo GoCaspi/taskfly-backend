@@ -35,7 +35,7 @@ public class ResetService {
         return repo;
     }
 
-    public List getUserByEmail(String hashMail, String lastName){
+    public List<User> getUserByEmail(String hashMail, String lastName) throws HttpClientErrorException{
         List<User> users = getRepo().findUserByEmail(hashMail);
         if (users.isEmpty()){
             throw this.exceptionNotFound;

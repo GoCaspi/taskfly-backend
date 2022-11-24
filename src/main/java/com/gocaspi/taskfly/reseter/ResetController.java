@@ -1,20 +1,19 @@
 package com.gocaspi.taskfly.reseter;
 
-import com.gocaspi.taskfly.task.Task;
 import com.gocaspi.taskfly.user.User;
 import com.gocaspi.taskfly.user.UserRepository;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -45,7 +44,6 @@ public class ResetController {
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
-   //     props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.debug", "true");
         props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
 
@@ -62,26 +60,27 @@ public class ResetController {
     }
 
     @PostMapping
-    public ResponseEntity<List> handleReset(@RequestBody String body) throws NoSuchAlgorithmException {
+    public ResponseEntity<List> handleReset(@RequestBody String body) {
         Reset resetRequest = jsonToReset(body);
-       String hashMail = resetRequest.hashStr(resetRequest.getEmail());
-        if(Objects.equals(resetRequest.getLastName(), "")){
+        String hashMail = resetRequest.hashStr(resetRequest.getEmail());
+        List emptyList = new ArrayList<>();
+        if (Objects.equals(resetRequest.getLastName(), "")) {
+            return new ResponseEntity<>(emptyList, HttpStatus.BAD_REQUEST);
         }
-        List users = getService().getUserByEmail(hashMail,resetRequest.getLastName());
-
-        // return only userId in the messagge
-        // send email (!!!to the email of the resetRequest.getEmail() !!!) with the userId in the text and a link to the frontend-form
-        // next-next step: create new post-handler: posting userId and password and retypedd password to the handler will update the password assigned to the userId if the user to the userId has the field: reseted true
-
-        if(users.size() == 1){
-        //    this.sendResetMail(resetRequest.getEmail(), "Password reset for TaskFly","Your Password has been reseted. Please copy your userId : "+users.get(0) +" and follow the link: to assign a new password. ");
-            this.sendResetMail("taskfly.info@gmail.com", "Password reset for TaskFly","Your Password has been reseted. Please copy your userId : "+users.get(0) +" and follow the link: to assign a new password. ");
-        }
-
+        List<User> users = new ArrayList<>();
+        try { users = getService().getUserByEmail(hashMail, resetRequest.getLastName()); }
+        catch (HttpClientErrorException ex) { return new ResponseEntity<>(emptyList, ex.getStatusCode()); }
+        if(users.size() !=1){ return new ResponseEntity<>(emptyList, HttpStatus.NOT_FOUND); }
+        else{
+            String userId = users.get(0).getId();
+            //    this.sendResetMail(resetRequest.getEmail(), "Password reset for TaskFly","Your Password has been reseted. Please copy your userId : "+ userId +" and follow the link: to assign a new password. ");
+            //  For testing: send email to host: taskfly.info@gmail.com
+            this.sendResetMail("taskfly.info@gmail.com", "!Password reset for TaskFly!", "Your Password has been reseted. Please copy your userId : " + userId + " and follow the link: to assign a new password. ");
 
 
-        //
         return new ResponseEntity<>(users, HttpStatus.ACCEPTED);
+        }
+
     }
 
     public void sendResetMail(String to, String subject, String text){
