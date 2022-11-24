@@ -81,6 +81,16 @@ public class TaskController {
         return new ResponseEntity<>(taskList, HttpStatus.OK);
     }
 
+    @GetMapping("/private/{userid}")
+    public ResponseEntity<List<Task>> handleGetPrivateTasksByUser(@PathVariable String userid) throws  HttpClientErrorException.NotFound{
+        var taskList = service.getPrivateTasks(userid);
+        return new ResponseEntity<>(taskList, HttpStatus.OK);
+    }
+    @GetMapping("/shared/{userid}")
+    public ResponseEntity<List<Task>> handleGetSharedTasksByUser(@PathVariable String userid) throws  HttpClientErrorException.NotFound{
+        var taskList = service.getSharedTasks(userid);
+        return new ResponseEntity<>(taskList, HttpStatus.OK);
+    }
     /**
      * if there is a task to the provided id (path variable) then that task is removed from the mongoDB, else an exception is thrown
      *

@@ -105,11 +105,23 @@ public class TaskService {
         if(taskList.isEmpty()){
             throw exceptionNotFound;
         }
-        return repo.getTaskByUserIdAndBody_Priority(userid, true);
+        return taskList;
     }
 
     public List<Task> getPrivateTasks(String userid){
+        var taskList = repo.findPrivateTasksByUserID(userid);
+        if(taskList.isEmpty()){
+            throw exceptionNotFound;
+        }
+        return taskList;
+    }
 
+    public List<Task> getSharedTasks(String userid){
+        var taskList = repo.findSharedTasksByUserID(userid);
+        if(taskList.isEmpty()){
+            throw exceptionNotFound;
+        }
+        return taskList;
     }
 
     /**
