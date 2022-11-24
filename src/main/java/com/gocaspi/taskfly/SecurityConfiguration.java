@@ -19,22 +19,13 @@ import java.util.Arrays;
 @EnableGlobalMethodSecurity(securedEnabled = true,jsr250Enabled = true)
 @Configuration
 public class SecurityConfiguration {
-  /*  public SecurityConfiguration(UserDetailsService userDetailsService){
-        this.userDetailsService = userDetailsService;
-    }
-    @Bean
-    public AuthenticationManager customAuthenticationManager(HttpSecurity http)throws Exception{
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
-        return
-                authenticationManagerBuilder.build();
-    }*/
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.csrf().disable().authorizeRequests()
-                .antMatchers("/user/**").permitAll()
                 .antMatchers("/userInfo").authenticated()
+                .antMatchers("/user/**").permitAll()
                 .antMatchers("/getUserRoles").hasAuthority("ROLE_WRITE")
                 .antMatchers("/task/**").permitAll()
                 .antMatchers("/tc/**").permitAll()

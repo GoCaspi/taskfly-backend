@@ -33,7 +33,9 @@ public class UserController {
     @PostMapping("/create")
     public ResponseEntity<String> handlerCreateUser(@RequestBody String body) throws HttpClientErrorException.BadRequest {
         var user = jsonToUser(body);
+        user.setEmail(user.getEmail());
         user.setPassword(encoder.encode(user.getPassword()));
+        user.setSrole(user.getSrole());
         getService().postService(user);
         var msg = "Successfully created User";
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
@@ -109,6 +111,14 @@ public class UserController {
         if (users.isEmpty()) {throw  getService().getNotFound();}
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
+    /**
+     * this endpoint couverts to Update all data User from DB.
+     * @param id
+     * @param body
+     * @return
+     * @throws HttpClientErrorException.NotFound
+     */
     @PutMapping("/{id}")
     public ResponseEntity<String> handleUpdateUser(@PathVariable String id, @RequestBody String body) throws HttpClientErrorException.NotFound {
         var update = jsonToUser(body);
