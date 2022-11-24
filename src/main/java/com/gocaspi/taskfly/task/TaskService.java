@@ -18,7 +18,6 @@ public class TaskService {
         this.exceptionNotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
         this.exceptionBadRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", new HttpHeaders(), "".getBytes(), null);
     }
-
     /**
      * returns the TaskRepository that was set in the constructor
      *
@@ -29,7 +28,6 @@ public class TaskService {
     }
 
     public HttpClientErrorException getNotFound(){return this.exceptionNotFound;}
-
     /**
      * throws an error if not all necessary fields of the provided task are assigned. If all fields are validated the task is saved to the db
      *
@@ -42,7 +40,6 @@ public class TaskService {
         }
          getRepo().insert(t);
     }
-
     /**
      * returns all tasks that are assigned to the provided id. If there are no tasks assigned the length of the list will be 0
      *
@@ -97,7 +94,6 @@ public class TaskService {
             getRepo().save(t);
         });
     }
-
     /**
      * given a requestbody (Json of a Task) the method checks if all fields are null-safe with the exception of the fields: priority and deadline, which must not be set.
      * @param jsonPayload, request body
@@ -107,7 +103,6 @@ public class TaskService {
         var task = jsonToTask(jsonPayload);
         return !Objects.equals(task.getUserId(), null) && !Objects.equals(task.getListId(), null) && !Objects.equals(task.getBody().getTopic(), null) && !Objects.equals(task.getBody().getDescription(), null);
     }
-
     /**
      * returns a Task from a json String
      * @param jsonPayload String
