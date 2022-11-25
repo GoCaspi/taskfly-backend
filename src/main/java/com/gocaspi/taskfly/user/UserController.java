@@ -11,7 +11,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.List;
 @RestController
 @ResponseBody
+@CrossOrigin("*")
 @RequestMapping("/user")
+
 public class UserController {
     @Autowired
     private PasswordEncoder encoder;
@@ -55,8 +57,11 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
+
     public String login(){
-        return "Successfully logged in by user :"+ SecurityContextHolder.getContext().getAuthentication().getName();
+
+     return "Successfully logged in by user :"+ SecurityContextHolder.getContext().getAuthentication().getName();
+
     }
     /**
      * User who has the role ROLE_WRITE can only access this API

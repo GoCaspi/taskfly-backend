@@ -37,6 +37,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
 

@@ -21,6 +21,7 @@ public class User implements UserDetails {
 @Id
     private String id;
     private String userId;
+
     private String srole;
 
 
@@ -43,6 +44,7 @@ public class User implements UserDetails {
     public String getListId(){ return this.listId;}
     public String getTeam(){ return this.team;}
     public String getId() {return this.id;}
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

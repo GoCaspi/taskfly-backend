@@ -23,8 +23,8 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http.csrf().disable().authorizeRequests()
-                .antMatchers("/userInfo").authenticated()
+        http.cors().and().csrf().disable().authorizeRequests()
+                .antMatchers("/user/userInfo").authenticated()
                 .antMatchers("/user/**").permitAll()
                 .antMatchers("/getUserRoles").hasAuthority("ROLE_WRITE")
                 .antMatchers("/task/**").permitAll()
@@ -35,6 +35,7 @@ public class SecurityConfiguration {
                 .httpBasic();
         return http.build();
     }
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
