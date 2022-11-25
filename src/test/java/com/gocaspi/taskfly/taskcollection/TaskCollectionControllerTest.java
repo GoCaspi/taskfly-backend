@@ -30,7 +30,9 @@ class TaskCollectionControllerTest {
     final private String mockTCName = "TaskCollection1";
     final private String mockTCTeamID = new ObjectId().toHexString();
     final private String mockTCOwnerID = new ObjectId().toHexString();
-    final private TaskCollection mockTC = new TaskCollection(mockTCID, mockTCName, mockTCTeamID, mockTCOwnerID);
+
+    final private List<String> mockTeamMember = Arrays.asList("123", "456", "789");
+    final private TaskCollection mockTC = new TaskCollection(mockTCID, mockTCName, mockTCTeamID, mockTCOwnerID, mockTeamMember);
     final private String mockUserIds = "1";
     final private String mockListId = "1";
 
@@ -44,7 +46,7 @@ class TaskCollectionControllerTest {
     @Test
     void createNewTaskCollection() {
         TaskCollectionController t = new TaskCollectionController(mockService);
-        TaskCollection taskCollection = new TaskCollection(this.mockTCID, this.mockTCName, this.mockTCTeamID, this.mockTCOwnerID);
+        TaskCollection taskCollection = new TaskCollection(this.mockTCID, this.mockTCName, this.mockTCTeamID, this.mockTCOwnerID, this.mockTeamMember);
 
         class Testcase {
             final TaskCollection mockTaskCollection;

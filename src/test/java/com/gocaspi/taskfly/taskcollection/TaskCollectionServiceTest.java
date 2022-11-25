@@ -24,7 +24,8 @@ class TaskCollectionServiceTest {
     final private String mockTCName = "TaskCollection1";
     final private String mockTCTeamID = new ObjectId().toHexString();
     final private String mockTCOwnerID = new ObjectId().toHexString();
-    final private TaskCollection mockTC = new TaskCollection(mockTCID, mockTCName, mockTCTeamID, mockTCOwnerID);
+    final private List<String> mockTeamMember = Arrays.asList("123", "456", "789");
+    final private TaskCollection mockTC = new TaskCollection(mockTCID, mockTCName, mockTCTeamID, mockTCOwnerID, mockTeamMember);
     final private String mockUserIds = "1";
     final private String mockListId = "1";
     final private String mockTopic = "topic1";
@@ -38,7 +39,7 @@ class TaskCollectionServiceTest {
     @Test
     void createTaskCollectionTest(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
-        TaskCollection taskCollection = new TaskCollection(this.mockTCID, this.mockTCName, this.mockTCTeamID, this.mockTCOwnerID);
+        TaskCollection taskCollection = new TaskCollection(this.mockTCID, this.mockTCName, this.mockTCTeamID, this.mockTCOwnerID, mockTeamMember);
 
         class Testcase {
             final TaskCollection mockTaskCollection;
@@ -203,7 +204,7 @@ class TaskCollectionServiceTest {
         Testcase[] testcases = new Testcase[]{
                 new Testcase(mockTC, mockTCID, true),
                 new Testcase(mockTC, mockTCID, false),
-                new Testcase(new TaskCollection(mockTCID, "", "", ""), mockTCID, true)
+                new Testcase(new TaskCollection(mockTCID, "", "", "", Arrays.asList()), mockTCID, true)
         };
         for (Testcase tc : testcases) {
             try {
