@@ -1,6 +1,5 @@
 package com.gocaspi.taskfly.user;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -107,7 +106,7 @@ public class UserController {
      * @param id id of the user that should be updated
      * @param body update of the user to the provided id
      * @return ResponseEntity containing success message and updated user id and the http status code
-     * @throws ChangeSetPersister.NotFoundException Exception if no user to the id was found
+     * @throws HttpClientErrorException.NotFound Exception if no user to the id was found
      */
     @PutMapping("/{id}")
     public ResponseEntity<String> handleUpdateUser(@PathVariable String id, @RequestBody String body) throws HttpClientErrorException.NotFound {

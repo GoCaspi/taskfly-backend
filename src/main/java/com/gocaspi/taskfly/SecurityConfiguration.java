@@ -14,6 +14,13 @@ import java.util.Arrays;
  */
 @Configuration
 public class SecurityConfiguration {
+    /**
+     * commit access to the endpoint user, task, tc and actuator
+     *
+     * @param http HttpSecurity
+     * @return SecurityFilterChain
+     * @throws Exception error
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.csrf().disable().authorizeRequests()
@@ -27,6 +34,11 @@ public class SecurityConfiguration {
         return http.build();
     }
 
+    /**
+     * allows the Cross origin scope for third party application like our frontend
+     *
+     * @return CorsConfigurationSource
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

@@ -16,6 +16,9 @@ import java.util.Map;
  */
 @RestControllerAdvice
 public class ApiExceptionHandler {
+    /**
+     * A string varible initialized with error_msg
+     */
     public static final String ERRORMSGKEY = "error_msg";
 
     /**

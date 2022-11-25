@@ -1,7 +1,6 @@
 package com.gocaspi.taskfly.teammanagement;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +23,8 @@ public class TeamManagementController {
     /**
      * Constractor for TeamManagementController
      *
-     * @param repository variable for the interface taskrepository
+     * @param repository variable for the interface TeamManagementRepository
+     * @param service variable for the class TeamManagementService
      */
     public TeamManagementController(TeamManagementRepository repository, TeamManagementService service){
         super();
@@ -99,7 +99,7 @@ public class TeamManagementController {
      * @param id id of the team that should be updated
      * @param body update of the team to the provided id
      * @return ResponseEntity containing success message and updated team id and the http status code
-     * @throws ChangeSetPersister.NotFoundException Exception if no team to the id was found
+     * @throws HttpClientErrorException.NotFound Exception if no team to the id was found
      */
     @PatchMapping("/{id}")
     public ResponseEntity<String> updateTeam(@PathVariable String id,@RequestBody String body) throws HttpClientErrorException.NotFound {

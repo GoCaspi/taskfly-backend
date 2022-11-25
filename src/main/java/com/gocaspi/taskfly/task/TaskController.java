@@ -2,7 +2,6 @@ package com.gocaspi.taskfly.task;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -112,7 +111,7 @@ public class TaskController {
      * @param id id of the task that should be updated
      * @param body update of the task to the provided id
      * @return ResponseEntity containing success message and updated task id and the http status code
-     * @throws ChangeSetPersister.NotFoundException Exception if no task to the id was found
+     * @throws HttpClientErrorException.NotFound Exception if no task to the id was found
      */
     @PutMapping("/{id}")
     public ResponseEntity<String> handleUpdateTask(@PathVariable String id,@RequestBody String body) throws HttpClientErrorException.NotFound {
