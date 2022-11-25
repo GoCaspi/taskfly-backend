@@ -83,7 +83,7 @@ public class UserController {
     /**
      * this endpoint couverts to getall User from DB.
      *
-     * @return
+     * @return ResponseEntity containing success message and get all user and the http status code
      */
     @GetMapping()
     public ResponseEntity<List<User>> handleGetAllUsers() throws HttpClientErrorException.NotFound {

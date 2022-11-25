@@ -20,22 +20,52 @@ public class Task {
             this.priority = priority;
             this.description = description;
         }
-        public void setPriority(String str){
-            this.priority = str;
+       /**
+        * sets the priority of a task to a new priority
+        *
+        * @param priority, new value of the task-field: priority
+        */
+        public void setPriority(String priority){
+            this.priority = priority;
         }
-        public void setDescription(String str){
-            this.description = str;
+       /**
+        * sets the description of a task to a new description
+        *
+        * @param description, new value of the task-field: description
+        */
+        public void setDescription(String description){
+            this.description = description;
         }
-        public void setTopic(String str){
-            this.topic = str;
+       /**
+        * sets the topic of a task to a new topic
+        *
+        * @param topic, new value of the task-field: topic
+        */
+        public void setTopic(String topic){
+            this.topic = topic;
         }
 
+       /**
+        * returns the topic of the task
+        *
+        * @return String, topic of the task
+        */
         public String getTopic(){
             return this.topic;
         }
+       /**
+        * returns the description of the task
+        *
+        * @return String, description of the task
+        */
         public String getDescription(){
             return this.description;
         }
+       /**
+        * returns the priority of the task
+        *
+        * @return String, priority of the task
+        */
         public String getPriority(){
             return this.priority;
         }
