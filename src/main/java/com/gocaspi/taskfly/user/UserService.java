@@ -9,19 +9,31 @@ package com.gocaspi.taskfly.user;
         import java.util.List;
         import java.util.Objects;
         import java.util.Optional;
+/**
+ * Class for UserService
+ */
 public class UserService {
 
     @Autowired
     private UserRepository repo;
     private final HttpClientErrorException exceptionnotFound;
     private final HttpClientErrorException exceptionbadRequest;
+    /**
+     * Constractor for UserService
+     *
+     * @param repo variable for the interface userRepository
+     */
     public UserService(UserRepository repo){
 
         this.repo = repo ;
         this.exceptionnotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
         this.exceptionbadRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", new HttpHeaders(), "".getBytes(), null);
     }
-
+    /**
+     * returns the HttpClientErrorException
+     *
+     * @return exceptionNotFound
+     */
     public HttpClientErrorException getNotFound() {
 
         return this.exceptionbadRequest;

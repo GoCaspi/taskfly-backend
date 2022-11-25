@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import org.springframework.web.client.HttpClientErrorException;
 
+
+/**
+ * Class for TeamManagementController
+ */
 @RestController
 @ResponseBody
 @RequestMapping("/teammanagement")
@@ -17,6 +21,11 @@ public class TeamManagementController {
     @Autowired
     private final TeamManagementService service;
 
+    /**
+     * Constractor for TeamManagementController
+     *
+     * @param repository variable for the interface taskrepository
+     */
     public TeamManagementController(TeamManagementRepository repository, TeamManagementService service){
         super();
         this.repository = repository;

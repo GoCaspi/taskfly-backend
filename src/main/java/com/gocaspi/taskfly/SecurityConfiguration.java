@@ -9,7 +9,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-
+/**
+ * Class for SecurityConfiguration
+ */
 @Configuration
 public class SecurityConfiguration {
     @Bean

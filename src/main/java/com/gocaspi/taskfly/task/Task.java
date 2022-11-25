@@ -2,6 +2,9 @@ package com.gocaspi.taskfly.task;
 
 import org.bson.types.ObjectId;
 
+/**
+ * Class for Task
+ */
 public class Task {
     private String userId;
     private String listId;
@@ -10,11 +13,22 @@ public class Task {
     private ObjectId id;
     private String taskId;
     private Taskbody body;
-   public static class Taskbody {
+
+    /**
+     * Class for Taskbody
+     */
+    public static class Taskbody {
         private String topic;
         private String priority;
         private String description;
 
+       /**
+        * Constractor for Taskbody
+        *
+        * @param topic title of the task
+        * @param priority priority of the task
+        * @param description description of the task
+        */
         public Taskbody(String topic, String priority,String description){
             this.topic = topic;
             this.priority = priority;
@@ -72,6 +86,15 @@ public class Task {
 
     }
 
+    /**
+     * Constractor for Task
+     * @param userId userid for the task
+     * @param listId listId for the task
+     * @param team team for the task
+     * @param deadline deadline for the task
+     * @param id id for the task
+     * @param body body for the task
+     */
     public Task(String userId, String listId, String team,  String deadline, ObjectId id, Taskbody body){
         this.userId = userId;
         this.listId = listId;
@@ -81,11 +104,25 @@ public class Task {
         this.taskId = id.toString();
         this.body = body;
     }
+
+    /**
+     * Empty Constractor Task for testing
+     */
     public Task(){
     }
+    /**
+     * sets the body of a task to a new body
+     *
+     * @param body, new value of task-field: body
+     */
     public void setBody(Taskbody body){
         this.body = body;
     }
+    /**
+     * returns the body of the task
+     *
+     * @return String, body of the task
+     */
     public Taskbody getBody(){
         return this.body;
     }

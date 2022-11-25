@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import org.springframework.web.client.HttpClientErrorException;
 import java.util.List;
+/**
+ * Class for UserController
+ */
 @RestController
 @ResponseBody
 @RequestMapping("/user")
@@ -14,7 +17,11 @@ public class UserController {
     @Autowired
     private UserRepository repository;
     private final UserService service;
-
+    /**
+     * Constractor for UserController
+     *
+     * @param repository variable for the interface userRepository
+     */
     public UserController(UserRepository repository) {
         super();
         this.repository = repository;

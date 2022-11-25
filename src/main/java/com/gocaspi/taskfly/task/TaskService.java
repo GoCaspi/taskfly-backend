@@ -8,11 +8,20 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.*;
 
+/**
+ * Class for TeamService
+ */
 public class TaskService {
     @Autowired
     private TaskRepository repo;
     private final HttpClientErrorException exceptionNotFound;
     private final HttpClientErrorException exceptionBadRequest;
+
+    /**
+     * Constractor for TaskService
+     *
+     * @param repo variable for the interface taskrepository
+     */
     public TaskService (TaskRepository repo){
         this.repo = repo;
         this.exceptionNotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
@@ -26,13 +35,17 @@ public class TaskService {
     public TaskRepository getRepo() {
         return repo;
     }
-
+    /**
+     * returns the HttpClientErrorException
+     *
+     * @return exceptionNotFound
+     */
     public HttpClientErrorException getNotFound(){return this.exceptionNotFound;}
     /**
      * throws an error if not all necessary fields of the provided task are assigned. If all fields are validated the task is saved to the db
      *
      * @param t task to get validated and saved
-     * @throws RuntimeException
+     * @throws RuntimeException Exception if not all fields are filled
      */
     public void postService(Task t) throws HttpClientErrorException {
         if(!validateTaskFields(new Gson().toJson(t))){

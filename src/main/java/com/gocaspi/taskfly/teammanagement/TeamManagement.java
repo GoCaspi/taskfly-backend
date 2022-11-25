@@ -1,7 +1,9 @@
 package com.gocaspi.taskfly.teammanagement;
 
 import org.springframework.data.annotation.Id;
-
+/**
+ * Class for TeamManagement
+ */
 public class TeamManagement {
 
     private String teamName;
@@ -9,14 +11,23 @@ public class TeamManagement {
     private String userID;
     @Id
     private String id;
-
+    /**
+     * Constractor for TeamManagement
+     *
+     * @param userID userID of the teamManagement
+     * @param teamName teamName of the teamManagement
+     * @param members members of the teamManagement
+     * @param id id of the teamManagement
+     */
     public TeamManagement(String userID, String teamName, String[] members, String id){
         this.userID = userID;
         this.teamName = teamName;
         this.members = members;
         this.id = id;
     }
-
+    /**
+     * Empty Constractor TeamManagement for testing
+     */
     public TeamManagement(){}
     /**
      * sets the userID of a Team to a new userID

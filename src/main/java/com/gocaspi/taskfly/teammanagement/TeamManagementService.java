@@ -8,12 +8,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.*;
+/**
+ * Class for TeamService
+ */
 @Service
 public class TeamManagementService {
     @Autowired
     private TeamManagementRepository repository;
     private final HttpClientErrorException exceptionNotFound;
     private final HttpClientErrorException exceptionBadRequest;
+
+    /**
+     * Constractor for TeamManagementService
+     *
+     * @param repository variable for the interface TeamManagementRepository
+     */
     public TeamManagementService(TeamManagementRepository repository){
         this.repository = repository;
         this.exceptionNotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);

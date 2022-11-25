@@ -4,7 +4,9 @@ package com.gocaspi.taskfly.user;
 
 import org.springframework.data.annotation.Id;
 
-
+/**
+ * Class for User
+ */
 public class User {
     private String firstName;
     private String lastName;
@@ -15,8 +17,16 @@ public class User {
     @Id
     private String id;
     private String userId;
-
-
+    /**
+     * Constractor for User
+     * @param firstName firstName for the user
+     * @param lastName lastName for the user
+     * @param email email for the user
+     * @param password password for the user
+     * @param team team for the user
+     * @param listId listId for the user
+     * @param userId userId for the user
+     */
     public User(String firstName, String lastName, String email, String password, String team, String listId, String userId) {
         this.userId = userId;
         this.firstName = firstName;
@@ -26,6 +36,9 @@ public class User {
         this.listId = listId;
         this.team = team;
     }
+    /**
+     * Empty Constractor Task for testing
+     */
     public User(){}
     /**
      * returns the userId of the user

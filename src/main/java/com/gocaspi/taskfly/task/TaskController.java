@@ -11,6 +11,10 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.*;
 
+
+/**
+ * Class for TaskController
+ */
 @RestController
 @ResponseBody
 @RequestMapping("/task")
@@ -19,6 +23,11 @@ public class TaskController {
     private TaskRepository repository;
     private final TaskService service;
 
+    /**
+     * Constractor for TaskController
+     *
+     * @param repository variable for the interface taskrepository
+     */
    public TaskController (TaskRepository repository){
        super();
        this.repository = repository;
