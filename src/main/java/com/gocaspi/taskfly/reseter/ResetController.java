@@ -18,7 +18,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
+
+
 @RestController
+@CrossOrigin("*")
 @ResponseBody
 @RequestMapping("/reset")
 public class ResetController {
