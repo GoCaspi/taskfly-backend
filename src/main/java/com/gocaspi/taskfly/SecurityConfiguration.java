@@ -25,31 +25,24 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers("/user/userInfo").authenticated()
-                .antMatchers("/user/**").permitAll()
+                .antMatchers("/user/**").authenticated()
+                .antMatchers("/user/login").authenticated()
                 .antMatchers("/getUserRoles").hasAuthority("ROLE_WRITE")
                 .antMatchers("/task/**").permitAll()
                 .antMatchers("/tc/**").permitAll()
                 .antMatchers("/actuator/**")
                 .authenticated()
                 .and()
-                .httpBasic();
+                .httpBasic()
+                .and()
+                .anonymous().disable();
+
         return http.build();
     }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
-    }
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
-        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 
 }

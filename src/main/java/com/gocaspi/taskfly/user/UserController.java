@@ -2,6 +2,8 @@ package com.gocaspi.taskfly.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -56,12 +58,11 @@ public class UserController {
      * User Login
      * @return
      */
-    @PostMapping("/login")
+  @PostMapping("/login")
 
-    public String login(){
+    public String login()throws AuthenticationException {
 
      return "Successfully logged in by user :"+ SecurityContextHolder.getContext().getAuthentication().getName();
-
     }
     /**
      * User who has the role ROLE_WRITE can only access this API
