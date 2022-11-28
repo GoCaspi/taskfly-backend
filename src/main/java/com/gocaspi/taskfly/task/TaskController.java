@@ -80,16 +80,36 @@ public class TaskController {
         return new ResponseEntity<>(taskList, HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param userid
+     * @return
+     * @throws HttpClientErrorException.NotFound
+     */
     @GetMapping("/private/{userid}")
     public ResponseEntity<List<Task>> handleGetPrivateTasksByUser(@PathVariable String userid) throws  HttpClientErrorException.NotFound{
         var taskList = service.getPrivateTasks(userid);
         return new ResponseEntity<>(taskList, HttpStatus.OK);
     }
+
+    /**
+     *
+     * @param userid, identifier for the user of interest
+     * @return ResponseEntity, containing a List of Tasks and the http status code.
+     * @throws HttpClientErrorException.NotFound Exception
+     */
     @GetMapping("/shared/{userid}")
     public ResponseEntity<List<Task>> handleGetSharedTasksByUser(@PathVariable String userid) throws  HttpClientErrorException.NotFound{
         var taskList = service.getSharedTasks(userid);
         return new ResponseEntity<>(taskList, HttpStatus.OK);
     }
+
+    /**
+     *
+     * @param userid, identifier for the user of interest
+     * @return ResponseEntity, containing a List of Tasks and the http status code.
+     * @throws HttpClientErrorException.NotFound Exception if no matching task is found.
+     */
     @GetMapping("/scheduled/week/{userid}")
     public ResponseEntity<List<Task>> handleTasksScheduledForOneWeekByUser(@PathVariable String userid) throws HttpClientErrorException.NotFound{
         var taskList = service.getTasksScheduledForOneWeek(userid);
@@ -98,7 +118,7 @@ public class TaskController {
     /**
      * if there is a task to the provided id (path variable) then that task is removed from the mongoDB, else an exception is thrown
      *
-     * @param id, identifier of the task of intereset
+     * @param id, identifier of the task of interest
      * @return ResponseEntity, containing the task from the db and the http status code
      * @throws HttpClientErrorException.NotFound Exception if no task to the id was found
      */
