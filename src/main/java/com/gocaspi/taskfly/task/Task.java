@@ -26,17 +26,17 @@ public class Task {
     private Taskbody body;
    public static class Taskbody {
         private String topic;
-        private Boolean priority;
+        private Boolean highPriority;
         private String description;
 
         public Taskbody(String topic, Boolean priority,String description){
             this.topic = topic;
-            this.priority = priority;
+            this.highPriority = priority;
             this.description = description;
         }
 
-        public void setPriority(Boolean str){
-            this.priority = str;
+        public void setHighPriority(Boolean str){
+            this.highPriority = str;
         }
         public void setDescription(String str){
             this.description = str;
@@ -51,8 +51,8 @@ public class Task {
         public String getDescription(){
             return this.description;
         }
-        public Boolean getPriority(){
-            return this.priority;
+        public Boolean getHighPriority(){
+            return this.highPriority;
         }
 
 

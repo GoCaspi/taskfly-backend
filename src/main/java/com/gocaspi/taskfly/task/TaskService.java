@@ -97,8 +97,8 @@ public class TaskService {
         });
     }
 
-    public List<Task> getTasksByPriorityService(String userid) {
-        var taskList = repo.getTaskByUserIdAndBody_Priority(userid, true);
+    public List<Task> getTasksByHighPriorityService(String userid) {
+        var taskList = repo.getTaskByUserIdAndBody_HighPriority(userid, true);
         if(taskList.isEmpty()){
             throw exceptionNotFound;
         }

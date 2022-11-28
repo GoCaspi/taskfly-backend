@@ -47,8 +47,8 @@ public class TaskRepositoryImpl implements TaskRepositoryCustom {
         return aggregationOperation -> new Document("$addFields",
                 new Document("deadlineDiff",
                         new Document("$dateDiff",
-                                new Document("startDate", "$deadline")
-                                        .append("endDate", "$$NOW")
+                                new Document("startDate", "$$NOW")
+                                        .append("endDate", "$deadline")
                                         .append("unit", "hour")))
                         .append("currentDate", "$$NOW"));
     }

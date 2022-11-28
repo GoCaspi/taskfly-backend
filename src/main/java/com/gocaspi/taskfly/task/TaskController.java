@@ -76,7 +76,7 @@ public class TaskController {
 
     @GetMapping("/priority/{userid}")
     public ResponseEntity<List<Task>> handleGetTaskByUserIDandPriority(@PathVariable String userid) throws HttpClientErrorException.NotFound{
-        var taskList = service.getTasksByPriorityService(userid);
+        var taskList = service.getTasksByHighPriorityService(userid);
         return new ResponseEntity<>(taskList, HttpStatus.OK);
     }
 

@@ -4,13 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 
- class TaskTest {
+
+class TaskTest {
+	LocalDateTime mockTime = LocalDateTime.now();
 	String mockUserIds = "1"; String mockListId = ""; String mockTopic = ""; String mockTeam = "";
 	String mockPrio = ""; String mockDesc = ""; String mockDeadline = ""; ObjectId mockObjectId = new ObjectId();
 //	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
 Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
-Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObjectId,mockbody);
+Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
 
 	class Testcase_setString{
 		final String newText;
@@ -68,11 +71,11 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObject
 	}
 
 	@Test
-	 void setPriority() {
+	 void setHighPriority() {
 		Task t = mockTask;
 		for (Testcase_setString tc : testcases){
-			t.getBody().setPriority(false);
-			assertEquals(t.getBody().getPriority(),false);
+			t.getBody().setHighPriority(false);
+			assertEquals(t.getBody().getHighPriority(),false);
 		}
 	}
 
@@ -89,7 +92,8 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObject
 	 void setDeadline() {
 		Task t = mockTask;
 		for (Testcase_setString tc : testcases){
-			t.setDeadline(tc.newText);
+			LocalDateTime time =LocalDateTime.now();
+			t.setDeadline(time);
 			assertEquals(t.getDeadline(),tc.newText);
 		}
 	}
@@ -107,9 +111,10 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObject
 	 void getDeadline(){
 		Task t = mockTask;
 		for (Testcase_getString tc : testcases_get){
-			t.setDeadline(tc.expected);
-			String actual = t.getDeadline();
-			assertEquals(actual,tc.expected);
+			LocalDateTime time =LocalDateTime.now();
+			t.setDeadline(time);
+			LocalDateTime actual = t.getDeadline();
+			assertEquals(actual,time);
 		}
 	}
 
@@ -117,8 +122,8 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObject
 	 void getPriority(){
 		Task t = mockTask;
 		for (Testcase_getString tc : testcases_get){
-			t.getBody().setPriority(true);
-			Boolean actual = t.getBody().getPriority();
+			t.getBody().setHighPriority(true);
+			Boolean actual = t.getBody().getHighPriority();
 			assertEquals(actual,true);
 		}
 	}
