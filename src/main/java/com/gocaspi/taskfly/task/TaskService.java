@@ -77,7 +77,7 @@ public class TaskService {
      */
     public Task getServiceTaskById(String id) throws HttpClientErrorException.NotFound {
         if(!getRepo().existsById(id)){ throw exceptionNotFound; }
-        var task = repo.findById(id);
+        var task = getRepo().findById(id);
         if (task.isEmpty()){
             throw exceptionNotFound;
         }

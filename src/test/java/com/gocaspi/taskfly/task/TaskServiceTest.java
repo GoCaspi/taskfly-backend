@@ -138,10 +138,6 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 			} catch (Exception e){
 
 			}
-			/*Optional<Task> optionalTask = Optional.ofNullable(mockTask);
-			when(mockRepo.existsById(tc.mockId)).thenReturn(tc.expected);
-			service.getServiceTaskById(tc.mockId);
-			verify(mockRepo, times(1)).findById(tc.mockId);*/
 		}
 	}
 	@Test

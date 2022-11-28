@@ -94,7 +94,7 @@ class UserServiceTest {
     }
 
     @Test
-    void getTeamById() {
+    void getUserById() {
         UserService service = new UserService(mockRepo);
 
         class Testcase {
@@ -124,12 +124,11 @@ class UserServiceTest {
             } catch (Exception e) {
 
             }
-
         }
     }
 
     @Test
-    void deleteTeam() {
+    void deleteUser() {
         UserService service = new UserService(mockRepo);
         class Testcase {
             final String mockId;
