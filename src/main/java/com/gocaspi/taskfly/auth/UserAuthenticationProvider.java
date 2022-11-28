@@ -52,6 +52,12 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("Password mismatch");
         }
     }
+
+    /**
+     * User can have more than roles separated by ",". We are splitting each role separately(ROLE_WRITE/ROLE_READ)
+     * @param userRoles
+     * @return
+     */
      private List<GrantedAuthority> getUserRoles(String userRoles){
         List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
         String[] roles = userRoles.split(",");

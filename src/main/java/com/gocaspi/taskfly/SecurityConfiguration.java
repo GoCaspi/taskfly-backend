@@ -20,12 +20,18 @@ import java.util.Arrays;
 @Configuration
 public class SecurityConfiguration {
 
-
+    /**
+     * “/usertInfo” – can be access by any user who has successfully ayuthenticated.
+     * “/getUserRoles” – can be accessed by the user who has role/authority – “ROLE_WRITE”
+     * @param http
+     * @return
+     * @throws Exception
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.cors().and().csrf().disable().authorizeRequests()
+                .antMatchers("/user/**").permitAll()
                 .antMatchers("/user/userInfo").authenticated()
-                .antMatchers("/user/**").authenticated()
                 .antMatchers("/user/login").authenticated()
                 .antMatchers("/getUserRoles").hasAuthority("ROLE_WRITE")
                 .antMatchers("/task/**").permitAll()
@@ -37,9 +43,14 @@ public class SecurityConfiguration {
                 .and()
                 .anonymous().disable();
 
+
         return http.build();
     }
 
+    /**
+     * In our example we are going to use BCryptPasswordEncoder to encode the password and save it in database.
+     * @return
+     */
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
