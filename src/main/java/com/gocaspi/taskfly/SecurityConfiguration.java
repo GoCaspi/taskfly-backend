@@ -29,7 +29,7 @@ public class SecurityConfiguration {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http.cors().and().csrf().disable().authorizeRequests()
+        http.cors().and().anonymous().and().csrf().disable().authorizeRequests()
                 .antMatchers("/user/**").permitAll()
                 .antMatchers("/user/userInfo").authenticated()
                 .antMatchers("/user/login").authenticated()
@@ -39,9 +39,9 @@ public class SecurityConfiguration {
                 .antMatchers("/actuator/**")
                 .authenticated()
                 .and()
-                .httpBasic()
-                .and()
-                .anonymous().disable();
+                .httpBasic();
+
+
 
 
         return http.build();
