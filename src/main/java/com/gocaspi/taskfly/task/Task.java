@@ -1,9 +1,15 @@
 package com.gocaspi.taskfly.task;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 
 public class Task {
@@ -12,7 +18,9 @@ public class Task {
     @NotBlank
     private String listId;
     private String team;
-    private String deadline;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
+    private LocalDateTime deadline;
     @Id
     private ObjectId id;
     private Taskbody body;
@@ -47,11 +55,13 @@ public class Task {
             return this.priority;
         }
 
+
+
     }
 
 
 
-    public Task(String userId, String listId, String team,  String deadline, ObjectId id, Taskbody body){
+    public Task(String userId, String listId, String team, LocalDateTime deadline, ObjectId id, Taskbody body){
         this.userId = userId;
         this.listId = listId;
         this.team = team;
@@ -114,7 +124,7 @@ public class Task {
      *
      * @param deadline, new value of task-field: deadline
      */
-    public void setDeadline(String deadline){
+    public void setDeadline(LocalDateTime deadline){
         this.deadline = deadline;
     }
 
@@ -123,7 +133,7 @@ public class Task {
      *
      * @return String, deadline of the task
      */
-    public String getDeadline(){ return this.deadline; }
+    public LocalDateTime getDeadline(){ return this.deadline; }
 
 
     /**

@@ -38,8 +38,7 @@ public class TaskController {
      * @throws HttpClientErrorException.BadRequest Exception if the provided requestbody is missing fields
      */
     @PostMapping
-    public ResponseEntity<String> handleCreateNewTask(@Valid @RequestBody String body) throws HttpClientErrorException.BadRequest {
-        var task = jsonToTask(body);
+    public ResponseEntity<String> handleCreateNewTask(@Valid @RequestBody Task task) throws HttpClientErrorException.BadRequest {
         service.postService(task);
         String msg = "successfully created task with id: " + task.getId().toHexString();
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
@@ -89,6 +88,11 @@ public class TaskController {
     @GetMapping("/shared/{userid}")
     public ResponseEntity<List<Task>> handleGetSharedTasksByUser(@PathVariable String userid) throws  HttpClientErrorException.NotFound{
         var taskList = service.getSharedTasks(userid);
+        return new ResponseEntity<>(taskList, HttpStatus.OK);
+    }
+    @GetMapping("/scheduled/week/{userid}")
+    public ResponseEntity<List<Task>> handleTasksScheduledForOneWeekByUser(@PathVariable String userid) throws HttpClientErrorException.NotFound{
+        var taskList = service.getTasksScheduledForOneWeek(userid);
         return new ResponseEntity<>(taskList, HttpStatus.OK);
     }
     /**

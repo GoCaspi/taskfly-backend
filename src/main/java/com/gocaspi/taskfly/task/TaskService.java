@@ -39,9 +39,6 @@ public class TaskService {
      * @throws RuntimeException
      */
     public void postService(Task t) throws HttpClientErrorException {
-        if(!validateTaskFields(new Gson().toJson(t))){
-            throw exceptionBadRequest;
-        }
          getRepo().insert(t);
     }
 
@@ -118,6 +115,14 @@ public class TaskService {
 
     public List<Task> getSharedTasks(String userid){
         var taskList = repo.findSharedTasksByUserID(userid);
+        if(taskList.isEmpty()){
+            throw exceptionNotFound;
+        }
+        return taskList;
+    }
+
+    public List<Task> getTasksScheduledForOneWeek(String userid){
+        var taskList = repo.findTasksScheduledForOneWeekByUserID(userid);
         if(taskList.isEmpty()){
             throw exceptionNotFound;
         }

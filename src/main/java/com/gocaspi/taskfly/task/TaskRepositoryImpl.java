@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class TaskRepositoryImpl implements TaskRepositoryCustom {
@@ -40,6 +41,16 @@ public class TaskRepositoryImpl implements TaskRepositoryCustom {
 
     private AggregationOperation unwindResult(){
         return aggregationOperation -> new Document("$unwind", "$result");
+    }
+
+    private AggregationOperation addDateDifferenceFields(){
+        return aggregationOperation -> new Document("$addFields",
+                new Document("deadlineDiff",
+                        new Document("$dateDiff",
+                                new Document("startDate", "$deadline")
+                                        .append("endDate", "$$NOW")
+                                        .append("unit", "hour")))
+                        .append("currentDate", "$$NOW"));
     }
 
     @Override
@@ -89,6 +100,14 @@ public class TaskRepositoryImpl implements TaskRepositoryCustom {
         );
         var matchOperation2 = Aggregation.match(new Criteria("userId").is(userid));
         var aggregation = Aggregation.newAggregation(addConvertedIDField(), lookupOperation, unwindResult(), addSizeField(), matchOperation1, matchOperation2);
+        return mongoTemplate.aggregate(aggregation, "task", Task.class).getMappedResults();
+    }
+
+    @Override
+    public List<Task> findTasksScheduledForOneWeekByUserID(String userid){
+        var matchOperation1 = Aggregation.match(new Criteria("userId").is(userid));
+        var matchOperation2 = Aggregation.match(new Criteria("deadlineDiff").lt(168));
+        var aggregation = Aggregation.newAggregation(addDateDifferenceFields(), matchOperation1, matchOperation2);
         return mongoTemplate.aggregate(aggregation, "task", Task.class).getMappedResults();
     }
 

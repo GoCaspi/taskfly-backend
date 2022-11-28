@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -185,6 +186,7 @@ class TaskCollectionServiceTest {
 
         }
     }
+
     @Test
     void updateTaskCollection(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
