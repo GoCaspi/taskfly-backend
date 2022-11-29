@@ -105,7 +105,9 @@ public class ResetController {
             return new ResponseEntity<>(emptyList, HttpStatus.BAD_REQUEST);
         }
         List<User> users = new ArrayList<>();
-        try { users = getService().getUserByEmail(hashMail, resetRequest.getLastName()); }
+        try {
+            users = getService().getUserByEmail(hashMail, resetRequest.getLastName());
+        }
         catch (HttpClientErrorException ex) { return new ResponseEntity<>(emptyList, ex.getStatusCode()); }
         if(users.size() !=1){ return new ResponseEntity<>(emptyList, HttpStatus.NOT_FOUND); }
         else{
