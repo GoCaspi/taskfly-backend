@@ -1,6 +1,5 @@
 package com.gocaspi.taskfly.task;
 
-import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -9,7 +8,6 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,42 +72,6 @@ class TaskControllerTest {
 			}
 		}
 
-	@Test
-	 void getAllTasksDB() {
-
-		TaskService s = new TaskService(mockRepo);
-		TaskController t = new TaskController(s);
-		ArrayList<Task> mockList = new ArrayList<>();
-		for (Task task : mockTaskArr) {
-			mockList.add(task);
-		}
-		class Testcase {
-			final String userId;
-			final ArrayList<Task> mockArrayList;
-
-			public Testcase(String userId, ArrayList<Task> mockArrayList) {
-				this.userId = userId;
-				this.mockArrayList = mockArrayList;
-			}
-		}
-
-		Testcase[] testcases = new Testcase[]{
-				new Testcase("1",  mockList),
-				new Testcase("1", null),
-		};
-		for (Testcase tc : testcases) {
-			when(mockRepo.findAll()).thenReturn(tc.mockArrayList);
-
-			try {
-				ResponseEntity<List<Task>> expected = new ResponseEntity<>(Arrays.asList(mockTask), HttpStatus.OK);
-				ResponseEntity<List<Task>> actual1 = t.handleGetAllTasks(tc.userId);
-				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
-			} catch (HttpClientErrorException e) {
-				HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
-				assertEquals(e.getClass(), expectedException.getClass());
-			}
-		}
-	}
 
 
 	@Test
@@ -231,8 +193,37 @@ class TaskControllerTest {
 			}
 		}
 	}
+	@Test
+	void handleGetAllTasksTest() {
+		TaskController t = new TaskController(mockService);
+		List<Task> taskList =  new ArrayList<Task>();
+		taskList.add(mockTask);
+		class Testcase {
+			final String userId;
+			final List<Task> mockTasks;
+
+			public Testcase(String userId, List<Task> mockTasks) {
+				this.userId = userId;
+				this.mockTasks = mockTasks;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase("1", taskList),
+		};
+		for (Testcase tc : testcases) {
+			try {
+				when(mockService.getServiceAllTasksOfUser(tc.userId)).thenReturn(tc.mockTasks);
+				ResponseEntity<List<Task>> expected = new ResponseEntity<>(tc.mockTasks, HttpStatus.OK);
+				ResponseEntity<List<Task>> actual1 = t.handleGetAllTasks(tc.userId);
+				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
+			} catch (HttpClientErrorException e) {
+
+			}
+		}
+	}
      @Test
-     void GetTasksByPriority() {
+     void GetTasksByPriorityTest() {
          TaskController t = new TaskController(mockService);
 		 List<Task> taskList =  new ArrayList<Task>();
 		 taskList.add(mockTask);
@@ -261,7 +252,7 @@ class TaskControllerTest {
          }
      }
 	@Test
-	void GetSharedTasksByUser() {
+	void GetSharedTasksByUserTest() {
 		TaskController t = new TaskController(mockService);
 		List<Task> taskList =  new ArrayList<Task>();
 		taskList.add(mockTask);
@@ -283,6 +274,36 @@ class TaskControllerTest {
 				when(mockService.getSharedTasks(tc.userId)).thenReturn(tc.mockTasks);
 				ResponseEntity<List<Task>> expected = new ResponseEntity<>(tc.mockTasks, HttpStatus.OK);
 				ResponseEntity<List<Task>> actual1 = t.handleGetSharedTasksByUser(tc.userId);
+				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
+			} catch (HttpClientErrorException e) {
+
+			}
+		}
+	}
+
+	@Test
+	void GetPrivateTasksByUserTest() {
+		TaskController t = new TaskController(mockService);
+		List<Task> taskList =  new ArrayList<Task>();
+		taskList.add(mockTask);
+		class Testcase {
+			final String userId;
+			final List<Task> mockTasks;
+
+			public Testcase(String userId, List<Task> mockTasks) {
+				this.userId = userId;
+				this.mockTasks = mockTasks;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase("1", taskList),
+		};
+		for (Testcase tc : testcases) {
+			try {
+				when(mockService.getPrivateTasks(tc.userId)).thenReturn(tc.mockTasks);
+				ResponseEntity<List<Task>> expected = new ResponseEntity<>(tc.mockTasks, HttpStatus.OK);
+				ResponseEntity<List<Task>> actual1 = t.handleGetPrivateTasksByUser(tc.userId);
 				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
 			} catch (HttpClientErrorException e) {
 
