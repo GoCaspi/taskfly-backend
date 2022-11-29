@@ -67,7 +67,6 @@ class UserControllerTest {
                 when(mockRepo.existsById(tc.userId)).thenReturn(false);
             } else {
                 when(mockRepo.existsById(tc.userId)).thenReturn(true);
-                //	when(mockRepo.deleteById(tc.userId)).thenReturn(mockTask);
             }
 
             try {
@@ -269,9 +268,7 @@ class UserControllerTest {
     }
      @Test
      void getUserRole() {
-
          UserController t = new UserController(mockRepo);
-
          class Testcase {
              final String email;
              final boolean dbReturnSize0;
@@ -280,94 +277,71 @@ class UserControllerTest {
              public Testcase(String email, boolean dbReturnSize0) {
                  this.email = email;
                  this.dbReturnSize0 = dbReturnSize0;
-
              }
          }
-
          Testcase[] testcases = new Testcase[]{
-                 new Testcase("1", false ),
-                 new Testcase("1", true),
+                 new Testcase("test@gmail.com", false ),
+                   new Testcase("", false),
          };
          for (Testcase tc : testcases) {
-             when(mockRepo.findByEmail(tc.email)).thenReturn(mockUser);
-             when(mockService.getUserRoles(tc.email)).thenReturn(tc.email);
-             String actual = t.getUserRoles(tc.email);
-             assertEquals(actual,actual);
+             try {
+                 when(mockService.getUserRoles(tc.email)).thenReturn(tc.email);
+                 t.getUserRoles(tc.email);
+                 verify(mockService, times(1)).getUserRoles(tc.email);
+             } catch (Exception e) {
              }
+         }
      }
-   /*  @Test
-     void login() {
+     @Test
+     void getUserInfo() {
          UserController t = new UserController(mockRepo);
-
          class Testcase {
-
-             public Testcase() {
-             }
-         }
-
-         Testcase[] testcases = new Testcase[]{
-
-         };
-         for (Testcase tc : testcases) {
-             if (tc.) {
-                 when(mockRepo.existsById(tc.userId)).thenReturn(false);
-             } else {
-                 when(mockRepo.existsById(tc.userId)).thenReturn(true);
-                 when(mockRepo.findById(tc.userId)).thenReturn(Optional.ofNullable(mockUser));
-             }
-
-             try {
-                 ResponseEntity<User> expected = new ResponseEntity<>(tc.mockUser, HttpStatus.OK);
-                 ResponseEntity<> actual1 = t.login();
-                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
-             } catch (HttpClientErrorException e) {
-                 HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
-                 assertEquals(e.getClass(), expectedException.getClass());
-             }
-         }
-     }*/
-    /* @Test
-     void UserInfo() {
-         UserController t = new UserController(mockRepo);
-
-         class Testcase {
-             final String userId;
+             final String email;
              final boolean dbReturnSize0;
-             final User mockUser;
-             final String expectedOutput;
 
-             public Testcase(String userId, boolean dbReturnSize0, User mockUser, String expectedOutput) {
-                 this.userId = userId;
+
+             public Testcase(String email, boolean dbReturnSize0) {
+                 this.email = email;
                  this.dbReturnSize0 = dbReturnSize0;
-                 this.mockUser = mockUser;
-                 this.expectedOutput = expectedOutput;
              }
          }
-
          Testcase[] testcases = new Testcase[]{
-                 new Testcase("1", false, mockUser, ""),
-                 new Testcase("1", true, mockUser, "no user were found to the provided id"),
-                 new Testcase(null, true, mockUser, "no user were found to the provided id"),
-                 new Testcase("", true, mockUser, "no user were found to the provided id"),
-                 new Testcase(null, false, mockUser, "no user were found to the provided id")
+                 new Testcase("test@gmail.com", true ),
+                 new Testcase("", true),
          };
          for (Testcase tc : testcases) {
-             if (tc.dbReturnSize0) {
-                 when(mockRepo.existsById(tc.userId)).thenReturn(false);
-             } else {
-                 when(mockRepo.existsById(tc.userId)).thenReturn(true);
-                 when(mockRepo.findById(tc.userId)).thenReturn(Optional.ofNullable(mockUser));
-             }
-
              try {
-                 ResponseEntity<User> expected = new ResponseEntity<>(tc.mockUser, HttpStatus.OK);
-                 ResponseEntity<User> actual1 = t.getUserInfo(tc.userId);
-                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
-             } catch (HttpClientErrorException e) {
-                 HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
-                 assertEquals(e.getClass(), expectedException.getClass());
+                 when(mockService.getDetails(tc.email)).thenReturn(mockUser);
+                 t.getUserInfo(tc.email);
+             } catch (Exception e) {
              }
          }
-     }*/
+     }
+           @Test
+     void getLogin() {
+         UserController t = new UserController(mockRepo);
+         class Testcase {
+             final String email;
+             final boolean dbReturnSize0;
+
+
+             public Testcase(String email, boolean dbReturnSize0) {
+                 this.email = email;
+                 this.dbReturnSize0 = dbReturnSize0;
+             }
+         }
+         Testcase[] testcases = new Testcase[]{
+                 new Testcase("test@gmail.com", false ),
+                   new Testcase("", false),
+         };
+         for (Testcase tc : testcases) {
+             try {
+                 when(mockService.getUserRoles(tc.email)).thenReturn(tc.email);
+                 t.login();
+                 verify(mockService, times(1)).getUserRoles(tc.email);
+             } catch (Exception e) {
+             }
+         }
+     }
 }
 

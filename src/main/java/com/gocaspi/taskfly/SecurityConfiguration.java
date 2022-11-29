@@ -41,9 +41,6 @@ public class SecurityConfiguration {
                 .and()
                 .httpBasic();
 
-
-
-
         return http.build();
     }
 

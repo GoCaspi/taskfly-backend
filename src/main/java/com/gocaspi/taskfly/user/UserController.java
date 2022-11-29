@@ -117,7 +117,6 @@ public class UserController {
         if (users.isEmpty()) {throw  getService().getNotFound();}
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
-
     /**
      * this endpoint couverts to Update all data User from DB.
      * @param id
