@@ -1,5 +1,7 @@
 package com.gocaspi.taskfly.reset;
 
+import com.dumbster.smtp.SimpleSmtpServer;
+import com.dumbster.smtp.SmtpMessage;
 import com.gocaspi.taskfly.user.User;
 import com.gocaspi.taskfly.user.UserRepository;
 import com.google.gson.Gson;
@@ -9,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 
+import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -113,27 +117,6 @@ public class ResetControllerTest {
 			resetController.sendResetMail(tc.mockTo, tc.mockSubject, tc.mockText);
 			verify(resetController, times(1)).getJavaMailSender();
 		}
-	}
-	@Test
-	public void sendSimpleEmailWithCC() {
-		// Runs a Dumbster simple SMTP server - default config
-		SimpleSmtpServer server = SimpleSmtpServer.start();
-		String from = "whoever@from.com";
-		String to = "whoever@to.com";
-		String messageText = "Good message";
-		String title = "Test message";
-		String cc = "whoever@cc.com";
-		Assert.assertTrue(mailSender.sendEmail(from, to, cc, title, messageText));
-		server.stop();
-		Assert.assertTrue(server.getReceivedEmailSize() == 1);
-		Iterator emailIter = server.getReceivedEmail();
-		SmtpMessage email = (SmtpMessage) emailIter.next();
-		Assert.assertTrue(email.getHeaderValue("From").equals(from));
-		Assert.assertTrue(email.getHeaderValue("To").equals(to));
-		Assert.assertTrue(email.getHeaderValue("Cc").equals(cc));
-		Assert.assertTrue(email.getHeaderValue("Subject")
-				.equals("Test message"));
-		Assert.assertTrue(email.getBody().equals(messageText));
 	}
 
 	@Test
