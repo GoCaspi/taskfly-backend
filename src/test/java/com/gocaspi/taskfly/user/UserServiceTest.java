@@ -1,11 +1,13 @@
 package com.gocaspi.taskfly.user;
 
 
-import com.gocaspi.taskfly.task.Task;
-import com.gocaspi.taskfly.task.TaskService;
+
+import com.gocaspi.taskfly.taskcollection.TaskCollectionService;
+import com.gocaspi.taskfly.teammanagement.TeamManagementService;
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import java.util.ArrayList;
@@ -115,6 +117,90 @@ class UserServiceTest {
                     verify(mockRepo, times(1)).save(tc.mockUser);
                 }
             } catch (Exception e) {
+
+            }
+
+        }
+    }
+    @Test
+    void getServiceById(){
+        UserService s = new UserService(mockRepo);
+        class Testcase{
+            final String mockId;
+            final boolean expected;
+            public Testcase(String mockId, boolean expected){
+                this.mockId = mockId;
+                this.expected = expected;
+            }
+        }
+        Testcase[] testcases = new Testcase[]{
+                new Testcase("1",true),
+                new Testcase("2", false )
+        };
+
+        for (Testcase tc : testcases) {
+            try{
+                s.getServicebyid(tc.mockId);
+                verify(s, times(1)).getServicebyid(tc.mockId);
+            } catch (Exception e){
+
+            }
+
+        }
+    }
+    @Test
+    void deleteUserByID(){
+        UserService s = new UserService(mockRepo);
+
+        class Testcase {
+            final String mockID;
+            final Boolean exists;
+
+            public Testcase(String mockID, Boolean exists) {
+                this.mockID = mockID;
+                this.exists = exists;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase("1", true),
+                new Testcase("2", false)
+        };
+        for (Testcase tc : testcases) {
+            try{
+                when(mockRepo.existsById(tc.mockID)).thenReturn(tc.exists);
+                s.deleteService(tc.mockID);
+                Mockito.verify(mockRepo, times(1)).deleteById(tc.mockID);
+            } catch (Exception e){
+
+            }
+
+        }
+    }
+    @Test
+    void postservice(){
+        UserService s = new UserService(mockRepo);
+
+        class Testcase {
+            final String mockID;
+            final Boolean exists;
+
+            public Testcase(String mockID, Boolean exists) {
+                this.mockID = mockID;
+                this.exists = exists;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase("1", true),
+                new Testcase("2", false)
+        };
+        for (Testcase tc : testcases) {
+            try{
+                when(mockRepo.existsById(tc.mockID)).thenReturn(tc.exists);
+                s.postService(mockUser);
+                verify(s, times(1)).getServicebyid(tc.mockID);
+            } catch (Exception e){
 
             }
 
