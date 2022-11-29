@@ -106,7 +106,10 @@ public class TaskRepositoryImpl implements TaskRepositoryCustom {
     @Override
     public List<Task> findTasksScheduledForOneWeekByUserID(String userid){
         var matchOperation1 = Aggregation.match(new Criteria("userId").is(userid));
-        var matchOperation2 = Aggregation.match(new Criteria("deadlineDiff").lt(168));
+        var matchOperation2 = Aggregation.match(new Criteria().andOperator(
+                Criteria.where("deadlineDiff").gt(0),
+                Criteria.where("deadlineDiff").lt(168)
+        ));
         var aggregation = Aggregation.newAggregation(addDateDifferenceFields(), matchOperation1, matchOperation2);
         return mongoTemplate.aggregate(aggregation, "task", Task.class).getMappedResults();
     }

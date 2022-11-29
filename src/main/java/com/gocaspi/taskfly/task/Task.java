@@ -29,9 +29,9 @@ public class Task {
         private Boolean highPriority;
         private String description;
 
-        public Taskbody(String topic, Boolean priority,String description){
+        public Taskbody(String topic, Boolean highPriority,String description){
             this.topic = topic;
-            this.highPriority = priority;
+            this.highPriority = highPriority;
             this.description = description;
         }
 
