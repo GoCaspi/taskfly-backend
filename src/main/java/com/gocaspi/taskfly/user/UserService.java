@@ -10,8 +10,6 @@ package com.gocaspi.taskfly.user;
         import org.springframework.web.client.HttpClientErrorException;
 
         import java.nio.charset.StandardCharsets;
-        import java.security.MessageDigest;
-        import java.security.NoSuchAlgorithmException;
         import java.util.ArrayList;
         import java.util.List;
         import java.util.Objects;
@@ -55,19 +53,8 @@ public class UserService {
         }
         user.ifPresent(t -> {
            if (update.getEmail() != null) {
-               try {
                    t.setEmail(hashStr(update.getEmail()));
-               } catch (NoSuchAlgorithmException e) {
-                   throw new RuntimeException(e);
-               }
            }
-           if(!update.getReseted()){
-               t.setReseted(false);
-           }
-            if(update.getReseted()){
-                t.setReseted(true);
-            }
-
 
             if (update.getTeam() != null) {
                 t.setTeam(update.getTeam());
@@ -89,11 +76,11 @@ public class UserService {
         });
     }
 
-    public void postService(User t) throws HttpClientErrorException, NoSuchAlgorithmException {
+    public void postService(User t) throws HttpClientErrorException {
         if (!validateTaskFields(new Gson().toJson(t))) {
             throw exceptionbadRequest;
         }
-        t.setEmail(hashStr(t.getEmail().toString()));
+        t.setEmail(hashStr(t.getEmail()));
         getRepo().insert(t);
     }
 
@@ -128,12 +115,11 @@ public class UserService {
     }
 
 
-    public String hashStr(String str) throws NoSuchAlgorithmException {
-        String sha256hex = Hashing.sha256()
+    public String hashStr(String str)  {
+
+        return Hashing.sha256()
                 .hashString(str, StandardCharsets.UTF_8)
                 .toString();
-
-    return  sha256hex;
 
     }
 }

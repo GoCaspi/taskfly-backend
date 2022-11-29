@@ -60,12 +60,12 @@ public class ResetService {
             throw  this.exceptionBadRequest;
         }
 
-        EnablePwdReset(users.get(0).getId(),true);
+        enablePwdReset(users.get(0).getId(),true);
 
         return users;
     }
 
-    public void EnablePwdReset(String id, Boolean status) throws HttpClientErrorException {
+    public void enablePwdReset(String id, Boolean status) throws HttpClientErrorException {
         Optional<User> user = getRepo().findById(id);
 
         if (!getRepo().existsById(id)) {
@@ -73,10 +73,10 @@ public class ResetService {
         }
         user.ifPresent(t -> {
 
-            if(!status){
+            if(Boolean.FALSE.equals(status)){
                 t.setReseted(false);
             }
-            if(status){
+            if(Boolean.TRUE.equals(status)){
                 t.setReseted(true);
             }
             getRepo().save(t);
@@ -84,11 +84,9 @@ public class ResetService {
 
     }
     public String hashStr(String str)  {
-        String sha256hex = Hashing.sha256()
+        return Hashing.sha256()
                 .hashString(str, StandardCharsets.UTF_8)
                 .toString();
-
-        return  sha256hex;
 
     }
 

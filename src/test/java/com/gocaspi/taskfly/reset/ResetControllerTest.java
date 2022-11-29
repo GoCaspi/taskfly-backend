@@ -59,7 +59,7 @@ public class ResetControllerTest {
 		for (Testcase tc : testcases) {
 			if (tc.expectedCode == 400) {
 				ResponseEntity actual1 = r.handleReset(new Gson().toJson(mockResetEmptyLName));
-				assertEquals(actual1.getStatusCode(), HttpStatus.BAD_REQUEST);
+				assertEquals(HttpStatus.BAD_REQUEST, actual1.getStatusCode() );
 			}
 			if (tc.expectedCode == 404) {
 				mockList.add(new User("fName", "lName", "abc@mail.to", "123", "red", "1", "123", false));
@@ -67,7 +67,7 @@ public class ResetControllerTest {
 				//			when(mockService.getUserByEmail(mockReset.hashStr(mockReset.getEmail()),mockReset.getLastName())).thenReturn(mockList);
 
 				ResponseEntity actual1 = r.handleReset(new Gson().toJson(mockReset));
-				assertEquals(actual1.getStatusCode(), HttpStatus.NOT_FOUND);
+				assertEquals(HttpStatus.NOT_FOUND,actual1.getStatusCode());
 			}
 
 			if (tc.expectedCode == 200) {
@@ -78,7 +78,7 @@ public class ResetControllerTest {
 				//			when(mockService.getUserByEmail(mockReset.hashStr(mockReset.getEmail()),mockReset.getLastName())).thenReturn(mockList);
 
 				ResponseEntity actual1 = r.handleReset(new Gson().toJson(mockReset));
-				assertEquals(actual1.getStatusCode(), HttpStatus.ACCEPTED);
+				assertEquals( HttpStatus.ACCEPTED,actual1.getStatusCode());
 			}
 		}
 	}
@@ -126,7 +126,7 @@ public class ResetControllerTest {
 		String text = "textMock"; // TODO Replace default value.
 		r.sendResetMail(to, subject, text);
 		atLeast(1);
-		assertEquals(verifySendInfo(to,subject,text),true);
+		assertEquals(true,verifySendInfo(to,subject,text));
 	}
 
 	public boolean verifySendInfo(String to,String sub, String text){

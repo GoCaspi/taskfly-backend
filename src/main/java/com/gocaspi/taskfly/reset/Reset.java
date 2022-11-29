@@ -27,11 +27,9 @@ public class Reset {
     }
 
     public String hashStr(String str) {
-        String sha256hex = Hashing.sha256()
+        return Hashing.sha256()
                 .hashString(str, StandardCharsets.UTF_8)
                 .toString();
-
-        return  sha256hex;
 
     }
 

@@ -159,8 +159,8 @@ public class ResetServiceTest {
 				when(repo.findById(tc.dbReturn.getUserId())).thenReturn(Optional.ofNullable(mockUser));
 				when(repo.existsById(tc.dbReturn.getUserId())).thenReturn(true);
 				try {
-					 resetService.EnablePwdReset(tc.dbReturn.getUserId(),true);
-					resetService.EnablePwdReset(tc.dbReturn.getUserId(),false);
+					 resetService.enablePwdReset(tc.dbReturn.getUserId(),true);
+					resetService.enablePwdReset(tc.dbReturn.getUserId(),false);
 				}
 				catch (HttpClientErrorException e){}
 			}
@@ -168,7 +168,7 @@ public class ResetServiceTest {
 				when(repo.findById(tc.dbReturn.getUserId())).thenReturn(null);
 				when(repo.existsById(tc.dbReturn.getUserId())).thenReturn(false);
 				try {
-					resetService.EnablePwdReset(tc.dbReturn.getUserId(),true);
+					resetService.enablePwdReset(tc.dbReturn.getUserId(),true);
 				}
 				catch (HttpClientErrorException e){
 					HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);

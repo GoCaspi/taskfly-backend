@@ -6,8 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import org.springframework.web.client.HttpClientErrorException;
-
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 @RestController
 @ResponseBody
@@ -25,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> handlerCreateUser(@RequestBody String body) throws HttpClientErrorException.BadRequest, NoSuchAlgorithmException {
+    public ResponseEntity<String> handlerCreateUser(@RequestBody String body) throws HttpClientErrorException.BadRequest {
         var user = jsonToUser(body);
         getService().postService(user);
         var msg = "Successfully created User";

@@ -61,10 +61,10 @@ public class ResetController {
     public ResetService getService() {
         return this.service;
     }
-    public class uIdAndPwdBody{
+    public class UIdAndPwdBody{
         private String pwd;
         private String userId;
-        public uIdAndPwdBody(String pwd, String userId){
+        public UIdAndPwdBody(String pwd, String userId){
             this.userId = userId;
             this.pwd = pwd;
         }
@@ -86,12 +86,12 @@ public class ResetController {
         }
     }
     @PostMapping("/setNew")
-    public ResponseEntity handleSetNewUserPwd(@RequestBody String body){
-        // cast body in { userId, password }
-        uIdAndPwdBody jsonPayload = new Gson().fromJson(body, uIdAndPwdBody.class);
-        // call service to update the users (userId) new password if user.reset == true
+    public ResponseEntity<String> handleSetNewUserPwd(@RequestBody String body){
+
+        UIdAndPwdBody jsonPayload = new Gson().fromJson(body, UIdAndPwdBody.class);
+
         getService().resetPwdOfUser(jsonPayload.getUserId(), jsonPayload.getPwd());
-        return new ResponseEntity("healthy",HttpStatus.OK);
+        return new ResponseEntity<>("healthy",HttpStatus.OK);
     }
 
 
@@ -100,7 +100,7 @@ public class ResetController {
     public ResponseEntity<List<User>> handleReset(@RequestBody String body) {
         Reset resetRequest = jsonToReset(body);
         String hashMail = resetRequest.hashStr(resetRequest.getEmail());
-        List<User> emptyList = new ArrayList<User>();
+        List<User> emptyList = new ArrayList<>();
         if (Objects.equals(resetRequest.getLastName(), "")) {
             return new ResponseEntity<>(emptyList, HttpStatus.BAD_REQUEST);
         }
