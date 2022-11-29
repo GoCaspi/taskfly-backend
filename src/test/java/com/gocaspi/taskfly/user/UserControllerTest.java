@@ -36,8 +36,8 @@ class UserControllerTest {
     User[] mockUseArr = new User[]{mockUser,mockUser};
     @Test
      void deleteUser() {
-
-        UserController t = new UserController(mockRepo);
+         UserService s = new UserService(mockRepo);
+        UserController t = new UserController(s);
 
         class Testcase {
             final String userId;
@@ -79,7 +79,7 @@ class UserControllerTest {
     }
     @Test
      void updateUser() {
-        UserController t = new UserController(mockRepo);
+        UserController t = new UserController(mockService);
         User mockUpdate = new User( mockEmail + "updated", mockPassword + "updated", mockFistName, mockLastName + "updated",mocksrole+"update",mockbody);
 
         class Testcase {
@@ -134,7 +134,7 @@ class UserControllerTest {
     }
     @Test
      void getUserById() {
-        UserController t = new UserController(mockRepo);
+        UserController t = new UserController(mockService);
 
         class Testcase {
             final String userId;
@@ -178,7 +178,7 @@ class UserControllerTest {
 
 @Test
  void Handle_create() {
-        UserController t = new UserController(mockRepo);
+        UserController t = new UserController(mockService);
 
     class Testcase {
         final String userId;
@@ -221,7 +221,9 @@ class UserControllerTest {
 }
     @Test
      void getAllUser() {
-        UserController t = new UserController(mockRepo);
+        UserService s = new UserService(mockRepo);
+        UserController t = new UserController(s);
+
         ArrayList<User> mockList = new ArrayList<>();
         for (User task : mockUseArr) {
             mockList.add(task);
@@ -249,9 +251,9 @@ class UserControllerTest {
         };
         for (Testcase tc : testcases) {
             if (tc.dbReturnSize0) {
-                when(mockRepo.findAll()).thenReturn(new ArrayList<>());
+                when(s.getServiceAllUser()).thenReturn(new ArrayList<>());
             } else {
-                when(mockRepo.findAll()).thenReturn(tc.mockArrayList);
+                when(s.getServiceAllUser()).thenReturn(tc.mockArrayList);
             }
 
             try {
@@ -266,7 +268,7 @@ class UserControllerTest {
     }
      @Test
      void getUserRole() {
-         UserController t = new UserController(mockRepo);
+         UserController t = new UserController(mockService);
          class Testcase {
              final String email;
              final boolean dbReturnSize0;
@@ -290,9 +292,9 @@ class UserControllerTest {
              }
          }
      }
-    /* @Test
+    @Test
      void getUserInfo() {
-         UserController t = new UserController(mockRepo);
+         UserController t = new UserController(mockService);
          class Testcase {
              final String email;
              final boolean dbReturnSize0;
@@ -309,16 +311,17 @@ class UserControllerTest {
          };
          for (Testcase tc : testcases) {
              try {
+
                  when(mockService.getDetails(tc.email)).thenReturn(mockUser);
-                 t.getUserInfo(tc.email);
-                 verify(mockService,times(1)).getUserRoles(tc.email);
+                 User actual = t.getUserInfo(tc.email);
+                 assertEquals(mockUser,actual);
              } catch (Exception e) {
              }
          }
-     }*/
+     }
            @Test
      void getLogin() {
-         UserController t = new UserController(mockRepo);
+         UserController t = new UserController(mockService);
          class Testcase {
              final String email;
              final boolean dbReturnSize0;
@@ -335,8 +338,8 @@ class UserControllerTest {
          };
          for (Testcase tc : testcases) {
              try {
-                 when(mockService.getUserRoles(tc.email)).thenReturn(tc.email);
-                 t.login();
+                 when(mockService.getDetails(tc.email)).thenReturn(mockUser);
+                t.login();
                  verify(mockService, times(1)).getUserRoles(tc.email);
              } catch (Exception e) {
              }

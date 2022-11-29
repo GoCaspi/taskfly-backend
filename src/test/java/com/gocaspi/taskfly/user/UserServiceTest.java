@@ -1,5 +1,6 @@
 package com.gocaspi.taskfly.user;
 
+
 import com.gocaspi.taskfly.task.Task;
 import com.gocaspi.taskfly.task.TaskService;
 import com.google.gson.Gson;
@@ -7,14 +8,13 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
+
 
 class UserServiceTest {
     UserRepository mockRepo = mock(UserRepository.class);
@@ -83,6 +83,67 @@ class UserServiceTest {
              assertEquals(tc.expected, actualOut);
          }
      }
+    @Test
+     void updateUserService(){
+        UserService s = new UserService(mockRepo);
+        var emptyBody = new User.Userbody("","","");
+        var emptyUser = new User("", "", "", "","", emptyBody);
+        class Testcase {
+            final User mockUser;
+            final String mockID;
+            final Boolean exists;
 
+            public Testcase(User user, String mockID, Boolean exists) {
+                this.mockUser = user;
+                this.mockID = mockID;
+                this.exists = exists;
+            }
+        }
 
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(emptyUser, mockObject_Id.toHexString(), true),
+                new Testcase(mockUser, mockObject_Id.toHexString(), true),
+                new Testcase(mockUser, mockObject_Id.toHexString(), false)
+        };
+        for (Testcase tc : testcases) {
+            try {
+                Optional<User> taskCollection = Optional.ofNullable(tc.mockUser);
+                when(mockRepo.findById(tc.mockID)).thenReturn(taskCollection);
+                when(mockRepo.existsById(tc.mockID)).thenReturn(tc.exists);
+                s.updateService(tc.mockID, tc.mockUser);
+                if (tc.exists){
+                    verify(mockRepo, times(1)).save(tc.mockUser);
+                }
+            } catch (Exception e) {
+
+            }
+
+        }
+    }
 }
+   /* @Test
+    void getdetail() {
+        UserService t = new UserService(mockRepo);
+        class Testcase {
+            final User userInput;
+            final boolean expected;
+
+            public Testcase(User testUser, boolean expected) {
+                this.userInput = testUser;
+                this.expected = expected;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(mockUser, false),
+                new Testcase(new User(null,null,null,null,null,null),false),
+                new Testcase(new User("test","test","test","test","test",mockbody),true)
+        };
+        for(Testcase tc : testcases){
+            when(mockRepo.findByEmail(mockEmail)).thenReturn(mockUser);
+            User actual = t.getDetails(mockEmail);
+            assertEquals(tc.expected, actual);
+        }
+    }
+*/
+

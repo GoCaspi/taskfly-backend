@@ -4,17 +4,20 @@ package com.gocaspi.taskfly.user;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.http.HttpHeaders;
         import org.springframework.http.HttpStatus;
+        import org.springframework.stereotype.Service;
         import org.springframework.web.client.HttpClientErrorException;
         import java.util.ArrayList;
         import java.util.List;
         import java.util.Objects;
         import java.util.Optional;
+        @Service
 public class UserService {
 
     @Autowired
     private UserRepository userRepository;
     private final HttpClientErrorException exceptionnotFound;
     private final HttpClientErrorException exceptionbadRequest;
+
     public UserService(UserRepository repo){
 
         this.userRepository = repo ;

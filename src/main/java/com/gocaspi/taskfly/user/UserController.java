@@ -19,13 +19,11 @@ public class UserController {
     @Autowired
     private PasswordEncoder encoder;
     @Autowired
-    private UserRepository repository;
     private final UserService service;
 
-    public UserController(UserRepository repository) {
+    public UserController(UserService userService) {
         super();
-        this.repository = repository;
-        this.service = new UserService(repository);
+        this.service = userService;
         this.encoder = new BCryptPasswordEncoder();
     }
     /**
@@ -113,7 +111,9 @@ public class UserController {
     @GetMapping()
     public ResponseEntity<List<User>> handleGetAllUsers() throws HttpClientErrorException.NotFound {
         var users = getService().getServiceAllUser();
-        if (users.isEmpty()) {throw  getService().getNotFound();}
+        if (users.isEmpty()) {
+                             throw  getService().getNotFound();
+                            }
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
     /**
