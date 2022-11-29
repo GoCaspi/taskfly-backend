@@ -11,6 +11,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,10 +36,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 	public void getService_AllTasksOfUser() {
 
 		TaskService t = new TaskService(mockRepo);
-		Task[] mockTaskArr = new Task[]{mockTask, mockTask};
-		ArrayList<Task> mockList = new ArrayList<>();
-		for (Task task : mockTaskArr) { mockList.add(task); }
-
+		List<Task> mockList = Arrays.asList(mockTask);
 		class Testcase {
 			final String id;
 			final List<Task> dbReturn;
@@ -138,8 +136,8 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 	@Test
 	public void getTaskByUserIDandPriorityTest(){
 		TaskService s = new TaskService(mockRepo);
-		List<Task> taskList = new ArrayList<>();
-		taskList.add(mockTask);
+		List<Task> mockList = Arrays.asList(mockTask);
+
 		class Testcase {
 			final List<Task> mockTasks;
 			final String mockID;
@@ -151,7 +149,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		}
 
 		Testcase[] testcases = new Testcase[]{
-				new Testcase(taskList, mockObjectId.toHexString()),
+				new Testcase(mockList, mockObjectId.toHexString()),
 				new Testcase(new ArrayList<>(), mockObjectId.toHexString())
 		};
 		for (Testcase tc : testcases) {
@@ -169,8 +167,8 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 	@Test
 	public void getPrivateTasksTest(){
 		TaskService s = new TaskService(mockRepo);
-		List<Task> taskList = new ArrayList<>();
-		taskList.add(mockTask);
+		List<Task> mockList = Arrays.asList(mockTask);
+
 		class Testcase {
 			final List<Task> mockTasks;
 			final String mockID;
@@ -182,7 +180,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		}
 
 		Testcase[] testcases = new Testcase[]{
-				new Testcase(taskList, mockObjectId.toHexString()),
+				new Testcase(mockList, mockObjectId.toHexString()),
 				new Testcase(new ArrayList<>(), mockObjectId.toHexString())
 		};
 		for (Testcase tc : testcases) {
@@ -200,8 +198,8 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 	@Test
 	public void getSharedTasksTest(){
 		TaskService s = new TaskService(mockRepo);
-		List<Task> taskList = new ArrayList<>();
-		taskList.add(mockTask);
+		List<Task> mockList = Arrays.asList(mockTask);
+
 		class Testcase {
 			final List<Task> mockTasks;
 			final String mockID;
@@ -213,7 +211,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		}
 
 		Testcase[] testcases = new Testcase[]{
-				new Testcase(taskList, mockObjectId.toHexString()),
+				new Testcase(mockList, mockObjectId.toHexString()),
 				new Testcase(new ArrayList<>(), mockObjectId.toHexString())
 		};
 		for (Testcase tc : testcases) {
@@ -260,8 +258,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 	@Test
 	public void getTasksScheduledForOneWeekTest(){
 		TaskService s = new TaskService(mockRepo);
-		List<Task> taskList = new ArrayList<>();
-		taskList.add(mockTask);
+		List<Task> mockList = Arrays.asList(mockTask);
 		class Testcase {
 			final List<Task> mockTasks;
 			final String mockID;
@@ -273,7 +270,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		}
 
 		Testcase[] testcases = new Testcase[]{
-				new Testcase(taskList, mockObjectId.toHexString()),
+				new Testcase(mockList, mockObjectId.toHexString()),
 				new Testcase(new ArrayList<>(), mockObjectId.toHexString())
 		};
 		for (Testcase tc : testcases) {
