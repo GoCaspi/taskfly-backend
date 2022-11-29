@@ -10,33 +10,32 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
- class UserServiceTest {
+class UserServiceTest {
     UserRepository mockRepo = mock(UserRepository.class);
     HttpClientErrorException er = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "no User are assigned to the provided userId", null, null, null);
-    String mockUserIds = "123";
-    String mockListId = "1";
     String mockFistName = "topic1";
-    String mockTeam = "team1";
     String mockLastName = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     String mocksrole ="ADMIN";
     ObjectId mockObject_Id = new ObjectId();
-    User mockUser = new User(mockUserIds, mockFistName, mockLastName, mockEmail, mockPassword,mockTeam,mockListId,mocksrole);
+    User.Userbody mockbody =new User.Userbody("mockTeam","mockListId","mockUserId");
+    User mockUser = new User(mocksrole, mockFistName, mockLastName, mockEmail, mockPassword,mockbody);
     UserService ts = new UserService(mockRepo);
 
     @Test
      void getService_AllUser() {
 
         UserService t = new UserService(mockRepo);
-        User[] mockTaskArr = new User[]{mockUser, mockUser };
+        User[] mockUserArr = new User[]{mockUser, mockUser };
         ArrayList<User> mockList = new ArrayList<>();
-        for (User task : mockTaskArr) { mockList.add(task); }
+        for (User user : mockUserArr) { mockList.add(user); }
 
         class Testcase {
             final String id;
@@ -75,8 +74,8 @@ import static org.mockito.Mockito.when;
 
          Testcase[] testcases = new Testcase[]{
                  new Testcase(mockUser, true),
-                 new Testcase(new User(null,null,null,null,null,null,null,null),false),
-                 new Testcase(new User("test","test","test","test","test","test","test","test"),true)
+                 new Testcase(new User(null,null,null,null,null,null),false),
+                 new Testcase(new User("test","test","test","test","test",mockbody),true)
          };
 
          for (Testcase tc : testcases) {
@@ -84,5 +83,6 @@ import static org.mockito.Mockito.when;
              assertEquals(tc.expected, actualOut);
          }
      }
+
 
 }

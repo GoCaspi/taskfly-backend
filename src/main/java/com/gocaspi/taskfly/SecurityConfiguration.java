@@ -21,7 +21,7 @@ import java.util.Arrays;
 public class SecurityConfiguration {
 
     /**
-     * “/usertInfo” – can be access by any user who has successfully ayuthenticated.
+     * “/userInfo” – can be access by any user who has successfully authenticated.
      * “/getUserRoles” – can be accessed by the user who has role/authority – “ROLE_WRITE”
      * @param http
      * @return
@@ -33,7 +33,7 @@ public class SecurityConfiguration {
                 .antMatchers("/user/**").permitAll()
                 .antMatchers("/user/userInfo").authenticated()
                 .antMatchers("/user/login").authenticated()
-                .antMatchers("/getUserRoles").hasAuthority("ROLE_WRITE")
+                .antMatchers("/user/getUserRoles").hasAuthority("ROLE_WRITE")
                 .antMatchers("/task/**").permitAll()
                 .antMatchers("/tc/**").permitAll()
                 .antMatchers("/actuator/**")

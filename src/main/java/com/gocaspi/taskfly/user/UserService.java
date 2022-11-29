@@ -44,14 +44,11 @@ public class UserService {
             if (update.getEmail() != null) {
                 t.setEmail(update.getEmail());
             }
-            if (update.getTeam() != null) {
-                t.setTeam(update.getTeam());
+            if (update.getSrole() != null) {
+                t.setSrole(update.getSrole());
             }
             if (update.getPassword() != null) {
                 t.setPassword(update.getPassword());
-            }
-            if (update.getListId() != null) {
-                t.setListId(update.getListId());
             }
             if (update.getFirstName() != null) {
                 t.setFirstName(update.getFirstName());
@@ -66,7 +63,7 @@ public class UserService {
 
     public boolean validateTaskFields(String jsonPayload){
         var user = jsonToUser(jsonPayload);
-        return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getListId(), null) && !Objects.equals(user.getEmail(), null)&& !Objects.equals(user.getTeam(), null);
+        return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getSrole(), null) && !Objects.equals(user.getEmail(), null);
     }
     public User jsonToUser(String jsonPayload){return new Gson().fromJson(jsonPayload, User.class);}
 

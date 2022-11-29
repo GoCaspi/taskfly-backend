@@ -3,17 +3,17 @@ package com.gocaspi.taskfly.user;
 
 
 import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
  class UserTest {
-    String mockUserIds = "123";
-    String mockListId = "1";
     String mockFistName = "topic1";
-    String mockTeam = "team1";
     String mockLastName = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     String mocksrole ="ADMIN";
-    User mockUser = new User(mockUserIds,mockFistName,mockLastName, mockEmail, mockPassword,mockTeam,mockListId,mocksrole);
+
+     User.Userbody mockbody =new User.Userbody("mockTeam","mockListId","mockUserId");
+     User mockUser = new User(mocksrole, mockFistName, mockLastName, mockEmail, mockPassword,mockbody);
     class TestcasesetString{
         final String newText;
 
@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
     };
     @Test
      void getUserId(){
-        User t = mockUser;
+        User.Userbody t = mockbody;
         for (TestcasegetString tc : testcases_get){
             t.setUserId(tc.expected);
             String actual = t.getUserId();
@@ -50,7 +50,7 @@ import org.junit.jupiter.api.Test;
 
     @Test
      void setUserId(){
-        User t = mockUser;
+        User.Userbody t = mockbody;
         for (TestcasesetString tc : testcases){
             t.setUserId(tc.newText);
             assertEquals(t.getUserId(),tc.newText);
@@ -105,7 +105,7 @@ import org.junit.jupiter.api.Test;
     }
     @Test
     void getteam(){
-        User t = mockUser;
+        User.Userbody t = mockbody;
         for (TestcasegetString tc : testcases_get){
             t.setTeam(tc.expected);
             String actual = t.getTeam();
@@ -114,7 +114,7 @@ import org.junit.jupiter.api.Test;
     }
     @Test
     void getlistid(){
-        User t = mockUser;
+        User.Userbody t = mockbody;
         for (TestcasegetString tc : testcases_get){
             t.setListId(tc.expected);
             String actual = t.getListId();
@@ -133,7 +133,7 @@ import org.junit.jupiter.api.Test;
 
     @Test
     void setteam(){
-        User t = mockUser;
+        User.Userbody t = mockbody;
         for (TestcasesetString tc : testcases){
             t.setTeam(tc.newText);
             assertEquals(t.getTeam(),tc.newText);
@@ -141,7 +141,7 @@ import org.junit.jupiter.api.Test;
     }
     @Test
     void setlist(){
-        User t = mockUser;
+        User.Userbody t = mockbody;
         for (TestcasesetString tc : testcases){
             t.setListId(tc.newText);
             assertEquals(t.getListId(),tc.newText);
@@ -197,12 +197,29 @@ import org.junit.jupiter.api.Test;
     }
     @Test
     void setuserid(){
-        User t = mockUser;
+        User.Userbody t = mockbody;
         for (TestcasesetString tc : testcases){
             t.setUserId(tc.newText);
             assertEquals(t.getUserId(),tc.newText);
         }
     }
+     @Test
+     void getuserid(){
+         User.Userbody t = mockbody;
+         for (TestcasegetString tc : testcases_get){
+             t.setUserId(tc.expected);
+             String actual = t.getUserId();
+             assertEquals(actual,tc.expected);
+         }
+     }
+     @Test
+     void setBody() {
+         User t = mockUser;
+         User.Userbody mockbody =  new User.Userbody("mockTeam","mockListId","mockUserId");
+         t.setBody(mockbody);
+         User.Userbody actual = t.getBody();
+         Assertions.assertEquals(actual,mockbody);
+     }
 
 }
 

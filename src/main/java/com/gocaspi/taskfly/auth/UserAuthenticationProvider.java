@@ -62,7 +62,6 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
         String[] roles = userRoles.split(",");
         for (String role : roles){
-            logger.info("Role:"+ role);
             grantedAuthorityList.add(new SimpleGrantedAuthority(role.replaceAll("\\s+","")));
         }
         return grantedAuthorityList;
