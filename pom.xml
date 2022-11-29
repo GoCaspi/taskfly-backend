@@ -17,6 +17,12 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>com.github.kirviq</groupId>
+			<artifactId>dumbster</artifactId>
+			<version>1.7.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>31.0.1-jre</version>
