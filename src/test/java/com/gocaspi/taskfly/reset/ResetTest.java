@@ -1,4 +1,4 @@
-package com.gocaspi.taskfly.reseter;
+package com.gocaspi.taskfly.reset;
 
 
 import com.google.common.hash.Hashing;
@@ -6,7 +6,6 @@ import org.junit.*;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ResetTest {

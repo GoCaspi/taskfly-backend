@@ -1,21 +1,17 @@
-package com.gocaspi.taskfly.reseter;
+package com.gocaspi.taskfly.reset;
 
-import com.gocaspi.taskfly.task.Task;
 import com.gocaspi.taskfly.user.User;
 import com.gocaspi.taskfly.user.UserRepository;
-import com.gocaspi.taskfly.user.UserService;
 import com.google.common.hash.Hashing;
 import org.junit.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -140,7 +136,7 @@ public class ResetServiceTest {
 	}
 
 	@Test
-	public void EnablePwdReset_Test(){
+	public void EnablePwdResetOfUser(){
 		class Testcase{
 			private final User dbReturn;
 			private final boolean notFound;

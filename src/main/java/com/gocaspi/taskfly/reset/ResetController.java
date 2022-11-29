@@ -1,4 +1,4 @@
-package com.gocaspi.taskfly.reseter;
+package com.gocaspi.taskfly.reset;
 
 import com.gocaspi.taskfly.user.User;
 import com.gocaspi.taskfly.user.UserRepository;
@@ -12,7 +12,6 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -49,6 +48,7 @@ public class ResetController {
         props.put("mail.smtp.auth", "true");
         props.put("mail.debug", "true");
         props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.ssl.checkserveridentity",true);
 
         return mailSender;
     }
@@ -97,10 +97,10 @@ public class ResetController {
 
 
     @PostMapping
-    public ResponseEntity<List> handleReset(@RequestBody String body) {
+    public ResponseEntity<List<User>> handleReset(@RequestBody String body) {
         Reset resetRequest = jsonToReset(body);
         String hashMail = resetRequest.hashStr(resetRequest.getEmail());
-        List emptyList = new ArrayList<>();
+        List<User> emptyList = new ArrayList<User>();
         if (Objects.equals(resetRequest.getLastName(), "")) {
             return new ResponseEntity<>(emptyList, HttpStatus.BAD_REQUEST);
         }
