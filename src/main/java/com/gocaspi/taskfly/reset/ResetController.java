@@ -61,7 +61,7 @@ public class ResetController {
     public ResetService getService() {
         return this.service;
     }
-    public class uIdAndPwdBody{
+    public static class uIdAndPwdBody{
         private String pwd;
         private String userId;
         public uIdAndPwdBody(String pwd, String userId){
