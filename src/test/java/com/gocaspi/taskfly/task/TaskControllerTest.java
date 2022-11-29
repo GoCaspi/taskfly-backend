@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,21 +17,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class TaskControllerTest {
+	LocalDateTime mockTime = LocalDateTime.now();
 	TaskRepository mockRepo = mock(TaskRepository.class);
 	TaskService mockService = mock(TaskService.class);
 	String mockUserIds = "1";
 	String mockListId = "1";
-	String mockTopic = "topic1";
 	String mockTeam = "team1";
-	String mockPrio = "prio1";
-	String mockDesc = "desc1";
-	String mockDeadline = "11-11-2022";
 	ObjectId mockObjectId = new ObjectId();
 
 	Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 
-	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObjectId,mockbody);
-//	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
+	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
 	Task[] mockTaskArr = new Task[]{mockTask, mockTask};
 
 
@@ -39,7 +36,7 @@ class TaskControllerTest {
 	 void updateTask() {
 		TaskController t = new TaskController(mockService);
 	//	Task mockUpdate = new Task(mockUserIds, mockListId, mockTopic + "updated", mockTeam + "updated", mockPrio, mockDesc + "updated", mockDeadline, mockObjectId);
-		Task mockUpdate = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObjectId,mockbody);
+		Task mockUpdate = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
 		class Testcase {
 			final String mockId;
 			final boolean idFoundInDb;
@@ -65,57 +62,17 @@ class TaskControllerTest {
 
 		for (Testcase tc : testcases) {
 			when(mockRepo.existsById(tc.mockId)).thenReturn(tc.idFoundInDb);
-			if (tc.idFoundInDb) {
-				when(mockRepo.findById(tc.mockId)).thenReturn(Optional.ofNullable(tc.taskFromDb));
-			} else {
-				when(mockRepo.findById(tc.mockId)).thenReturn(null);
-			}
 
-			if (tc.expectSuccess) {
 				ResponseEntity<String> expected = new ResponseEntity<>("successfully updated task with id: " + tc.mockId, HttpStatus.ACCEPTED);
 				try {
-					ResponseEntity<String> actual = t.handleUpdateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
-					assertEquals(expected, actual);
+						ResponseEntity<String> actual = t.handleUpdateTask(tc.mockId, tc.updateForTask);
+						assertEquals(expected, actual);
 				} catch (HttpClientErrorException e) {
 					throw new RuntimeException(e);
 				}
 
-			} else {
-				try {
-					t.handleUpdateTask(tc.mockId, new Gson().toJson(tc.updateForTask));
-				} catch (HttpClientErrorException e) {
-					HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
-					assertEquals(e.getClass(), expectedException.getClass());
-				}
 			}
 		}
-	}
-
-
-	@Test
-	 void validateTaskFields() {
-		TaskController t = new TaskController(mockService);
-		class Testcase {
-			final Task taskInput;
-			final boolean expected;
-
-			public Testcase(Task testTask, boolean expected) {
-				this.taskInput = testTask;
-				this.expected = expected;
-			}
-		}
-
-		Testcase[] testcases = new Testcase[]{
-				new Testcase(mockTask, true),
-		new Testcase(new Task(null,null,null,null,new ObjectId(),null),false)
-		};
-
-		for (Testcase tc : testcases) {
-			boolean actualOut = t.validateTaskFields(new Gson().toJson(tc.taskInput));
-			assertEquals(tc.expected, actualOut);
-		}
-	}
-
 
 	@Test
 	 void getAllTasksDB() {
@@ -128,31 +85,20 @@ class TaskControllerTest {
 		}
 		class Testcase {
 			final String userId;
-			final boolean dbReturnSize0;
 			final ArrayList<Task> mockArrayList;
-			final String expectedOutput;
 
-			public Testcase(String userId, boolean dbReturnSize0, ArrayList<Task> mockArrayList, String expectedOutput) {
+			public Testcase(String userId, ArrayList<Task> mockArrayList) {
 				this.userId = userId;
-				this.dbReturnSize0 = dbReturnSize0;
 				this.mockArrayList = mockArrayList;
-				this.expectedOutput = expectedOutput;
 			}
 		}
 
 		Testcase[] testcases = new Testcase[]{
-				new Testcase("1", false, mockList, new Gson().toJson(mockList)),
-				new Testcase("1", true, new ArrayList<>(), "no tasks were found to the provided id"),
-				new Testcase(null, true, new ArrayList<>(), "no tasks were found to the provided id"),
-				new Testcase("", true, new ArrayList<>(), "no tasks were found to the provided id"),
-				new Testcase(null, false, new ArrayList<>(), "no tasks were found to the provided id")
+				new Testcase("1",  mockList),
+				new Testcase("1", null),
 		};
 		for (Testcase tc : testcases) {
-			if (tc.dbReturnSize0) {
-				when(mockRepo.findAll()).thenReturn(new ArrayList<>());
-			} else {
-				when(mockRepo.findAll()).thenReturn(tc.mockArrayList);
-			}
+			when(mockRepo.findAll()).thenReturn(tc.mockArrayList);
 
 			try {
 				ResponseEntity<List<Task>> expected = new ResponseEntity<>(Arrays.asList(mockTask), HttpStatus.OK);
@@ -217,36 +163,22 @@ class TaskControllerTest {
 
 		class Testcase {
 			final String userId;
-			final boolean badPayload;
 			final Task mockTask;
-			final String mockPayload;
 
-			public Testcase(String userId, boolean badPayload, Task mockTask, String mockPayload) {
+			public Testcase(String userId, Task mockTask) {
 				this.userId = userId;
-				this.badPayload = badPayload;
 				this.mockTask = mockTask;
-				this.mockPayload = mockPayload;
 			}
 		}
 
 		Testcase[] testcases = new Testcase[]{
-				new Testcase("1", false, mockTask, new Gson().toJson(mockTask)),
-				new Testcase("1", true, mockTask, new Gson().toJson(mockTask)),
-				//			new Testcase(null,true, mockTask, "no tasks were found to the provided id"),
-				//			new Testcase("",true, mockTask, "no tasks were found to the provided id"),
-				//			new Testcase(null,false, mockTask, "no tasks were found to the provided id")
+				new Testcase("1", mockTask),
 		};
 		for (Testcase tc : testcases) {
-			if (tc.badPayload) {
-				when(mockService.validateTaskFields(tc.mockPayload)).thenReturn(false);
-			} else {
-				when(mockService.validateTaskFields(tc.mockPayload)).thenReturn(true);
-				when(mockRepo.insert(tc.mockTask)).thenReturn(mockTask);
-			}
-
+			when(mockRepo.insert(tc.mockTask)).thenReturn(mockTask);
 			try {
 				ResponseEntity<String> expected = new ResponseEntity<>("successfully created task with id: " + tc.mockTask.getId().toHexString(), HttpStatus.ACCEPTED);
-				ResponseEntity<String> actual1 = t.handleCreateNewTask(tc.mockPayload);
+				ResponseEntity<String> actual1 = t.handleCreateNewTask(tc.mockTask);
 				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
 			} catch (HttpClientErrorException e) {
 				HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
@@ -307,22 +239,20 @@ class TaskControllerTest {
          class Testcase {
              final String userId;
              final List<Task> mockTasks;
-             final String expectedOutput;
 
-             public Testcase(String userId, List<Task> mockTasks, String expectedOutput) {
+             public Testcase(String userId, List<Task> mockTasks) {
                  this.userId = userId;
                  this.mockTasks = mockTasks;
-                 this.expectedOutput = expectedOutput;
              }
          }
 
          Testcase[] testcases = new Testcase[]{
-                 new Testcase("1", taskList, new Gson().toJson(taskList)),
+                 new Testcase("1", taskList),
          };
          for (Testcase tc : testcases) {
              try {
-				 when(mockService.getTasksByPriorityService(tc.userId)).thenReturn(tc.mockTasks);
-                 ResponseEntity<String> expected = new ResponseEntity<>(tc.expectedOutput, HttpStatus.OK);
+				 when(mockService.getTasksByHighPriorityService(tc.userId)).thenReturn(tc.mockTasks);
+                 ResponseEntity<List<Task>> expected = new ResponseEntity<>(tc.mockTasks, HttpStatus.OK);
                  ResponseEntity<List<Task>> actual1 = t.handleGetTaskByUserIDandPriority(tc.userId);
                  assertEquals(actual1.getStatusCode(), expected.getStatusCode());
              } catch (HttpClientErrorException e) {

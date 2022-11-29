@@ -19,10 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 
+import java.time.LocalDateTime;
 import java.util.*;
 class TaskCollectionControllerTest {
 
     private final HttpClientErrorException httpNotFoundError = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
+    LocalDateTime mockTime = LocalDateTime.now();
 
 
     TaskCollectionService mockService = mock(TaskCollectionService.class);
@@ -77,7 +79,7 @@ class TaskCollectionControllerTest {
     @Test
     void getTaskCollectionByUserID() {
         TaskCollectionController t = new TaskCollectionController(mockService);
-        Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
         TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
         List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
@@ -119,7 +121,7 @@ class TaskCollectionControllerTest {
     @Test
     void getTaskCollectionsByTeamID() {
         TaskCollectionController t = new TaskCollectionController(mockService);
-        Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
         TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
         List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
@@ -161,7 +163,7 @@ class TaskCollectionControllerTest {
     @Test
     void getTaskCollectionsByID() {
         TaskCollectionController t = new TaskCollectionController(mockService);
-        Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
         TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
 

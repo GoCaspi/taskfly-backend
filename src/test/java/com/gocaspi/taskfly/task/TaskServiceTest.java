@@ -8,6 +8,7 @@ import org.junit.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,16 +18,16 @@ import static org.mockito.Mockito.*;
 
 
 public class TaskServiceTest {
+	LocalDateTime mockTime = LocalDateTime.now();
 
 	TaskRepository mockRepo = mock(TaskRepository.class);
 	HttpClientErrorException er = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "no tasks are assigned to the provided userId", null, null, null);
 	String mockUserIds = "123";
 	String mockListId = "1";
 	String mockTeam = "team1";
-	String mockDeadline = "11-11-2022";
 	ObjectId mockObjectId = new ObjectId();
 Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
-	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObjectId,mockbody);
+	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
 
 
 	@Test
@@ -50,37 +51,17 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		}
 		Testcase[] testcases = new Testcase[]{
 				new Testcase("123", mockList,mockList),
-				new Testcase("1",new ArrayList<Task>(),new ArrayList<Task>())
+				new Testcase("1",new ArrayList<Task>(),new ArrayList<>())
 		};
 		for(Testcase tc : testcases){
-				when(mockRepo.findAll()).thenReturn(tc.dbReturn);
-			List actual = t.getServiceAllTasksOfUser(tc.id);
-			assertEquals(tc.expected, actual);
-		}
-	}
+			try{
+				when(mockRepo.getTasksByUserId(tc.id)).thenReturn(tc.dbReturn);
+				List actual = t.getServiceAllTasksOfUser(tc.id);
+				assertEquals(tc.expected, actual);
+			} catch (Exception e) {
 
-	@Test
-	public void validateTaskFields() {
-		TaskService t = new TaskService(mockRepo);
-		class Testcase {
-			final Task taskInput;
-			final boolean expected;
-
-			public Testcase(Task testTask, boolean expected) {
-				this.taskInput = testTask;
-				this.expected = expected;
 			}
-		}
 
-		Testcase[] testcases = new Testcase[]{
-				new Testcase(mockTask, true),
-				new Testcase(new Task(null,null,null,null,new ObjectId(),mockbody),false),
-				new Testcase(new Task("test","test","test","test",new ObjectId(),mockbody),true)
-		};
-
-		for (Testcase tc : testcases) {
-			boolean actualOut = t.validateTaskFields(new Gson().toJson(tc.taskInput));
-			assertEquals(tc.expected, actualOut);
 		}
 	}
 
@@ -88,7 +69,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 	public void updateTaskService(){
 		TaskService s = new TaskService(mockRepo);
 		var emptyBody = new Task.Taskbody("",null,"");
-		var emptyTask = new Task("", "", "", "", mockObjectId, emptyBody);
+		var emptyTask = new Task("", "", "", null, mockObjectId, emptyBody);
 		class Testcase {
 			final Task mockTask;
 			final String mockID;
@@ -143,8 +124,8 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		for (Testcase tc : testcases) {
 			try {
 
-				when(mockRepo.getTaskByUserIdAndBody_Priority(tc.mockID, true)).thenReturn(tc.mockTasks);
-				var actual = s.getTasksByPriorityService(tc.mockID);
+				when(mockRepo.getTaskByUserIdAndBody_HighPriority(tc.mockID, true)).thenReturn(tc.mockTasks);
+				var actual = s.getTasksByHighPriorityService(tc.mockID);
 				assertEquals(tc.mockTasks, actual);
 			} catch (Exception e) {
 

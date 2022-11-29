@@ -49,14 +49,11 @@ public class TaskService {
      * @return ArrayList containing the tasks of the user with the id id
      */
     public List<Task> getServiceAllTasksOfUser(String id){
-        List<Task> tasks = getRepo().findAll();
-        List<Task> tasksToId = new ArrayList<>();
-        for(Task t : tasks){
-            if (Objects.equals(t.getUserId(), id)){
-                tasksToId.add(t);
-            }
+        var taskList = repo.getTasksByUserId(id);
+        if (taskList.isEmpty()){
+            throw exceptionNotFound;
         }
-        return tasksToId;
+        return taskList;
     }
 
     public Task getServiceTaskById(String id) throws HttpClientErrorException.NotFound {
@@ -121,23 +118,15 @@ public class TaskService {
         return taskList;
     }
 
-    public List<Task> getTasksScheduledForOneWeek(String userid){
+    public List<Task> getTasksScheduledForOneWeek(String userid) {
         var taskList = repo.findTasksScheduledForOneWeekByUserID(userid);
-        if(taskList.isEmpty()){
+        if (taskList.isEmpty()) {
             throw exceptionNotFound;
         }
         return taskList;
     }
 
-    /**
-     * given a requestbody (Json of a Task) the method checks if all fields are null-safe with the exception of the fields: priority and deadline, which must not be set.
-     * @param jsonPayload, request body
-     * @return true if the mentioned criteria holds for that Task-payload, else return false
-     */
-    public boolean validateTaskFields(String jsonPayload){
-        var task = jsonToTask(jsonPayload);
-        return !Objects.equals(task.getUserId(), null) && !Objects.equals(task.getListId(), null) && !Objects.equals(task.getBody().getTopic(), null) && !Objects.equals(task.getBody().getDescription(), null);
-    }
+
 
     /**
      * returns a Task from a json String

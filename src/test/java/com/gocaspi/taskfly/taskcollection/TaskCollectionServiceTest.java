@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +30,9 @@ class TaskCollectionServiceTest {
     final private TaskCollection mockTC = new TaskCollection(mockTCID, mockTCName, mockTCTeamID, mockTCOwnerID, mockTeamMember);
     final private String mockUserIds = "1";
     final private String mockListId = "1";
-    final private String mockTopic = "topic1";
     final private String mockTeam = "team1";
-    final private String mockPrio = "prio1";
-    final private String mockDesc = "desc1";
-    final private String mockDeadline = "11-11-2022";
+    LocalDateTime mockTime = LocalDateTime.now();
+
     final private ObjectId mockObjectId = new ObjectId();
     final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic",true,"mockDescription");
 
@@ -61,7 +60,7 @@ class TaskCollectionServiceTest {
     @Test
     void getTaskCollectionByIDTest(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
-        Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
         TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
         class Testcase {
@@ -92,7 +91,7 @@ class TaskCollectionServiceTest {
     @Test
     void getTaskCollectionByOwnerIDTest(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
-        Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
         TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
         List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
@@ -126,7 +125,7 @@ class TaskCollectionServiceTest {
     @Test
     void getTaskCollectionByTeamID(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
-        Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
         TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
         List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);

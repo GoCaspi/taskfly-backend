@@ -94,7 +94,7 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,m
 		for (Testcase_setString tc : testcases){
 			LocalDateTime time =LocalDateTime.now();
 			t.setDeadline(time);
-			assertEquals(t.getDeadline(),tc.newText);
+			assertEquals(t.getDeadline(),time);
 		}
 	}
 	@Test

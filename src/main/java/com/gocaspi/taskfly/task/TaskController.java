@@ -22,18 +22,11 @@ public class TaskController {
    public TaskController (TaskService service){
        this.service = service;
    }
-
-    /**
-     * returns the service  of type TaskService
-     *
-     * @return TaskService that is injected in the Controller
-     */
-
     /**
      * given a request body this endpoint converts the body to a Task and validates the input Data against set criteria (see method below)
      * If criteria are matched returns HttpStatus:202, else throws an exception.
      *
-     * @param body json of the task that should be created
+     * @param task which is being sent as a json to the controller via http
      * @return ResponseEntity containing a success message along with the http status code
      * @throws HttpClientErrorException.BadRequest Exception if the provided requestbody is missing fields
      */
@@ -141,33 +134,9 @@ public class TaskController {
      * @throws ChangeSetPersister.NotFoundException Exception if no task to the id was found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<String> handleUpdateTask(@PathVariable String id,@RequestBody String body) throws HttpClientErrorException.NotFound {
-
-        var update = jsonToTask(body);
-        service.updateService(id,update);
-        var msg = "successfully updated task with id: "+id;
+    public ResponseEntity<String> handleUpdateTask(@PathVariable String id,@RequestBody Task body) throws HttpClientErrorException.NotFound {
+        service.updateService(id,body);
+        var msg = "successfully updated task with id: "+ id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
-
-    /**
-     * given a requestbody (Json of a Task) the method checks if all fields are null-safe with the exception of the fields: priority and deadline, which must not be set.
-     *
-     * @param jsonPayload, request body
-     * @return true if the mentioned criteria holds for that Task-payload, else return false
-     */
-
-    public boolean validateTaskFields(String jsonPayload){
-        var task = jsonToTask(jsonPayload);
-        return !Objects.equals(task.getUserId(), null) && !Objects.equals(task.getListId(), null) && !Objects.equals(task.getBody().getTopic(), null) && !Objects.equals(task.getBody().getDescription(), null);
-    }
-
-
-
-    /**
-     * returns a Task from a Json
-     *
-     * @param jsonPayload String
-     * @return Task fetched from the jsonPayload
-     */
-    public Task jsonToTask(String jsonPayload){ return new Gson().fromJson(jsonPayload, Task.class);}
 }
