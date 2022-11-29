@@ -7,10 +7,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-
-
 
 public class Task {
     @NotBlank
@@ -77,8 +73,6 @@ public class Task {
     public Taskbody getBody(){
         return this.body;
     }
-
-
     /**
      * sets the userIDs array of a task to the provided String-array (newUserIds)
      *
@@ -131,7 +125,7 @@ public class Task {
     /**
      * returns the deadline of the task
      *
-     * @return String, deadline of the task
+     * @return LocalDateTime, deadline of the task
      */
     public LocalDateTime getDeadline(){ return this.deadline; }
 

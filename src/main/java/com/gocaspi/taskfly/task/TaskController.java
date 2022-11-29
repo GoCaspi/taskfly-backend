@@ -6,7 +6,6 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.google.gson.Gson;
 import org.springframework.web.client.HttpClientErrorException;
 
 import javax.validation.Valid;
@@ -49,7 +48,6 @@ public class TaskController {
     @GetMapping("/userId/{id}")
     public ResponseEntity<List<Task>> handleGetAllTasks(@PathVariable String id) throws HttpClientErrorException.NotFound {
         List<Task> tasks = service.getServiceAllTasksOfUser(id);
-        if(tasks.isEmpty()){ throw service.getNotFound();}
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
@@ -108,6 +106,7 @@ public class TaskController {
         var taskList = service.getTasksScheduledForOneWeek(userid);
         return new ResponseEntity<>(taskList, HttpStatus.OK);
     }
+
     /**
      * if there is a task to the provided id (path variable) then that task is removed from the mongoDB, else an exception is thrown
      *

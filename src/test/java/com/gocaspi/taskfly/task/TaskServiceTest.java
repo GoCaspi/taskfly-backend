@@ -5,6 +5,7 @@ import com.gocaspi.taskfly.taskcollection.TaskCollectionService;
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.*;
+import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -57,6 +58,38 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 			try{
 				when(mockRepo.getTasksByUserId(tc.id)).thenReturn(tc.dbReturn);
 				List actual = t.getServiceAllTasksOfUser(tc.id);
+				assertEquals(tc.expected, actual);
+			} catch (Exception e) {
+
+			}
+
+		}
+	}
+
+	@Test
+	public void getServiceTaskByIDTest() {
+		TaskService t = new TaskService(mockRepo);
+
+		class Testcase {
+			final String id;
+			final Task dbReturn;
+			final Task expected;
+
+			public	Testcase(String id,  Task dbReturn, Task expected) {
+				this.id = id;
+				this.dbReturn = dbReturn;
+				this.expected = expected;
+			}
+		}
+		Testcase[] testcases = new Testcase[]{
+				new Testcase("123", mockTask,mockTask),
+				new Testcase("1",null,null)
+		};
+		for(Testcase tc : testcases){
+			try{
+				Optional<Task> task = Optional.ofNullable(tc.dbReturn);
+				when(mockRepo.findById(tc.id)).thenReturn(Optional.ofNullable(tc.dbReturn));
+				Task actual = t.getServiceTaskById(tc.id);
 				assertEquals(tc.expected, actual);
 			} catch (Exception e) {
 
@@ -126,6 +159,128 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 
 				when(mockRepo.getTaskByUserIdAndBody_HighPriority(tc.mockID, true)).thenReturn(tc.mockTasks);
 				var actual = s.getTasksByHighPriorityService(tc.mockID);
+				assertEquals(tc.mockTasks, actual);
+			} catch (Exception e) {
+
+			}
+
+		}
+	}
+	@Test
+	public void getPrivateTasksTest(){
+		TaskService s = new TaskService(mockRepo);
+		List<Task> taskList = new ArrayList<>();
+		taskList.add(mockTask);
+		class Testcase {
+			final List<Task> mockTasks;
+			final String mockID;
+
+			public Testcase(List<Task> task, String mockID) {
+				this.mockTasks = task;
+				this.mockID = mockID;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase(taskList, mockObjectId.toHexString()),
+				new Testcase(new ArrayList<>(), mockObjectId.toHexString())
+		};
+		for (Testcase tc : testcases) {
+			try {
+
+				when(mockRepo.findPrivateTasksByUserID(tc.mockID)).thenReturn(tc.mockTasks);
+				var actual = s.getPrivateTasks(tc.mockID);
+				assertEquals(tc.mockTasks, actual);
+			} catch (Exception e) {
+
+			}
+
+		}
+	}
+	@Test
+	public void getSharedTasksTest(){
+		TaskService s = new TaskService(mockRepo);
+		List<Task> taskList = new ArrayList<>();
+		taskList.add(mockTask);
+		class Testcase {
+			final List<Task> mockTasks;
+			final String mockID;
+
+			public Testcase(List<Task> task, String mockID) {
+				this.mockTasks = task;
+				this.mockID = mockID;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase(taskList, mockObjectId.toHexString()),
+				new Testcase(new ArrayList<>(), mockObjectId.toHexString())
+		};
+		for (Testcase tc : testcases) {
+			try {
+
+				when(mockRepo.findSharedTasksByUserID(tc.mockID)).thenReturn(tc.mockTasks);
+				var actual = s.getSharedTasks(tc.mockID);
+				assertEquals(tc.mockTasks, actual);
+			} catch (Exception e) {
+
+			}
+
+		}
+	}
+	@Test
+	public void deleteTaskTest(){
+		TaskService s = new TaskService(mockRepo);
+		class Testcase {
+			final String mockID;
+			final Boolean exists;
+
+			public Testcase(String mockID, Boolean exists) {
+				this.mockID = mockID;
+				this.exists = exists;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase(mockObjectId.toHexString(), true),
+				new Testcase(mockObjectId.toHexString(), false),
+
+		};
+		for (Testcase tc : testcases) {
+			when(mockRepo.existsById(tc.mockID)).thenReturn(tc.exists);
+			try{
+				s.deleteService(tc.mockID);
+				Mockito.verify(mockRepo, times(1)).deleteById(tc.mockID);
+			} catch (Exception e){
+
+			}
+
+		}
+	}
+	@Test
+	public void getTasksScheduledForOneWeekTest(){
+		TaskService s = new TaskService(mockRepo);
+		List<Task> taskList = new ArrayList<>();
+		taskList.add(mockTask);
+		class Testcase {
+			final List<Task> mockTasks;
+			final String mockID;
+
+			public Testcase(List<Task> task, String mockID) {
+				this.mockTasks = task;
+				this.mockID = mockID;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase(taskList, mockObjectId.toHexString()),
+				new Testcase(new ArrayList<>(), mockObjectId.toHexString())
+		};
+		for (Testcase tc : testcases) {
+			try {
+
+				when(mockRepo.findTasksScheduledForOneWeekByUserID(tc.mockID)).thenReturn(tc.mockTasks);
+				var actual = s.getTasksScheduledForOneWeek(tc.mockID);
 				assertEquals(tc.mockTasks, actual);
 			} catch (Exception e) {
 

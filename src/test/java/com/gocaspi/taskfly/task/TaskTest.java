@@ -75,7 +75,7 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,m
 		Task t = mockTask;
 		for (Testcase_setString tc : testcases){
 			t.getBody().setHighPriority(false);
-			assertEquals(t.getBody().getHighPriority(),false);
+			assertEquals(false, t.getBody().getHighPriority());
 		}
 	}
 
@@ -124,7 +124,7 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,m
 		for (Testcase_getString tc : testcases_get){
 			t.getBody().setHighPriority(true);
 			Boolean actual = t.getBody().getHighPriority();
-			assertEquals(actual,true);
+			assertEquals(true, actual);
 		}
 	}
 

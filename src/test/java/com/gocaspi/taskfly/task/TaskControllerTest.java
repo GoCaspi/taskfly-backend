@@ -260,6 +260,65 @@ class TaskControllerTest {
              }
          }
      }
+	@Test
+	void GetSharedTasksByUser() {
+		TaskController t = new TaskController(mockService);
+		List<Task> taskList =  new ArrayList<Task>();
+		taskList.add(mockTask);
+		class Testcase {
+			final String userId;
+			final List<Task> mockTasks;
+
+			public Testcase(String userId, List<Task> mockTasks) {
+				this.userId = userId;
+				this.mockTasks = mockTasks;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase("1", taskList),
+		};
+		for (Testcase tc : testcases) {
+			try {
+				when(mockService.getSharedTasks(tc.userId)).thenReturn(tc.mockTasks);
+				ResponseEntity<List<Task>> expected = new ResponseEntity<>(tc.mockTasks, HttpStatus.OK);
+				ResponseEntity<List<Task>> actual1 = t.handleGetSharedTasksByUser(tc.userId);
+				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
+			} catch (HttpClientErrorException e) {
+
+			}
+		}
+	}
+
+	@Test
+	void GetTasksScheduledForOneWeekTest() {
+		TaskController t = new TaskController(mockService);
+		List<Task> taskList =  new ArrayList<Task>();
+		taskList.add(mockTask);
+		class Testcase {
+			final String userId;
+			final List<Task> mockTasks;
+
+			public Testcase(String userId, List<Task> mockTasks) {
+				this.userId = userId;
+				this.mockTasks = mockTasks;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase("1", taskList),
+		};
+		for (Testcase tc : testcases) {
+			try {
+				when(mockService.getTasksScheduledForOneWeek(tc.userId)).thenReturn(tc.mockTasks);
+				ResponseEntity<List<Task>> expected = new ResponseEntity<>(tc.mockTasks, HttpStatus.OK);
+				ResponseEntity<List<Task>> actual1 = t.handleTasksScheduledForOneWeekByUser(tc.userId);
+				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
+			} catch (HttpClientErrorException e) {
+
+			}
+		}
+	}
 }
 
 
