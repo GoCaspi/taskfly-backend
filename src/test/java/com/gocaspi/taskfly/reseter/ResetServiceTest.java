@@ -98,6 +98,91 @@ public class ResetServiceTest {
 		}
 	}
 
+	@Test
+	public void resetPwd_Test(){
+		class Testcase{
+			private final User dbReturn;
+			private final boolean notFound;
+			private final Optional<User> expected;
+
+			public Testcase(User dbReturn, Boolean notFound, Optional<User>expected){
+				this.dbReturn = dbReturn;
+				this.notFound = notFound;
+				this.expected = expected;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase(mockUser,false, Optional.ofNullable(mockUser)),
+				new Testcase(mockUser,true, Optional.ofNullable(mockUser)),
+		};
+		for(Testcase tc : testcases){
+			if(tc.notFound){
+				when(repo.findById(tc.dbReturn.getUserId())).thenReturn(null);
+				when(repo.existsById(tc.dbReturn.getUserId())).thenReturn(false);
+				try {
+					resetService.resetPwdOfUser(tc.dbReturn.getUserId(),"newPwd");
+				}
+				catch (HttpClientErrorException e){
+					HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
+					assertEquals(e.getClass(), expectedException.getClass());
+				}
+			}
+			else{
+				mockUser.setReseted(true);
+				when(repo.findById(tc.dbReturn.getUserId())).thenReturn(Optional.ofNullable(mockUser));
+				when(repo.existsById(tc.dbReturn.getUserId())).thenReturn(true);
+				Optional<User> actual = resetService.resetPwdOfUser(tc.dbReturn.getUserId(),"newPwd");
+				assertEquals(actual,tc.expected);
+			}
+
+		}
+	}
+
+	@Test
+	public void EnablePwdReset_Test(){
+		class Testcase{
+			private final User dbReturn;
+			private final boolean notFound;
+			private final Optional<User> expected;
+
+			public Testcase(User dbReturn, Boolean notFound, Optional<User>expected){
+				this.dbReturn = dbReturn;
+				this.notFound = notFound;
+				this.expected = expected;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase(mockUser,false, Optional.ofNullable(mockUser)),
+				new Testcase(mockUser,true, Optional.ofNullable(mockUser)),
+		};
+
+		for(Testcase tc : testcases){
+			if(!tc.notFound){
+				when(repo.findById(tc.dbReturn.getUserId())).thenReturn(Optional.ofNullable(mockUser));
+				when(repo.existsById(tc.dbReturn.getUserId())).thenReturn(true);
+				try {
+					 resetService.EnablePwdReset(tc.dbReturn.getUserId(),true);
+					resetService.EnablePwdReset(tc.dbReturn.getUserId(),false);
+				}
+				catch (HttpClientErrorException e){}
+			}
+			else {
+				when(repo.findById(tc.dbReturn.getUserId())).thenReturn(null);
+				when(repo.existsById(tc.dbReturn.getUserId())).thenReturn(false);
+				try {
+					resetService.EnablePwdReset(tc.dbReturn.getUserId(),true);
+				}
+				catch (HttpClientErrorException e){
+					HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
+					assertEquals(e.getClass(), expectedException.getClass());
+				}
+			}
+		}
+
+	}
+
 
 	public String hashStr(String str)  {
 		String sha256hex = Hashing.sha256()
