@@ -40,7 +40,7 @@
 					"basic": [
 						{
 							"key": "username",
-							"value": "max-maxi@gmail.com",
+							"value": "test@gmail.com",
 							"type": "string"
 						},
 						{
@@ -282,6 +282,107 @@
 					],
 					"cookie": [],
 					"body": "ROLE_WRITE"
+				},
+				{
+					"name": "UserRoles-Unauthorized-user",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/user/getUserRoles?email=max-maxi@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"getUserRoles"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "max-maxi@gmail.com"
+								}
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "WWW-Authenticate",
+							"value": "Basic realm=\"Realm\""
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 30 Nov 2022 14:28:42 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"timestamp\": \"2022-11-30T14:28:42.848+00:00\",\n    \"status\": 401,\n    \"error\": \"Unauthorized\",\n    \"path\": \"/user/getUserRoles\"\n}"
 				}
 			]
 		},
@@ -316,13 +417,13 @@
 					"type": "basic",
 					"basic": [
 						{
-							"key": "password",
-							"value": "0123",
+							"key": "username",
+							"value": "max-maxi@gmail.com",
 							"type": "string"
 						},
 						{
-							"key": "username",
-							"value": "max-maxi@gmail.com",
+							"key": "password",
+							"value": "0123",
 							"type": "string"
 						}
 					]
@@ -1042,6 +1143,9 @@
 		{
 			"name": "GetUser",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -1258,10 +1362,32 @@
 		{
 			"name": "Actuator",
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "Test@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "0123",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": ""
+					"raw": "{{host}}/actuator/prometheus",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"actuator",
+						"prometheus"
+					]
 				}
 			},
 			"response": []
