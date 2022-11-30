@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 
-public class TaskCollectionRepositoryImplTest {
+class TaskCollectionRepositoryImplTest {
     final private String mockUserID = new ObjectId().toHexString();
     final private String mockTCID = new ObjectId().toHexString();
     final private String mockTCName = "TaskCollection1";
@@ -73,12 +73,45 @@ public class TaskCollectionRepositoryImplTest {
         ObjectId fakeUserID = new ObjectId();
         Task validTask = new Task(mockUserID,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
         mongoTemplate.save(validTask, "task");
-        Task invalidTask = new Task(mockUserID,fakeTaskCollectionID.toHexString(),mockTeam,mockTime,mockObjectId,mockbody);
+        Task invalidTask = new Task(mockUserID,fakeTaskCollectionID.toHexString(),mockTeam,mockTime,new ObjectId(),mockbody);
         mongoTemplate.save(invalidTask, "task");
         TaskCollection altCollection = new TaskCollection(fakeTaskCollectionID.toHexString(), mockTCName, mockTCTeamID, fakeUserID.toHexString(), mockTeamMember);
         mongoTemplate.save(altCollection, "taskCollection");
-        var taskCollectionList = taskCollectionRepositoryImpl.findByOwnerID(mockUserID);
+        List<TaskCollectionGetQuery> taskCollectionList = taskCollectionRepositoryImpl.findByOwnerID(mockUserID);
         assertEquals(1, taskCollectionList.size());
+        assertEquals(1, taskCollectionList.get(0).getTasks().size());
+    }
 
+    @Test
+    void findByIDTest(){
+        TaskCollectionRepositoryImpl taskCollectionRepositoryImpl = new TaskCollectionRepositoryImpl(mongoTemplate);
+        mongoTemplate.save(mockTC, "taskCollection");
+        ObjectId fakeTaskCollectionID = new ObjectId();
+        ObjectId fakeUserID = new ObjectId();
+        Task validTask = new Task(mockUserID,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
+        mongoTemplate.save(validTask, "task");
+        Task invalidTask = new Task(mockUserID,fakeTaskCollectionID.toHexString(),mockTeam,mockTime,new ObjectId(),mockbody);
+        mongoTemplate.save(invalidTask, "task");
+        TaskCollection altCollection = new TaskCollection(fakeTaskCollectionID.toHexString(), mockTCName, mockTCTeamID, fakeUserID.toHexString(), mockTeamMember);
+        mongoTemplate.save(altCollection, "taskCollection");
+        TaskCollectionGetQuery taskCollectionGetQuery = taskCollectionRepositoryImpl.findByID(mockTCID);
+        assertEquals(mockTCName, taskCollectionGetQuery.getName());
+    }
+
+    @Test
+    void findByTeamIDTest(){
+        TaskCollectionRepositoryImpl taskCollectionRepositoryImpl = new TaskCollectionRepositoryImpl(mongoTemplate);
+        mongoTemplate.save(mockTC, "taskCollection");
+        ObjectId fakeTaskCollectionID = new ObjectId();
+        ObjectId fakeUserID = new ObjectId();
+        Task validTask = new Task(mockUserID,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
+        mongoTemplate.save(validTask, "task");
+        Task invalidTask = new Task(mockUserID,fakeTaskCollectionID.toHexString(),mockTeam,mockTime,new ObjectId(),mockbody);
+        mongoTemplate.save(invalidTask, "task");
+        TaskCollection altCollection = new TaskCollection(fakeTaskCollectionID.toHexString(), mockTCName, new ObjectId().toHexString(), fakeUserID.toHexString(), mockTeamMember);
+        mongoTemplate.save(altCollection, "taskCollection");
+        List<TaskCollectionGetQuery> taskCollectionList = taskCollectionRepositoryImpl.findByTeamID(mockTCTeamID);
+        assertEquals(1, taskCollectionList.size());
+        assertEquals(1, taskCollectionList.get(0).getTasks().size());
     }
 }

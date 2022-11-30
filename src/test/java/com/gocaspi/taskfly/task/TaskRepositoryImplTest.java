@@ -24,7 +24,7 @@ import java.util.*;
 
 import static org.mockito.Mockito.mock;
 @ExtendWith(SpringExtension.class)
-public class TaskRepositoryImplTest {
+class TaskRepositoryImplTest {
     final private String mockUserID = new ObjectId().toHexString();
     final private String mockTCID = new ObjectId().toHexString();
     final private String mockTCName = "TaskCollection1";
@@ -110,22 +110,5 @@ public class TaskRepositoryImplTest {
         assertEquals(correctList.get(0).getDeadline(), taskList.get(0).getDeadline());
         assertEquals(correctList.get(0).getUserId(), taskList.get(0).getUserId());
         assertEquals(correctList.get(0).getListId(), taskList.get(0).getListId());
-    }
-
-    @Test
-    void findTasksScheduledForOneWeekByUserIDTest(){
-        TaskRepositoryImpl tri = new TaskRepositoryImpl(mongoTemplate);
-        LocalDateTime inFewDays = LocalDateTime.now().plusDays(3);
-        Task taskInRange = new Task(mockUserID,mockListId,mockTeam,inFewDays,mockObjectId,mockbody);
-        mongoTemplate.save(taskInRange, "task");
-        LocalDateTime fewDaysAgo = LocalDateTime.now().minusDays(4);
-        Task taskOutOfRange = new Task(mockUserID,mockListId,mockTeam,fewDaysAgo,mockObjectId,mockbody);
-        mongoTemplate.save(taskOutOfRange, "task");
-        List<Task> correctList = Arrays.asList(taskInRange);
-
-
-
-
-
     }
 }
