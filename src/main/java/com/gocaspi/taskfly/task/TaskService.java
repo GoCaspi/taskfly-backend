@@ -69,7 +69,7 @@ public class TaskService {
             if(!Objects.equals(update.getTeam(), "")){
                 t.setTeam(update.getTeam());
             }
-            if(!Objects.equals(update.getDeadline(), "")){
+            if(!Objects.equals(update.getDeadline(), null)){
                 t.setDeadline(update.getDeadline());
             }
             if(!Objects.equals(update.getListId(), "")){

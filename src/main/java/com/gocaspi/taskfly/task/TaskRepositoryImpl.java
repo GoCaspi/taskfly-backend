@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class TaskRepositoryImpl implements TaskRepositoryCustom {
@@ -34,14 +35,15 @@ public class TaskRepositoryImpl implements TaskRepositoryCustom {
     }
 
     private AggregationOperation addSizeField(){
-        return aggregationOperation -> new Document(ADDFIELDSKEY,
-                 new Document("count",
-                         new Document("$cond",
-                                 new Document("if",
-                                         new Document("$isArray", RESULT_MEMBERS))
-                                         .append("then",
-                                                 new Document("$size", RESULT_MEMBERS))
-                                         .append("else", 0L))));
+        return aggregationOperation ->     new Document(ADDFIELDSKEY,
+                new Document("count",
+                        new Document("$cond",
+                                new Document("if",
+                                        new Document("$isArray", "$result.members"))
+                                        .append("then",
+                                                new Document("$size",
+                                                        new Document("$ifNull", Arrays.asList("$result.members", Arrays.asList()))))
+                                        .append("else", 0L))));
 
     }
 

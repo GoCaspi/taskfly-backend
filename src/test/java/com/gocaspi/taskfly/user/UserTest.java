@@ -1,9 +1,8 @@
 package com.gocaspi.taskfly.user;
 
 import org.bson.types.ObjectId;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UserTest {
     String mockUserIds = "123";

@@ -4,7 +4,7 @@ import com.gocaspi.taskfly.taskcollection.TaskCollection;
 import com.gocaspi.taskfly.taskcollection.TaskCollectionService;
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
-import org.junit.*;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
-public class TaskServiceTest {
+class TaskServiceTest {
 	LocalDateTime mockTime = LocalDateTime.now();
 
 	TaskRepository mockRepo = mock(TaskRepository.class);
@@ -33,7 +33,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 
 
 	@Test
-	public void getService_AllTasksOfUser() {
+	void getServiceAllTasksOfUserTest() {
 
 		TaskService t = new TaskService(mockRepo);
 		List<Task> mockList = Arrays.asList(mockTask);
@@ -65,7 +65,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 	}
 
 	@Test
-	public void getServiceTaskByIDTest() {
+	void getServiceTaskByIdTest() {
 		TaskService t = new TaskService(mockRepo);
 
 		class Testcase {
@@ -97,7 +97,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 	}
 
 	@Test
-	public void updateTaskService(){
+	void updateServiceTest(){
 		TaskService s = new TaskService(mockRepo);
 		var emptyBody = new Task.Taskbody("",null,"");
 		var emptyTask = new Task("", "", "", null, mockObjectId, emptyBody);
@@ -134,7 +134,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		}
 	}
 	@Test
-	public void getTaskByUserIDandPriorityTest(){
+	void getTasksByHighPriorityServiceTest(){
 		TaskService s = new TaskService(mockRepo);
 		List<Task> mockList = Arrays.asList(mockTask);
 
@@ -165,7 +165,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		}
 	}
 	@Test
-	public void getPrivateTasksTest(){
+	void getPrivateTasksTest(){
 		TaskService s = new TaskService(mockRepo);
 		List<Task> mockList = Arrays.asList(mockTask);
 
@@ -196,7 +196,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		}
 	}
 	@Test
-	public void getSharedTasksTest(){
+	void getSharedTasksTest(){
 		TaskService s = new TaskService(mockRepo);
 		List<Task> mockList = Arrays.asList(mockTask);
 
@@ -227,7 +227,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		}
 	}
 	@Test
-	public void deleteTaskTest(){
+	void deleteTaskTest(){
 		TaskService s = new TaskService(mockRepo);
 		class Testcase {
 			final String mockID;
@@ -256,7 +256,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		}
 	}
 	@Test
-	public void getTasksScheduledForOneWeekTest(){
+	void getTasksScheduledForOneWeekTest(){
 		TaskService s = new TaskService(mockRepo);
 		List<Task> mockList = Arrays.asList(mockTask);
 		class Testcase {
