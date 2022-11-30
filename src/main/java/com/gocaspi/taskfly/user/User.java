@@ -28,6 +28,11 @@ public class User {
      * @param userId userId for the user
      */
     public User(String firstName, String lastName, String email, String password, String team, String listId, String userId) {
+    private boolean reseted;
+
+
+
+    public User(String firstName, String lastName, String email, String password, String team, String listId, String userId, Boolean reseted) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -35,6 +40,14 @@ public class User {
         this.password = password;
         this.listId = listId;
         this.team = team;
+        this.reseted = reseted;
+    }
+
+    public boolean getReseted(){
+        return this.reseted;
+    }
+    public void setReseted(Boolean b){
+        this.reseted = b;
     }
     /**
      * Empty Constractor Task for testing

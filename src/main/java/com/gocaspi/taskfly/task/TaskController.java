@@ -15,6 +15,7 @@ import java.util.*;
  * Class for TaskController
  */
 @RestController
+@CrossOrigin("*")
 @ResponseBody
 @RequestMapping("/task")
 public class TaskController {

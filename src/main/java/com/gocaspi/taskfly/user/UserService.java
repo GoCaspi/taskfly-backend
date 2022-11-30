@@ -1,10 +1,15 @@
 package com.gocaspi.taskfly.user;
 
+
+
+        import com.google.common.hash.Hashing;
         import com.google.gson.Gson;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.http.HttpHeaders;
         import org.springframework.http.HttpStatus;
         import org.springframework.web.client.HttpClientErrorException;
+
+        import java.nio.charset.StandardCharsets;
         import java.util.ArrayList;
         import java.util.List;
         import java.util.Objects;
@@ -25,9 +30,9 @@ public class UserService {
      */
     public UserService(UserRepository repo){
 
-        this.repo = repo ;
-        this.exceptionnotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
-        this.exceptionbadRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", new HttpHeaders(), "".getBytes(), null);
+        this.repo = repo;
+        this.exceptionnotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(), null);
+        this.exceptionbadRequest = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, "bad payload", new HttpHeaders(), "".getBytes(), null);
     }
     /**
      * returns the HttpClientErrorException
@@ -71,9 +76,10 @@ public class UserService {
             throw exceptionnotFound;
         }
         user.ifPresent(t -> {
-            if (update.getEmail() != null) {
-                t.setEmail(update.getEmail());
-            }
+           if (update.getEmail() != null) {
+                   t.setEmail(hashStr(update.getEmail()));
+           }
+
             if (update.getTeam() != null) {
                 t.setTeam(update.getTeam());
             }
@@ -100,9 +106,10 @@ public class UserService {
      * @throws RuntimeException Exception if not all fields are filled
      */
     public void postService(User t) throws HttpClientErrorException {
-        if(!validateTaskFields(new Gson().toJson(t))){
+        if (!validateTaskFields(new Gson().toJson(t))) {
             throw exceptionbadRequest;
         }
+        t.setEmail(hashStr(t.getEmail()));
         getRepo().insert(t);
     }
     /**
@@ -112,7 +119,7 @@ public class UserService {
      */
     public boolean validateTaskFields(String jsonPayload){
         var user = jsonToUser(jsonPayload);
-        return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getListId(), null) && !Objects.equals(user.getEmail(), null)&& !Objects.equals(user.getTeam(), null);
+        return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getListId(), null) && !Objects.equals(user.getEmail(), null) && !Objects.equals(user.getTeam(), null);
     }
     /**
      * returns a user from a json String
@@ -129,7 +136,7 @@ public class UserService {
     public User getServicebyid(String id)throws HttpClientErrorException.NotFound{
         if(!getRepo().existsById(id)){ throw exceptionnotFound;}
         var user = getRepo().findById(id);
-        if (user.isEmpty()){
+        if (user.isEmpty()) {
             throw exceptionnotFound;
         }
         return user.get();
@@ -143,10 +150,19 @@ public class UserService {
     public List<User> getServiceAllUser(){
         List<User> users = getRepo().findAll();
         List<User> usersToId = new ArrayList<>();
-        for (User t : users){
-                usersToId.add(t);
+        for (User t : users) {
+            usersToId.add(t);
         }
         return usersToId;
+    }
+
+
+    public String hashStr(String str)  {
+
+        return Hashing.sha256()
+                .hashString(str, StandardCharsets.UTF_8)
+                .toString();
+
     }
 }
 

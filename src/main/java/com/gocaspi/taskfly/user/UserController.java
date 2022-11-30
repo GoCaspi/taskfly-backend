@@ -1,4 +1,5 @@
 package com.gocaspi.taskfly.user;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ public class UserController {
      */
     public UserController(UserRepository repository) {
         super();
+
         this.repository = repository;
         this.service = new UserService(repository);
     }
@@ -50,6 +52,7 @@ public class UserController {
     public User jsonToUser(String jsonPayload) {
         return new Gson().fromJson(jsonPayload, User.class);
     }
+
 
     /**
      * calls the service to fetch the user of the provided id. If the service does not throw an exception (no user to the provided id was found)
