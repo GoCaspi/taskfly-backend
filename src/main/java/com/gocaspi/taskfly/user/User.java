@@ -27,7 +27,7 @@ public class User {
      * @param listId listId for the user
      * @param userId userId for the user
      */
-    public User(String firstName, String lastName, String email, String password, String team, String listId, String userId) {
+
     private boolean reseted;
 
 

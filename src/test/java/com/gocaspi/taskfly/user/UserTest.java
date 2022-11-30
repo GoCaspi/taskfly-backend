@@ -15,7 +15,7 @@ class UserTest {
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
 
-    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword);
+    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword,false);
     class Testcase_setString{
         final String newText;
 

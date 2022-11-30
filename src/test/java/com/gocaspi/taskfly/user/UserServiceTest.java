@@ -22,7 +22,7 @@ class UserServiceTest {
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
 
-    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword);
+    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword,false);
 
     @Test
     void getService_AllUser() {
@@ -59,7 +59,7 @@ class UserServiceTest {
     @Test
     void updateUser() {
         UserService service = new UserService(mockRepo);
-        User emptyTeam = new User(null, null, null, null, null, null, null);
+        User emptyTeam = new User(null, null, null, null, null, null, null,false);
 
         class Testcase {
             final String mockId;
@@ -171,9 +171,9 @@ class UserServiceTest {
 
         Testcase[] testcases = new Testcase[]{
                 new Testcase(mockUser, true),
-                new Testcase(new User(null, null, null, null, null, null, null), false),
-                new Testcase(new User("test", "test", "test", "test", "test", "test", "test"), true),
-                new Testcase(new User("", "", "", "", "", "", ""), true)
+                new Testcase(new User(null, null, null, null, null, null, null,false), false),
+                new Testcase(new User("test", "test", "test", "test", "test", "test", "test",false), true),
+                new Testcase(new User("", "", "", "", "", "", "",false), true)
         };
 
         for (Testcase tc : testcases) {
