@@ -67,7 +67,18 @@ public class TaskCollectionRepositoryImplTest {
 
     @Test
     void findByOwnerIDTest(){
+        TaskCollectionRepositoryImpl taskCollectionRepositoryImpl = new TaskCollectionRepositoryImpl(mongoTemplate);
+        mongoTemplate.save(mockTC, "taskCollection");
+        ObjectId fakeTaskCollectionID = new ObjectId();
+        ObjectId fakeUserID = new ObjectId();
+        Task validTask = new Task(mockUserID,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
+        mongoTemplate.save(validTask, "task");
+        Task invalidTask = new Task(mockUserID,fakeTaskCollectionID.toHexString(),mockTeam,mockTime,mockObjectId,mockbody);
+        mongoTemplate.save(invalidTask, "task");
+        TaskCollection altCollection = new TaskCollection(fakeTaskCollectionID.toHexString(), mockTCName, mockTCTeamID, fakeUserID.toHexString(), mockTeamMember);
+        mongoTemplate.save(altCollection, "taskCollection");
+        var taskCollectionList = taskCollectionRepositoryImpl.findByOwnerID(mockUserID);
+        assertEquals(1, taskCollectionList.size());
 
-        Task validTask1 = new Task(mockUserID,mockListId,mockTeam,mockTime,mockObjectId,mockbody)
     }
 }

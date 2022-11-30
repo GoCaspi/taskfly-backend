@@ -540,14 +540,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{host}}/task/userId/2",
+					"raw": "{{host}}/task/userId/63773343094b4d6d2ec651f9",
 					"host": [
 						"{{host}}"
 					],
 					"path": [
 						"task",
 						"userId",
-						"2"
+						"63773343094b4d6d2ec651f9"
 					]
 				}
 			},
@@ -566,7 +566,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userId\":\"63773343094b4d6d2ec651f9\",\n    \"listId\":\"6377783effb2ae2e4b610f5b\",\n    \"team\":\"blue\",\n    \"deadline\":\"11-11-2022\",\n    \"body\":{\n        \"topic\":\"new topic\",\n        \"priority\":true,\n        \"description\":\"new description text\"\n    }\n}",
+					"raw": "{\n    \"userId\":\"63773343094b4d6d2ec651f9\",\n    \"listId\":\"123\",\n    \"team\":\"blue\",\n    \"deadline\":\"2022-11-23T03:00:00Z\",\n    \"body\":{\n        \"topic\":\"new topic\",\n        \"high_priority\":true,\n        \"description\":\"new description text\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -681,7 +681,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"TestCollection3\",\n    \"ownerID\": \"12346544\"\n}",
+					"raw": "{\n    \"name\": \"TestCollection1\",\n    \"ownerID\": \"63773343094b4d6d2ec651f9\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1269,7 +1269,18 @@
 			"name": "GetPrivateTasksByUserID",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "{{host}}/task/private/63773343094b4d6d2ec651f9",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"task",
+						"private",
+						"63773343094b4d6d2ec651f9"
+					]
+				}
 			},
 			"response": []
 		},
@@ -1277,7 +1288,19 @@
 			"name": "GetTasksScheduledForOneWeekByUserID",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "{{host}}/task/scheduled/week/63773343094b4d6d2ec651f9",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"task",
+						"scheduled",
+						"week",
+						"63773343094b4d6d2ec651f9"
+					]
+				}
 			},
 			"response": []
 		},
