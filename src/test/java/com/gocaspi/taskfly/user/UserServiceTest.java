@@ -17,13 +17,14 @@ class UserServiceTest {
     UserRepository mockRepo = mock(UserRepository.class);
     HttpClientErrorException er = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "no User are assigned to the provided userId", null, null, null);
     String mockFistName = "topic1";
+    String mockTeam = "team1";
     String mockLastName = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     String mocksrole = "ADMIN";
     ObjectId mockObject_Id = new ObjectId();
     User.Userbody mockbody = new User.Userbody("mockTeam", "mockListId", "mockUserId");
-    User mockUser = new User(mocksrole, mockFistName, mockLastName, mockEmail, mockPassword, mockbody);
+    User mockUser = new User(mocksrole, mockFistName, mockLastName, mockEmail, mockPassword, mockbody,true);
     UserService ts = new UserService(mockRepo);
 
     @Test
@@ -73,8 +74,8 @@ class UserServiceTest {
 
         Testcase[] testcases = new Testcase[]{
                 new Testcase(mockUser, true),
-                new Testcase(new User(null, null, null, null, null, null), false),
-                new Testcase(new User("test", "test", "test", "test", "test", mockbody), true)
+                new Testcase(new User(null, null, null, null, null, null,true), false),
+                new Testcase(new User("test", "test", "test", "test", "test", mockbody,false), true)
         };
 
         for (Testcase tc : testcases) {
@@ -87,7 +88,7 @@ class UserServiceTest {
     void updateUserService() {
         UserService s = new UserService(mockRepo);
         var emptyBody = new User.Userbody("", "", "");
-        var emptyUser = new User("", "", "", "", "", emptyBody);
+        var emptyUser = new User("", "", "", "", "", emptyBody,true);
         class Testcase {
             final User mockUser;
             final String mockID;

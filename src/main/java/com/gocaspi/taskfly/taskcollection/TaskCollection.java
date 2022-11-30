@@ -3,6 +3,8 @@ package com.gocaspi.taskfly.taskcollection;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
+
 public class TaskCollection {
 
 
@@ -13,12 +15,14 @@ public class TaskCollection {
     private String teamID;
     @NotBlank(message = "{ownerid.notblank}")
     private String ownerID;
+    private List<String> members;
 
-    public TaskCollection(String id, String name, String teamID, String ownerID) {
+    public TaskCollection(String id, String name, String teamID, String ownerID, List<String> members) {
         this.id = id;
         this.name = name;
         this.teamID = teamID;
         this.ownerID = ownerID;
+        this.members = members;
     }
 
     public TaskCollection() {
@@ -54,5 +58,13 @@ public class TaskCollection {
 
     public void setOwnerID(String ownerID) {
         this.ownerID = ownerID;
+    }
+
+    public List<String> getMembers() {
+        return this.members;
+    }
+
+    public void setMembers(List<String> members){
+        this.members = members;
     }
 }

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 
-class UserControllerTest {
+ class UserControllerTest {
     UserRepository mockRepo = mock(UserRepository.class);
     UserService mockService = mock(UserService.class);
     String mockUserIds = "123";
@@ -31,7 +31,7 @@ class UserControllerTest {
     String mocksrole ="ADMIN";
     ObjectId mockObject_Id = new ObjectId();
     User.Userbody mockbody =new User.Userbody("mockTeam","mockListId","mockUserId");
-    User mockUser = new User(mockFistName, mockLastName, mockEmail, mockPassword,mocksrole,mockbody);
+    User mockUser = new User(mockFistName, mockLastName, mockEmail, mockPassword,mocksrole,mockbody,false);
     PasswordEncoder mockencoder = mock(PasswordEncoder.class);
     User[] mockUseArr = new User[]{mockUser,mockUser};
     @Test
@@ -80,7 +80,7 @@ class UserControllerTest {
     @Test
      void updateUser() {
         UserController t = new UserController(mockService);
-        User mockUpdate = new User( mockEmail + "updated", mockPassword + "updated", mockFistName, mockLastName + "updated",mocksrole+"update",mockbody);
+        User mockUpdate = new User( mockEmail + "updated", mockPassword + "updated", mockFistName, mockLastName + "updated",mocksrole+"update",mockbody,true);
 
         class Testcase {
             final String mockId;
@@ -261,7 +261,7 @@ class UserControllerTest {
                 ResponseEntity<List<User>> actual1 = t.handleGetAllUsers();
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
-                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
+                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, "bad payload", null, null, null);
                 assertEquals(e.getClass(), expectedException.getClass());
             }
         }

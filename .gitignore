@@ -34,4 +34,4 @@ build/
 
 /scripts/swagdeploy/node_modules
 /scripts/swagdeploy/collection.yml
-/scripts/swagdeploy/*.postman_collection.json
+/scripts/swagdeploy/*.postman_collection.jsontaskcollection/

@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -24,21 +26,20 @@ class TaskCollectionServiceTest {
     final private String mockTCName = "TaskCollection1";
     final private String mockTCTeamID = new ObjectId().toHexString();
     final private String mockTCOwnerID = new ObjectId().toHexString();
-    final private TaskCollection mockTC = new TaskCollection(mockTCID, mockTCName, mockTCTeamID, mockTCOwnerID);
+    final private List<String> mockTeamMember = Arrays.asList("123", "456", "789");
+    final private TaskCollection mockTC = new TaskCollection(mockTCID, mockTCName, mockTCTeamID, mockTCOwnerID, mockTeamMember);
     final private String mockUserIds = "1";
     final private String mockListId = "1";
-    final private String mockTopic = "topic1";
     final private String mockTeam = "team1";
-    final private String mockPrio = "prio1";
-    final private String mockDesc = "desc1";
-    final private String mockDeadline = "11-11-2022";
+    LocalDateTime mockTime = LocalDateTime.now();
+
     final private ObjectId mockObjectId = new ObjectId();
-    final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic","mockPrio","mockDescription");
+    final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic",true,"mockDescription");
 
     @Test
     void createTaskCollectionTest(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
-        TaskCollection taskCollection = new TaskCollection(this.mockTCID, this.mockTCName, this.mockTCTeamID, this.mockTCOwnerID);
+        TaskCollection taskCollection = new TaskCollection(this.mockTCID, this.mockTCName, this.mockTCTeamID, this.mockTCOwnerID, mockTeamMember);
 
         class Testcase {
             final TaskCollection mockTaskCollection;
@@ -59,7 +60,7 @@ class TaskCollectionServiceTest {
     @Test
     void getTaskCollectionByIDTest(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
-        Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
         TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
         class Testcase {
@@ -90,7 +91,7 @@ class TaskCollectionServiceTest {
     @Test
     void getTaskCollectionByOwnerIDTest(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
-        Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
         TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
         List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
@@ -124,7 +125,7 @@ class TaskCollectionServiceTest {
     @Test
     void getTaskCollectionByTeamID(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
-        Task task = new Task(mockUserIds, mockListId, mockTeam, mockDeadline, mockObjectId, mockBody);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
         TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
         List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
@@ -184,6 +185,7 @@ class TaskCollectionServiceTest {
 
         }
     }
+
     @Test
     void updateTaskCollection(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
@@ -203,7 +205,7 @@ class TaskCollectionServiceTest {
         Testcase[] testcases = new Testcase[]{
                 new Testcase(mockTC, mockTCID, true),
                 new Testcase(mockTC, mockTCID, false),
-                new Testcase(new TaskCollection(mockTCID, "", "", ""), mockTCID, true)
+                new Testcase(new TaskCollection(mockTCID, "", "", "", Arrays.asList()), mockTCID, true)
         };
         for (Testcase tc : testcases) {
             try {

@@ -1,29 +1,37 @@
 package com.gocaspi.taskfly.task;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.format.annotation.DateTimeFormat;
 
-
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 public class Task {
+    @NotBlank
     private String userId;
+    @NotBlank
     private String listId;
     private String team;
-    private String deadline;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
+    private LocalDateTime deadline;
+    @Id
     private ObjectId id;
-    private String taskId;
     private Taskbody body;
    public static class Taskbody {
         private String topic;
-        private String priority;
+        private Boolean highPriority;
         private String description;
 
-        public Taskbody(String topic, String priority,String description){
+        public Taskbody(String topic, Boolean highPriority,String description){
             this.topic = topic;
-            this.priority = priority;
+            this.highPriority = highPriority;
             this.description = description;
         }
 
-        public void setPriority(String str){
-            this.priority = str;
+        public void setHighPriority(Boolean str){
+            this.highPriority = str;
         }
         public void setDescription(String str){
             this.description = str;
@@ -38,22 +46,27 @@ public class Task {
         public String getDescription(){
             return this.description;
         }
-        public String getPriority(){
-            return this.priority;
+        public Boolean getHighPriority(){
+            return this.highPriority;
         }
+
+
 
     }
 
 
 
-    public Task(String userId, String listId, String team,  String deadline, ObjectId id, Taskbody body){
+    public Task(String userId, String listId, String team, LocalDateTime deadline, ObjectId id, Taskbody body){
         this.userId = userId;
         this.listId = listId;
         this.team = team;
         this.deadline = deadline;
         this.id = id;
-        this.taskId = id.toString();
         this.body = body;
+    }
+
+    public Task(){
+
     }
 
 
@@ -63,36 +76,6 @@ public class Task {
     public Taskbody getBody(){
         return this.body;
     }
-
-
-    /**
-     * returns the id string of the ObjectId of the task
-     *
-     * @return String, id string of the ObjectId _id
-     */
-    public String getTaskId(){
-        return this.taskId;
-    }
-
-    /**
-     * sets the description of the task to a provided string (text)
-     *
-     * @param text, new description of the task
-     */
-    public void setTaskId(String text){
-        this.taskId = text;
-    }
-
-    /**
-     * returns the id string of the ObjectId of the task
-     *
-     * @return String, id string of the ObjectId _id
-     */
-    public String getTaskIdString(){
-        return this.id.toString();
-    }
-
-
     /**
      * sets the userIDs array of a task to the provided String-array (newUserIds)
      *
@@ -109,6 +92,13 @@ public class Task {
      */
     public String getUserId(){ return this.userId; }
 
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
 
     /**
      * sets the team of a task to a new team (team)
@@ -131,16 +121,16 @@ public class Task {
      *
      * @param deadline, new value of task-field: deadline
      */
-    public void setDeadline(String deadline){
+    public void setDeadline(LocalDateTime deadline){
         this.deadline = deadline;
     }
 
     /**
      * returns the deadline of the task
      *
-     * @return String, deadline of the task
+     * @return LocalDateTime, deadline of the task
      */
-    public String getDeadline(){ return this.deadline; }
+    public LocalDateTime getDeadline(){ return this.deadline; }
 
 
     /**

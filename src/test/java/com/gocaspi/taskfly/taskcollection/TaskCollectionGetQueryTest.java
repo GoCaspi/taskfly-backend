@@ -5,6 +5,7 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,12 +17,11 @@ class TaskCollectionGetQueryTest {
     private final String mockUserID = "1";
     private final String mockListID = "1";
     final private ObjectId mockObjectID = new ObjectId();
-
-    private final String mockDeadline = "11-11-2022";
-    private final Task.Taskbody mockBody = new Task.Taskbody("mockTopic", "mockPrio", "mockDescription");
+    LocalDateTime mockTime = LocalDateTime.now();
+    private final Task.Taskbody mockBody = new Task.Taskbody("mockTopic", true, "mockDescription");
     @Test
     void TestTaskCollectionGetQueryConstructor(){
-        Task task1 = new Task(mockUserID, mockListID, mockTeamID, mockDeadline, mockObjectID, mockBody);
+        Task task1 = new Task(mockUserID, mockListID, mockTeamID, mockTime, mockObjectID, mockBody);
         List<Task> taskList = new ArrayList<>();
         taskList.add(0, task1);
         TaskCollectionGetQuery taskCollectionGetQuery = new TaskCollectionGetQuery(mockName, mockTeamID, mockID, mockOwnerID, taskList);
@@ -33,7 +33,7 @@ class TaskCollectionGetQueryTest {
     }
     @Test
     void TestTaskCollectionGetQuerySetter(){
-        Task task1 = new Task(mockUserID, mockListID, mockTeamID, mockDeadline, mockObjectID, mockBody);
+        Task task1 = new Task(mockUserID, mockListID, mockTeamID, mockTime, mockObjectID, mockBody);
         List<Task> taskList = new ArrayList<>();
         taskList.add(0, task1);
         TaskCollectionGetQuery taskCollectionGetQuery = new TaskCollectionGetQuery(mockName, mockTeamID, mockID, mockOwnerID, taskList);
