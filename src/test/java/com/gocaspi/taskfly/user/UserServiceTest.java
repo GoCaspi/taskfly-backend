@@ -1,9 +1,5 @@
 package com.gocaspi.taskfly.user;
 
-
-
-import com.gocaspi.taskfly.taskcollection.TaskCollectionService;
-import com.gocaspi.taskfly.teammanagement.TeamManagementService;
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -13,7 +9,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 

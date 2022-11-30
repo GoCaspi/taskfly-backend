@@ -1,11 +1,11 @@
 package com.gocaspi.taskfly.user;
 
 
-
-import static org.junit.Assert.assertEquals;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
- class UserTest {
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class UserTest {
     String mockFistName = "topic1";
     String mockLastName = "prio1";
     String mockEmail = "desc1";
@@ -218,7 +218,7 @@ import org.junit.jupiter.api.Test;
          User.Userbody mockbody =  new User.Userbody("mockTeam","mockListId","mockUserId");
          t.setBody(mockbody);
          User.Userbody actual = t.getBody();
-         Assertions.assertEquals(actual,mockbody);
+         assertEquals(actual,mockbody);
      }
 
 }

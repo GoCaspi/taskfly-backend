@@ -7,138 +7,30 @@
 	},
 	"item": [
 		{
-			"name": "CreateUser",
+			"name": "UserRoles",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Create User 1\", () => {",
-							"    pm.response.to.have.status(201)",
+							"pm.test(\"Login Status check\", () => {",
+							"    pm.response.to.have.status(202)",
 							"})",
 							"",
-							"var jsonBody = pm.response.json()",
-							"",
-							"pm.environment.set(\"userID1\", jsonBody.id)",
-							"",
-							"var user2 = {",
-							"    \"firstName\": pm.environment.get(\"userfirstName1\"),",
-							"    \"lastName\": pm.environment.get(\"userlastName1\"),",
-							"    \"email\": pm.environment.get(\"userEmail1\"),",
-							"    \"password\": pm.environment.get(\"userpassword1\"),",
-							"    \"team\": pm.environment.get(\"userTeam1\"),",
-							"    \"listId\": pm.environment.get(\"userListId1\")",
-							"}",
-							"",
-							"var user3 = {",
-							"    \"username\": pm.environment.get(\"userUsername3\"),",
-							"    \"password\": pm.environment.get(\"userPassword3\"),",
-							"    \"email\": pm.environment.get(\"userEmail3\"),",
-							"    \"firstname\": pm.environment.get(\"userFirstname3\"),",
-							"    \"lastname\": pm.environment.get(\"userLastname3\")",
-							"}",
-							"",
-							"var errorInsufficentData = {",
-							"    \"username\": \"{{userUsername1}}\",",
-							"    \"password\": \"{{userPassword1}}\",",
-							"    \"firstname\": \"{{userFirstname1}}\",",
-							"    \"lastname\": \"{{userLastname1}}\",",
-							"}",
-							"",
-							"var errorInvalidPayload = \"{'username': 'Babo123', password:}\"",
-							"",
 							"pm.sendRequest({",
-							"    url: pm.environment.get(\"host\") + \"/user\",",
-							"    method: \"POST\",",
-							"    body: JSON.stringify(user2)",
-							"}, (err, res) => {",
-							"    var jsonBody = res.json()",
-							"    pm.environment.set(\"userID2\", jsonBody.id)",
-							"    pm.test(\"Create User 2\", () => {",
-							"        pm.expect(res).to.have.status(201)",
-							"    })",
+							"    url: pm.environment.get(\"host\") + \"/user/getUserRoles\",",
+							"    method: \"GET\",",
 							"    ",
-							"    pm.sendRequest({",
-							"        url: pm.environment.get(\"host\") + \"/user\",",
-							"        method: \"POST\",",
-							"        body: JSON.stringify(user2)",
-							"    }, (err, res) => {",
-							"        pm.test(\"User already exists\", () => {",
-							"            pm.expect(res).to.have.status(500)",
+							"}, (err, res) =>{",
+							"    pm.test(\"User is not Logged\", () => {",
+							"        pm.expect(res).to.have.status(404)",
 							"    })",
-							"        ",
-							"})",
-							"    ",
-							"})",
-							"",
-							"pm.sendRequest({",
-							"    url: pm.environment.get(\"host\") + \"/user\",",
-							"    method: \"POST\",",
-							"    body: JSON.stringify(user3)",
-							"}, (err, res) => {",
-							"    var jsonBody = res.json()",
-							"    pm.environment.set(\"userID3\", jsonBody.id)",
-							"    pm.test(\"Create User 3\", () => {",
-							"        pm.expect(res).to.have.status(201)",
-							"    })",
-							"})",
-							"",
-							"pm.sendRequest({",
-							"    url: pm.environment.get(\"host\") + \"/user\",",
-							"    method: \"POST\",",
-							"    body: JSON.stringify(errorInsufficentData)",
-							"}, (err, res) => {",
-							"    pm.test(\"Insufficent Data\", () => {",
-							"        pm.expect(res).to.have.status(500)",
-							"    })",
-							"})",
-							"",
-							"pm.sendRequest({",
-							"    url: pm.environment.get(\"host\") + \"/user\",",
-							"    method: \"POST\",",
-							"    body: errorInvalidPayload",
-							"}, (err, res) => {",
-							"    pm.test(\"Invalid Payload\", () => {",
-							"        pm.expect(res).to.have.status(400)",
-							"    })",
-							"})",
-							"",
-							"",
-							"",
-							""
+							"})"
 						],
 						"type": "text/javascript"
 					}
 				}
 			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"firstName\": \"Sahand\",\n    \"lastName\": \"Armin\",\n    \"email\":\"s.armin@gmail.com\",\n    \"password\":\"password\",\n    \"team\":\"Okapi\",\n    \"listId\":\"1\"\n\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{host}}:8080/user/create",
-					"host": [
-						"{{host}}"
-					],
-					"port": "8080",
-					"path": [
-						"user",
-						"create"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "UserRoles",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -148,7 +40,7 @@
 					"basic": [
 						{
 							"key": "username",
-							"value": "maxmaxi@gmail.com",
+							"value": "max-maxi@gmail.com",
 							"type": "string"
 						},
 						{
@@ -170,7 +62,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/user/getUserRoles?email=maxmaxi@gmail.com",
+					"raw": "http://localhost:8080/user/getUserRoles?email=max-maxi@gmail.com",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -183,137 +75,100 @@
 					"query": [
 						{
 							"key": "email",
-							"value": "maxmaxi@gmail.com"
+							"value": "max-maxi@gmail.com"
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "UserInfo",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "username",
-							"value": "maxmaxi@gmail.com",
-							"type": "string"
-						},
-						{
-							"key": "password",
-							"value": "0",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/user/userInfo?email=maxmaxi@gmail.com",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"user",
-						"userInfo"
-					],
-					"query": [
-						{
-							"key": "email",
-							"value": "maxmaxi@gmail.com"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GetallUser",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status check\", () => {",
-							"    pm.response.to.have.status(200)",
-							"})",
-							"",
-							"pm.sendRequest({",
-							"    url: pm.environment.get(\"host\") + \"/user\",",
-							"    method: \"GET\",",
-							"   ",
-							"}, (err, res) => {",
-							"    pm.test(\"Check Unauthorized User\", () => {",
-							"        pm.expect(res).to.have.status(401)",
-							"    })",
-							"})"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{host}}/user",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"user"
 					]
 				}
 			},
 			"response": [
 				{
-					"name": "Getalluser",
+					"name": "UserRoles-Invalid",
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8080/user",
+							"raw": "http://localhost:8080/user/getUserRoles?email=maxmaxi@gmail.com",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"user"
+								"user",
+								"getUserRoles"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "maxmaxi@gmail.com"
+								}
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "plain",
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
 					"header": [
 						{
-							"key": "Content-Type",
-							"value": "text/plain;charset=UTF-8"
+							"key": "Vary",
+							"value": "Origin"
 						},
 						{
-							"key": "Content-Length",
-							"value": "309"
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "WWW-Authenticate",
+							"value": "Basic realm=\"Realm\""
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
 						},
 						{
 							"key": "Date",
-							"value": "Fri, 28 Oct 2022 06:23:10 GMT"
+							"value": "Tue, 29 Nov 2022 08:46:22 GMT"
 						},
 						{
 							"key": "Keep-Alive",
@@ -325,24 +180,149 @@
 						}
 					],
 					"cookie": [],
-					"body": "[{\"id\":\"635b74f37a4fc27d889f187c\",\"firstName\":\"Müller\",\"lastName\":\"Müller\",\"email\":\"Müller@gmail.com\",\"password\":\"password\",\"team\":\"Okapi\",\"listId\":\"1\"},{\"id\":\"635b75067a4fc27d889f187d\",\"firstName\":\"Patrik\",\"lastName\":\"Müller\",\"email\":\"Patrik@gmail.com\",\"password\":\"password\",\"team\":\"Okapi\",\"listId\":\"1\"}]"
+					"body": "{\n    \"timestamp\": \"2022-11-29T08:46:22.991+00:00\",\n    \"status\": 401,\n    \"error\": \"Unauthorized\",\n    \"path\": \"/user/getUserRoles\"\n}"
+				},
+				{
+					"name": "UserRoles-Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/user/getUserRoles?email=max-maxi@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"getUserRoles"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "max-maxi@gmail.com"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "JSESSIONID=4B5A9904551F971FFF5EC136491E0190; Path=/; HttpOnly"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain;charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "10"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 29 Nov 2022 09:02:34 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "ROLE_WRITE"
 				}
 			]
 		},
 		{
 			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Login Status check\", () => {",
+							"    pm.response.to.have.status(202)",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/user/login\",",
+							"    method: \"POST\",",
+							"    ",
+							"}, (err, res) =>{",
+							"    pm.test(\"User is not Logged\", () => {",
+							"        pm.expect(res).to.have.status(404)",
+							"    })",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"auth": {
 					"type": "basic",
 					"basic": [
 						{
-							"key": "username",
-							"value": "Testee@gmail.com",
+							"key": "password",
+							"value": "0123",
 							"type": "string"
 						},
 						{
-							"key": "password",
-							"value": "0123",
+							"key": "username",
+							"value": "max-maxi@gmail.com",
 							"type": "string"
 						}
 					]
@@ -561,6 +541,501 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"timestamp\": \"2022-11-28T12:04:05.462+00:00\",\n    \"status\": 401,\n    \"error\": \"Unauthorized\",\n    \"path\": \"/user/login\"\n}"
+				}
+			]
+		},
+		{
+			"name": "UserInfo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Login Status check\", () => {",
+							"    pm.response.to.have.status(202)",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/user/userInfo\",",
+							"    method: \"GET\",",
+							"    ",
+							"}, (err, res) =>{",
+							"    pm.test(\"User is not Logged\", () => {",
+							"        pm.expect(res).to.have.status(404)",
+							"    })",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "0123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "Test@gmail.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/userInfo?email=Test@gmail.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"userInfo"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "Test@gmail.com"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "UserInfo-Invalid",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/user/userInfo?email=maxmaxi@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"userInfo"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "maxmaxi@gmail.com"
+								}
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "WWW-Authenticate",
+							"value": "Basic realm=\"Realm\""
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 29 Nov 2022 08:44:08 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"timestamp\": \"2022-11-29T08:44:08.877+00:00\",\n    \"status\": 401,\n    \"error\": \"Unauthorized\",\n    \"path\": \"/user/userInfo\"\n}"
+				},
+				{
+					"name": "UserInfo-Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/user/userInfo?email=max-maxi@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"userInfo"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "max-maxi@gmail.com"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "JSESSIONID=8520AA8C7393FB137504405E46F99002; Path=/; HttpOnly"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 29 Nov 2022 08:45:36 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"firstName\": \"maxi\",\n    \"lastName\": \"maxi\",\n    \"email\": \"max-maxi@gmail.com\",\n    \"password\": \"$2a$10$VRRlwlKemv54JJbKxvNLAOYXzPlxllum/7sohWRyE9SAkusJIe2/C\",\n    \"team\": \"Okapi\",\n    \"listId\": \"123\",\n    \"id\": \"6380f2feffede01970ff2e02\",\n    \"userId\": \"123\",\n    \"srole\": \"ROLE_WRITE\",\n    \"enabled\": false,\n    \"username\": null,\n    \"authorities\": null,\n    \"accountNonExpired\": false,\n    \"accountNonLocked\": false,\n    \"credentialsNonExpired\": false\n}"
+				}
+			]
+		},
+		{
+			"name": "CreateUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create User 1\", () => {",
+							"    pm.response.to.have.status(201)",
+							"})",
+							"",
+							"var jsonBody = pm.response.json()",
+							"",
+							"pm.environment.set(\"userID1\", jsonBody.id)",
+							"",
+							"var user2 = {",
+							"    \"firstName\": pm.environment.get(\"userfirstName1\"),",
+							"    \"lastName\": pm.environment.get(\"userlastName1\"),",
+							"    \"email\": pm.environment.get(\"userEmail1\"),",
+							"    \"password\": pm.environment.get(\"userpassword1\"),",
+							"    \"team\": pm.environment.get(\"userTeam1\"),",
+							"    \"listId\": pm.environment.get(\"userListId1\")",
+							"}",
+							"",
+							"var user3 = {",
+							"    \"username\": pm.environment.get(\"userUsername3\"),",
+							"    \"password\": pm.environment.get(\"userPassword3\"),",
+							"    \"email\": pm.environment.get(\"userEmail3\"),",
+							"    \"firstname\": pm.environment.get(\"userFirstname3\"),",
+							"    \"lastname\": pm.environment.get(\"userLastname3\")",
+							"}",
+							"",
+							"var errorInsufficentData = {",
+							"    \"username\": \"{{userUsername1}}\",",
+							"    \"password\": \"{{userPassword1}}\",",
+							"    \"firstname\": \"{{userFirstname1}}\",",
+							"    \"lastname\": \"{{userLastname1}}\",",
+							"}",
+							"",
+							"var errorInvalidPayload = \"{'username': 'Babo123', password:}\"",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/user\",",
+							"    method: \"POST\",",
+							"    body: JSON.stringify(user2)",
+							"}, (err, res) => {",
+							"    var jsonBody = res.json()",
+							"    pm.environment.set(\"userID2\", jsonBody.id)",
+							"    pm.test(\"Create User 2\", () => {",
+							"        pm.expect(res).to.have.status(201)",
+							"    })",
+							"    ",
+							"    pm.sendRequest({",
+							"        url: pm.environment.get(\"host\") + \"/user\",",
+							"        method: \"POST\",",
+							"        body: JSON.stringify(user2)",
+							"    }, (err, res) => {",
+							"        pm.test(\"User already exists\", () => {",
+							"            pm.expect(res).to.have.status(500)",
+							"    })",
+							"        ",
+							"})",
+							"    ",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/user\",",
+							"    method: \"POST\",",
+							"    body: JSON.stringify(user3)",
+							"}, (err, res) => {",
+							"    var jsonBody = res.json()",
+							"    pm.environment.set(\"userID3\", jsonBody.id)",
+							"    pm.test(\"Create User 3\", () => {",
+							"        pm.expect(res).to.have.status(201)",
+							"    })",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/user\",",
+							"    method: \"POST\",",
+							"    body: JSON.stringify(errorInsufficentData)",
+							"}, (err, res) => {",
+							"    pm.test(\"Insufficent Data\", () => {",
+							"        pm.expect(res).to.have.status(500)",
+							"    })",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/user\",",
+							"    method: \"POST\",",
+							"    body: errorInvalidPayload",
+							"}, (err, res) => {",
+							"    pm.test(\"Invalid Payload\", () => {",
+							"        pm.expect(res).to.have.status(400)",
+							"    })",
+							"})",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"Sahand\",\n    \"lastName\": \"Armin\",\n    \"email\":\"s.armin@gmail.com\",\n    \"password\":\"password\",\n    \"team\":\"Okapi\",\n    \"listId\":\"1\",\n    \"srole\":\"ROLE_WRITE\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/user/create",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"user",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetallUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status check\", () => {",
+							"    pm.response.to.have.status(200)",
+							"})",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.environment.get(\"host\") + \"/user\",",
+							"    method: \"GET\",",
+							"   ",
+							"}, (err, res) => {",
+							"    pm.test(\"Check Unauthorized User\", () => {",
+							"        pm.expect(res).to.have.status(401)",
+							"    })",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/user",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Getalluser",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "text/plain;charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "309"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 28 Oct 2022 06:23:10 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[{\"id\":\"635b74f37a4fc27d889f187c\",\"firstName\":\"Müller\",\"lastName\":\"Müller\",\"email\":\"Müller@gmail.com\",\"password\":\"password\",\"team\":\"Okapi\",\"listId\":\"1\"},{\"id\":\"635b75067a4fc27d889f187d\",\"firstName\":\"Patrik\",\"lastName\":\"Müller\",\"email\":\"Patrik@gmail.com\",\"password\":\"password\",\"team\":\"Okapi\",\"listId\":\"1\"}]"
 				}
 			]
 		},
