@@ -5,10 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.security.auth.Subject;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -103,14 +106,15 @@ class UserAuthenticationProviderTest {
            }
         }
     }
-   /* @Test
+    @Test
     void getUserRoles(){
-
         SimpleGrantedAuthority t =new SimpleGrantedAuthority("ROLE_WRITE");
+
         UserAuthenticationProvider Test = new UserAuthenticationProvider(mockRepo, mockEncoder);
+
        class Testcase {
            private final String testRole;
-           private final List<GrantedAuthority> expected ;
+           private final List expected ;
 
            Testcase(String testRole, List<GrantedAuthority> expected) {
                this.testRole = testRole;
@@ -121,9 +125,10 @@ class UserAuthenticationProviderTest {
                new Testcase("",new ArrayList<>())
        };
        for (Testcase tc : testcases){
-           List<GrantedAuthority> actual = Test.getUserRoles(tc.testRole);
-           assertEquals(tc.expected,actual);
+           tc.expected.add("ROLE_WRITE");
+           List<GrantedAuthority> actual = Test.getUserRoles(t.getAuthority());
+           assertEquals(tc.expected.get(0).toString(),actual.get(0).toString());
        }
 
-    }*/
+    }
 }
