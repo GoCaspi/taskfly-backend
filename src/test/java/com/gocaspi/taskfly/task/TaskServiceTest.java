@@ -34,9 +34,9 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 			final List<Task> dbReturn;
 			final List<Task> expected;
 
-		public	Testcase(String id,  List<Task> dbReturn, List<Task> expected) {
+			public Testcase(String id, List<Task> dbReturn, List<Task> expected) {
 				this.id = id;
-			this.dbReturn = dbReturn;
+				this.dbReturn = dbReturn;
 				this.expected = expected;
 			}
 		}
@@ -45,7 +45,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 				new Testcase("1",new ArrayList<>(),new ArrayList<>())
 		};
 		for(Testcase tc : testcases){
-				when(mockRepo.findAll()).thenReturn(tc.dbReturn);
+			when(mockRepo.findAll()).thenReturn(tc.dbReturn);
 			List actual = t.getServiceAllTasksOfUser(tc.id);
 			assertEquals(tc.expected, actual);
 		}
