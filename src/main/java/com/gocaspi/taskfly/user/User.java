@@ -15,9 +15,11 @@ public class User {
     @Id
     private String id;
     private String userId;
+    private boolean reseted;
 
 
-    public User(String firstName, String lastName, String email, String password, String team, String listId, String userId) {
+
+    public User(String firstName, String lastName, String email, String password, String team, String listId, String userId, Boolean reseted) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -25,6 +27,14 @@ public class User {
         this.password = password;
         this.listId = listId;
         this.team = team;
+        this.reseted = reseted;
+    }
+
+    public boolean getReseted(){
+        return this.reseted;
+    }
+    public void setReseted(Boolean b){
+        this.reseted = b;
     }
     public String getUserId(){return this.userId;}
 
@@ -45,6 +55,7 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
 
 
 

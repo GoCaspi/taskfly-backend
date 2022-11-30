@@ -1,10 +1,10 @@
 package com.gocaspi.taskfly.task;
 
-import com.gocaspi.taskfly.taskcollection.TaskCollection;
-import com.gocaspi.taskfly.taskcollection.TaskCollectionService;
+
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
-import org.junit.*;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
-public class TaskServiceTest {
+ class TaskServiceTest {
 
 	TaskRepository mockRepo = mock(TaskRepository.class);
 	HttpClientErrorException er = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "no tasks are assigned to the provided userId", null, null, null);
@@ -30,7 +30,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 
 
 	@Test
-	public void getService_AllTasksOfUser() {
+	 void getService_AllTasksOfUser() {
 
 		TaskService t = new TaskService(mockRepo);
 		Task[] mockTaskArr = new Task[]{mockTask, mockTask};
@@ -60,7 +60,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 	}
 
 	@Test
-	public void validateTaskFields() {
+	 void validateTaskFields() {
 		TaskService t = new TaskService(mockRepo);
 		class Testcase {
 			final Task taskInput;
@@ -85,7 +85,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 	}
 
 	@Test
-	public void updateTaskService(){
+	 void updateTaskService(){
 		TaskService s = new TaskService(mockRepo);
 		var emptyBody = new Task.Taskbody("","","");
 		var emptyTask = new Task("", "", "", "", mockObjectId, emptyBody);

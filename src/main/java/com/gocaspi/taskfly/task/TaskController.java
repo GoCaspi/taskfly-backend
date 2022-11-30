@@ -12,6 +12,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.*;
 
 @RestController
+@CrossOrigin("*")
 @ResponseBody
 @RequestMapping("/task")
 public class TaskController {

@@ -1,10 +1,15 @@
 package com.gocaspi.taskfly.user;
 
+
+
+        import com.google.common.hash.Hashing;
         import com.google.gson.Gson;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.http.HttpHeaders;
         import org.springframework.http.HttpStatus;
         import org.springframework.web.client.HttpClientErrorException;
+
+        import java.nio.charset.StandardCharsets;
         import java.util.ArrayList;
         import java.util.List;
         import java.util.Objects;
@@ -13,13 +18,15 @@ public class UserService {
 
     @Autowired
     private UserRepository repo;
+
     private final HttpClientErrorException exceptionnotFound;
     private final HttpClientErrorException exceptionbadRequest;
-    public UserService(UserRepository repo){
 
-        this.repo = repo ;
-        this.exceptionnotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
-        this.exceptionbadRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", new HttpHeaders(), "".getBytes(), null);
+    public UserService(UserRepository repo) {
+
+        this.repo = repo;
+        this.exceptionnotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(), null);
+        this.exceptionbadRequest = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, "bad payload", new HttpHeaders(), "".getBytes(), null);
     }
 
     public HttpClientErrorException getNotFound() {
@@ -27,13 +34,17 @@ public class UserService {
         return this.exceptionbadRequest;
     }
 
-    public UserRepository getRepo(){
+    public UserRepository getRepo() {
         return repo;
     }
-    public void deleteService(String id) throws HttpClientErrorException.NotFound{
-        if (!getRepo().existsById(id)){throw exceptionnotFound; }
+
+    public void deleteService(String id) throws HttpClientErrorException.NotFound {
+        if (!getRepo().existsById(id)) {
+            throw exceptionnotFound;
+        }
         getRepo().deleteById(id);
     }
+
     public void updateService(String id, User update) throws HttpClientErrorException {
         Optional<User> user = getRepo().findById(id);
 
@@ -41,9 +52,10 @@ public class UserService {
             throw exceptionnotFound;
         }
         user.ifPresent(t -> {
-            if (update.getEmail() != null) {
-                t.setEmail(update.getEmail());
-            }
+           if (update.getEmail() != null) {
+                   t.setEmail(hashStr(update.getEmail()));
+           }
+
             if (update.getTeam() != null) {
                 t.setTeam(update.getTeam());
             }
@@ -63,34 +75,52 @@ public class UserService {
 
         });
     }
+
     public void postService(User t) throws HttpClientErrorException {
-        if(!validateTaskFields(new Gson().toJson(t))){
+        if (!validateTaskFields(new Gson().toJson(t))) {
             throw exceptionbadRequest;
         }
+        t.setEmail(hashStr(t.getEmail()));
         getRepo().insert(t);
     }
-    public boolean validateTaskFields(String jsonPayload){
-        var user = jsonToUser(jsonPayload);
-        return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getListId(), null) && !Objects.equals(user.getEmail(), null)&& !Objects.equals(user.getTeam(), null);
-    }
-    public User jsonToUser(String jsonPayload){return new Gson().fromJson(jsonPayload, User.class);}
 
-    public User getServicebyid(String id)throws HttpClientErrorException.NotFound{
-        if(!getRepo().existsById(id)){ throw exceptionnotFound;}
+    public boolean validateTaskFields(String jsonPayload) {
+        var user = jsonToUser(jsonPayload);
+        return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getListId(), null) && !Objects.equals(user.getEmail(), null) && !Objects.equals(user.getTeam(), null);
+    }
+
+    public User jsonToUser(String jsonPayload) {
+        return new Gson().fromJson(jsonPayload, User.class);
+    }
+
+    public User getServicebyid(String id) throws HttpClientErrorException.NotFound {
+        if (!getRepo().existsById(id)) {
+            throw exceptionnotFound;
+        }
         var user = getRepo().findById(id);
-        if (user.isEmpty()){
+        if (user.isEmpty()) {
             throw exceptionnotFound;
         }
         return user.get();
 
     }
-    public List<User> getServiceAllUser(){
+
+    public List<User> getServiceAllUser() {
         List<User> users = getRepo().findAll();
         List<User> usersToId = new ArrayList<>();
-        for (User t : users){
-                usersToId.add(t);
+        for (User t : users) {
+            usersToId.add(t);
         }
         return usersToId;
+    }
+
+
+    public String hashStr(String str)  {
+
+        return Hashing.sha256()
+                .hashString(str, StandardCharsets.UTF_8)
+                .toString();
+
     }
 }
 

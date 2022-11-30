@@ -1,9 +1,10 @@
 package com.gocaspi.taskfly.user;
 
 import org.bson.types.ObjectId;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UserTest {
     String mockUserIds = "123";
@@ -14,7 +15,7 @@ public class UserTest {
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     ObjectId mockObject_Id = new ObjectId();
-    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword);
+    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword, false);
     class Testcase_setString{
         final String newText;
 
@@ -40,7 +41,7 @@ public class UserTest {
             new Testcase_getString(""),
     };
     @Test
-    public void getUserId(){
+     void getUserId(){
         User t = mockUser;
         for (Testcase_getString tc : testcases_get){
             t.setUserId(tc.expected);
@@ -50,7 +51,7 @@ public class UserTest {
     }
 
     @Test
-    public void setUserId(){
+     void setUserId(){
         User t = mockUser;
         for (Testcase_getString tc : testcases_get){
             t.setUserId(tc.expected);
@@ -60,7 +61,7 @@ public class UserTest {
     }
 
     @Test
-    public void getId(){
+     void getId(){
         User t = mockUser;
 
         String oId = new String("");
