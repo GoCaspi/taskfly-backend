@@ -3,8 +3,9 @@ package com.gocaspi.taskfly.user;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+
 @Document
-public class User {
+public class User  {
     private Userbody body;
     private String firstName;
     private String lastName;

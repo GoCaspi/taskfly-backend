@@ -91,6 +91,7 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
     public String getUserRoles(String email){
+
         return userRepository.findByEmail(email).getSrole();
     }
     public void postService(User t) throws HttpClientErrorException {
