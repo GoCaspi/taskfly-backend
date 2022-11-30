@@ -1,16 +1,16 @@
 package com.gocaspi.taskfly.task;
 
-import com.gocaspi.taskfly.teammanagement.TeamManagement;
-import com.gocaspi.taskfly.teammanagement.TeamManagementService;
+
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
-import org.junit.*;
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-public class TaskServiceTest {
+class TaskServiceTest {
 
 	TaskRepository mockRepo = mock(TaskRepository.class);
 
@@ -22,7 +22,7 @@ public class TaskServiceTest {
 Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescription");
 	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockDeadline,mockObjectId,mockbody);
 	@Test
-	public void getService_AllTasksOfUser() {
+	void getService_AllTasksOfUser() {
 
 		TaskService t = new TaskService(mockRepo);
 		Task[] mockTaskArr = new Task[]{mockTask, mockTask};
@@ -51,7 +51,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 		}
 	}
 	@Test
-	public void validateTaskFields() {
+	void validateTaskFields() {
 		TaskService t = new TaskService(mockRepo);
 		class Testcase {
 			final Task taskInput;
@@ -76,7 +76,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 		}
 	}
 	@Test
-	public void updateService(){
+	void updateService(){
 		TaskService service = new TaskService(mockRepo);
 		Task emptyTeam = new Task(null, null, null, null, mockObjectId, null);
 		class Testcase{
@@ -109,7 +109,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 		}
 	}
 	@Test
-	public void getServiceTaskById(){
+	void getServiceTaskById(){
 		TaskService service = new TaskService(mockRepo);
 		class Testcase{
 			final String mockId;
@@ -141,7 +141,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 		}
 	}
 	@Test
-	public void deleteTask(){
+	void deleteTask(){
 
 		TaskService service = new TaskService(mockRepo);
 		class Testcase{
@@ -170,7 +170,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 		}
 	}
 	@Test
-	public void insertTeam(){
+	void insertTeam(){
 		TaskService service = new TaskService(mockRepo);
 		Task mockTeamTest = new Task();
 
