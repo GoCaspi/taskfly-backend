@@ -2,13 +2,14 @@ package com.gocaspi.taskfly.reset;
 
 
 import com.google.common.hash.Hashing;
-import org.junit.*;
+import org.junit.jupiter.api.Test;
+
 
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ResetTest {
+ class ResetTest {
 	Reset reset = new Reset("abc","abc@mail.com");
 
 	class Testcase_setString{
@@ -41,7 +42,7 @@ public class ResetTest {
 
 
 	@Test
-	public void getLastName() {
+	 void getLastName() {
 		Reset r = reset; // TODO Replace default value.
 		for (Testcase_getString tc : testcases_get){
 			r.setLastName(tc.expected);
@@ -51,7 +52,7 @@ public class ResetTest {
 	}
 
 	@Test
-	public void getEmail() {
+	 void getEmail() {
 		Reset r = reset; // TODO Replace default value.
 		for (Testcase_getString tc : testcases_get){
 			r.setEmail(tc.expected);
@@ -60,7 +61,7 @@ public class ResetTest {
 		}
 	}
 	@Test
-	public void setEmail() {
+	 void setEmail() {
 		Reset r = reset; // TODO Replace default value.
 		for (Testcase_getString tc : testcases_get){
 			r.setEmail(tc.expected);
@@ -69,7 +70,7 @@ public class ResetTest {
 	}
 
 	@Test
-	public void setLastName() {
+	 void setLastName() {
 		Reset r = reset; // TODO Replace default value.
 		for (Testcase_getString tc : testcases_get){
 			r.setLastName(tc.expected);
@@ -78,7 +79,7 @@ public class ResetTest {
 	}
 
 	@Test
-	public void hashStr(){
+	 void hashStr(){
 		Reset r = reset;
 		String expected = Hashing.sha256()
 				.hashString(r.getEmail(), StandardCharsets.UTF_8)

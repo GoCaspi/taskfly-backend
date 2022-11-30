@@ -1,11 +1,11 @@
 package com.gocaspi.taskfly.reset;
 
-import com.gocaspi.taskfly.task.TaskRepository;
-import com.gocaspi.taskfly.task.TaskService;
+
 import com.gocaspi.taskfly.user.User;
 import com.gocaspi.taskfly.user.UserRepository;
 import com.google.gson.Gson;
-import org.junit.*;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,10 +16,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class ResetControllerTest {
+ class ResetControllerTest {
 	UserRepository mockRepo = mock(UserRepository.class);
 	ResetService mockService = mock(ResetService.class);
 	Reset mockReset = new Reset("lName", "abc@mail.to");
@@ -27,7 +27,7 @@ public class ResetControllerTest {
 
 
 	@Test
-	public void handleReset() {
+	 void handleReset() {
 		ArrayList<User> mockList = new ArrayList<>();
 		mockList.add(new User("fName", "lName", "abc@mail.to", "123", "red", "1", "123", false));
 		ArrayList<User> mockList1 = new ArrayList<>();
@@ -84,7 +84,7 @@ public class ResetControllerTest {
 	}
 
 	@Test
-	public void getJavaMailSender() {
+	 void getJavaMailSender() {
 		ResetController r = new ResetController(mockRepo); // TODO Replace default value.
 
 		JavaMailSender expected = new JavaMailSenderImpl();
@@ -106,7 +106,7 @@ public class ResetControllerTest {
 	}
 
 	@Test
-	public void jsonToReset() {
+	 void jsonToReset() {
 		ResetController r = new ResetController(mockRepo); // TODO Replace default value.
 		String jsonPayload = new Gson().toJson(mockReset); // TODO Replace default value.
 		Reset expected = mockReset; // TODO Replace default value.
@@ -118,7 +118,7 @@ public class ResetControllerTest {
 	}
 
 	@Test
-	public void sendResetMail() {
+	 void sendResetMail() {
 		ResetController r = new ResetController(mockRepo); // TODO Replace default value.
 		JavaMailSender mockSender = mock(JavaMailSender.class);
 		String to = "toMock"; // TODO Replace default value.

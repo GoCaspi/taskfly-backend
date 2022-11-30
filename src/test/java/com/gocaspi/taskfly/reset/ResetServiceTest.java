@@ -3,7 +3,8 @@ package com.gocaspi.taskfly.reset;
 import com.gocaspi.taskfly.user.User;
 import com.gocaspi.taskfly.user.UserRepository;
 import com.google.common.hash.Hashing;
-import org.junit.*;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ResetServiceTest {
+ class ResetServiceTest {
 	UserRepository repo = mock(UserRepository.class);
 	Reset reset = new Reset("lName","fName@mail.to");
 	ResetService resetService = new ResetService(repo);
@@ -28,7 +29,7 @@ public class ResetServiceTest {
 
 
 	@Test
-	public void getUserByEmail() {
+	 void getUserByEmail() {
 		ResetService r = resetService; // TODO Replace default value.
 		mockList.add(mockUser);
 
@@ -95,7 +96,7 @@ public class ResetServiceTest {
 	}
 
 	@Test
-	public void resetPwd_Test(){
+	 void resetPwd_Test(){
 		class Testcase{
 			private final User dbReturn;
 			private final boolean notFound;
@@ -136,7 +137,7 @@ public class ResetServiceTest {
 	}
 
 	@Test
-	public void EnablePwdResetOfUser(){
+	 void EnablePwdResetOfUser(){
 		class Testcase{
 			private final User dbReturn;
 			private final boolean notFound;

@@ -1,20 +1,17 @@
 package com.gocaspi.taskfly.taskcollection;
 
 import com.gocaspi.taskfly.task.Task;
-import com.gocaspi.taskfly.task.TaskController;
-import com.gocaspi.taskfly.task.TaskService;
+
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
+
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Optional.of;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
