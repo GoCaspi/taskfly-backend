@@ -13,11 +13,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Class of the ResetService, it provides the funtionilty to interact with the mongo database
+ */
 public class ResetService {
     @Autowired
     private UserRepository repo;
     private final HttpClientErrorException exceptionNotFound;
     private final HttpClientErrorException exceptionBadRequest;
+
+    /**
+     * Constructor for the ResetService, it takes an UserRepository
+     * @param repo UserRpository
+     */
     public ResetService (UserRepository repo){
         this.repo = repo;
         this.exceptionNotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
@@ -33,6 +41,13 @@ public class ResetService {
         return repo;
     }
 
+    /**
+     * the method checks if the user to the provided userId exists. If not it throws NotFound. Else checks if the field reseted of the user found
+     * to that userId is true. If so it sets the input password to the password field of the user.
+     * @param userId String, userId of the user who wants to reset the password
+     * @param newPwd String
+     * @return Optional User if the user was found
+     */
     public Optional<User> resetPwdOfUser(String userId, String newPwd){
         var user = getRepo().findById(userId);
 
@@ -51,6 +66,14 @@ public class ResetService {
         return user;
     }
 
+    /**
+     * takes a hashed email-string and a lastName. If no user was found to the hashed mail in the database it returns NotFound exception. If the lastName is not filled, then
+     * Status 400 BadRequest is Returned. Eslse the method sets the reseted field of the user to that email to true
+     * @param hashMail, String hashed email address
+     * @param lastName, String
+     * @return User
+     * @throws HttpClientErrorException, Status Code
+     */
     public List<User> getUserByEmail(String hashMail, String lastName) throws HttpClientErrorException{
         List<User> users = getRepo().findUserByEmail(hashMail);
         if (users.isEmpty()){
@@ -65,6 +88,12 @@ public class ResetService {
         return users;
     }
 
+    /**
+     *
+     * @param id
+     * @param status
+     * @throws HttpClientErrorException
+     */
     public void enablePwdReset(String id, Boolean status) throws HttpClientErrorException {
         Optional<User> user = getRepo().findById(id);
 
@@ -83,6 +112,12 @@ public class ResetService {
         });
 
     }
+    /**
+     * Hashes a string with the SHA256 algorithm
+     *
+     * @param str String that should get hashed by SHA256
+     * @return hashed String of the input String
+     */
     public String hashStr(String str)  {
         return Hashing.sha256()
                 .hashString(str, StandardCharsets.UTF_8)
