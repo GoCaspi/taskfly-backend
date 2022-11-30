@@ -65,6 +65,10 @@ public class Task {
         this.body = body;
     }
 
+    public Task(){
+
+    }
+
 
     public void setBody(Taskbody body){
         this.body = body;

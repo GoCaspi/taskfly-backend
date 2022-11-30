@@ -285,5 +285,35 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 
 		}
 	}
+	@Test
+	void insertTeam(){
+		TaskService service = new TaskService(mockRepo);
+		Task mockTeamTest = new Task();
+
+		class Testcase{
+			final Task mockInsert;
+			final boolean expected;
+
+			public Testcase(Task mockInsert, boolean expected){
+				this.mockInsert = mockInsert;
+				this.expected = expected;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase(mockTask, false),
+				new Testcase(mockTeamTest, true)
+		};
+
+		for (Testcase tc : testcases) {
+			try{
+				service.postService(tc.mockInsert);
+				verify(mockRepo, times(1)).insert(tc.mockInsert);
+			} catch (Exception e){
+
+			}
+
+		}
+	}
 }
 
