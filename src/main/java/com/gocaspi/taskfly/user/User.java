@@ -34,6 +34,7 @@ public static class Userbody implements java.io.Serializable{
     public String getUserId(){return this.userId;}
     public String getListId(){ return this.listId;}
     public String getTeam(){ return this.team;}
+
 }
     public User(String firstName, String lastName, String email, String password ,String srole,Userbody body) {
 

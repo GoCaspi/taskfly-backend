@@ -34,6 +34,9 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
+        if (authentication.getCredentials() == null){
+            throw new BadCredentialsException("Details not found");
+        }
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
 
@@ -53,7 +56,8 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
      * @param userRoles
      * @return
      */
-     private List<GrantedAuthority> getUserRoles(String userRoles){
+     public  List<GrantedAuthority> getUserRoles(String userRoles){
+
         List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
         String[] roles = userRoles.split(",");
         for (String role : roles){

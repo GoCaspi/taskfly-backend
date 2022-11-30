@@ -20,71 +20,74 @@ class UserServiceTest {
     String mockLastName = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
-    String mocksrole ="ADMIN";
+    String mocksrole = "ADMIN";
     ObjectId mockObject_Id = new ObjectId();
-    User.Userbody mockbody =new User.Userbody("mockTeam","mockListId","mockUserId");
-    User mockUser = new User(mocksrole, mockFistName, mockLastName, mockEmail, mockPassword,mockbody);
+    User.Userbody mockbody = new User.Userbody("mockTeam", "mockListId", "mockUserId");
+    User mockUser = new User(mocksrole, mockFistName, mockLastName, mockEmail, mockPassword, mockbody);
     UserService ts = new UserService(mockRepo);
 
     @Test
-     void getService_AllUser() {
+    void getService_AllUser() {
 
         UserService t = new UserService(mockRepo);
-        User[] mockUserArr = new User[]{mockUser, mockUser };
+        User[] mockUserArr = new User[]{mockUser, mockUser};
         ArrayList<User> mockList = new ArrayList<>();
-        for (User user : mockUserArr) { mockList.add(user); }
+        for (User user : mockUserArr) {
+            mockList.add(user);
+        }
 
         class Testcase {
             final String id;
             final List<User> dbReturn;
             final List<User> expected;
 
-            public	Testcase(String id, List<User> dbReturn, List<User> expected) {
+            public Testcase(String id, List<User> dbReturn, List<User> expected) {
                 this.id = id;
                 this.dbReturn = dbReturn;
                 this.expected = expected;
             }
         }
         Testcase[] testcases = new Testcase[]{
-                new Testcase("123", mockList,mockList),
-                new Testcase("1",new ArrayList<User>(),new ArrayList<User>())
+                new Testcase("123", mockList, mockList),
+                new Testcase("1", new ArrayList<User>(), new ArrayList<User>())
         };
-        for(Testcase tc : testcases){
+        for (Testcase tc : testcases) {
             when(mockRepo.findAll()).thenReturn(tc.dbReturn);
             List actual = t.getServiceAllUser();
             assertEquals(tc.expected, actual);
         }
     }
 
-     @Test
-      void validateTaskFields() {
-         UserService t = new UserService(mockRepo);
-         class Testcase {
-             final User userInput;
-             final boolean expected;
-
-             public Testcase(User testUser, boolean expected) {
-                 this.userInput = testUser;
-                 this.expected = expected;
-             }
-         }
-
-         Testcase[] testcases = new Testcase[]{
-                 new Testcase(mockUser, true),
-                 new Testcase(new User(null,null,null,null,null,null),false),
-                 new Testcase(new User("test","test","test","test","test",mockbody),true)
-         };
-
-         for (Testcase tc : testcases) {
-             boolean actualOut = t.validateTaskFields(new Gson().toJson(tc.userInput));
-             assertEquals(tc.expected, actualOut);
-         }
-     }
     @Test
-     void updateUserService(){
+    void validateTaskFields() {
+        UserService t = new UserService(mockRepo);
+        class Testcase {
+            final User userInput;
+            final boolean expected;
+
+            public Testcase(User testUser, boolean expected) {
+                this.userInput = testUser;
+                this.expected = expected;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(mockUser, true),
+                new Testcase(new User(null, null, null, null, null, null), false),
+                new Testcase(new User("test", "test", "test", "test", "test", mockbody), true)
+        };
+
+        for (Testcase tc : testcases) {
+            boolean actualOut = t.validateTaskFields(new Gson().toJson(tc.userInput));
+            assertEquals(tc.expected, actualOut);
+        }
+    }
+
+    @Test
+    void updateUserService() {
         UserService s = new UserService(mockRepo);
-        var emptyBody = new User.Userbody("","","");
-        var emptyUser = new User("", "", "", "","", emptyBody);
+        var emptyBody = new User.Userbody("", "", "");
+        var emptyUser = new User("", "", "", "", "", emptyBody);
         class Testcase {
             final User mockUser;
             final String mockID;
@@ -108,7 +111,7 @@ class UserServiceTest {
                 when(mockRepo.findById(tc.mockID)).thenReturn(taskCollection);
                 when(mockRepo.existsById(tc.mockID)).thenReturn(tc.exists);
                 s.updateService(tc.mockID, tc.mockUser);
-                if (tc.exists){
+                if (tc.exists) {
                     verify(mockRepo, times(1)).save(tc.mockUser);
                 }
             } catch (Exception e) {
@@ -117,34 +120,37 @@ class UserServiceTest {
 
         }
     }
+
     @Test
-    void getServiceById(){
+    void getServiceById() {
         UserService s = new UserService(mockRepo);
-        class Testcase{
+        class Testcase {
             final String mockId;
             final boolean expected;
-            public Testcase(String mockId, boolean expected){
+
+            public Testcase(String mockId, boolean expected) {
                 this.mockId = mockId;
                 this.expected = expected;
             }
         }
         Testcase[] testcases = new Testcase[]{
-                new Testcase("1",true),
-                new Testcase("2", false )
+                new Testcase("1", true),
+                new Testcase("2", false)
         };
 
         for (Testcase tc : testcases) {
-            try{
+            try {
                 s.getServicebyid(tc.mockId);
                 verify(s, times(1)).getServicebyid(tc.mockId);
-            } catch (Exception e){
+            } catch (Exception e) {
 
             }
 
         }
     }
+
     @Test
-    void deleteUserByID(){
+    void deleteUserByID() {
         UserService s = new UserService(mockRepo);
 
         class Testcase {
@@ -162,18 +168,19 @@ class UserServiceTest {
                 new Testcase("2", false)
         };
         for (Testcase tc : testcases) {
-            try{
+            try {
                 when(mockRepo.existsById(tc.mockID)).thenReturn(tc.exists);
                 s.deleteService(tc.mockID);
                 Mockito.verify(mockRepo, times(1)).deleteById(tc.mockID);
-            } catch (Exception e){
+            } catch (Exception e) {
 
             }
 
         }
     }
+
     @Test
-    void postservice(){
+    void postservice() {
         UserService s = new UserService(mockRepo);
 
         class Testcase {
@@ -191,40 +198,89 @@ class UserServiceTest {
                 new Testcase("2", false)
         };
         for (Testcase tc : testcases) {
-            try{
+            try {
                 when(mockRepo.existsById(tc.mockID)).thenReturn(tc.exists);
                 s.postService(mockUser);
                 verify(s, times(1)).getServicebyid(tc.mockID);
-            } catch (Exception e){
+            } catch (Exception e) {
 
             }
 
         }
     }
-}
-   /* @Test
-    void getdetail() {
+
+    @Test
+    void getUserRoles() {
         UserService t = new UserService(mockRepo);
         class Testcase {
-            final User userInput;
+            final String mockemail;
             final boolean expected;
 
-            public Testcase(User testUser, boolean expected) {
-                this.userInput = testUser;
+            public Testcase(String mockemail, boolean expected) {
+                this.mockemail = mockemail;
+                this.expected = expected;
+            }
+        }
+        Testcase[] testcases = new Testcase[]{
+                new Testcase("1", false),
+                new Testcase("",false),
+        };
+        for(Testcase tc : testcases){
+            when(mockRepo.findByEmail(tc.mockemail)).thenReturn(mockUser);
+            t.getUserRoles(tc.mockemail);
+            verify(mockRepo,times(1)).findByEmail(tc.mockemail);
+        }
+    }
+    @Test
+    void getUserDetails() {
+        UserService t = new UserService(mockRepo);
+        class Testcase {
+            final String mockemail;
+            final boolean expected;
+
+            public Testcase(String mockemail, boolean expected) {
+                this.mockemail = mockemail;
+                this.expected = expected;
+            }
+        }
+        Testcase[] testcases = new Testcase[]{
+                new Testcase("1", false),
+                new Testcase("",false),
+        };
+        for(Testcase tc : testcases){
+            when(mockRepo.findByEmail(tc.mockemail)).thenReturn(mockUser);
+            t.getDetails(tc.mockemail);
+            verify(mockRepo,times(1)).findByEmail(tc.mockemail);
+        }
+    }
+    @Test
+    void createUser() {
+        UserService service = new UserService(mockRepo);
+        class Testcase {
+            final User mockInsert;
+            final boolean expected;
+
+            public Testcase(User mockInsert, boolean expected) {
+                this.mockInsert = mockInsert;
                 this.expected = expected;
             }
         }
 
         Testcase[] testcases = new Testcase[]{
                 new Testcase(mockUser, false),
-                new Testcase(new User(null,null,null,null,null,null),false),
-                new Testcase(new User("test","test","test","test","test",mockbody),true)
+                new Testcase(null, true)
         };
-        for(Testcase tc : testcases){
-            when(mockRepo.findByEmail(mockEmail)).thenReturn(mockUser);
-            User actual = t.getDetails(mockEmail);
-            assertEquals(tc.expected, actual);
+
+        for (Testcase tc : testcases) {
+            try {
+                service.postService(tc.mockInsert);
+                verify(mockRepo, times(1)).insert(tc.mockInsert);
+            } catch (Exception e) {
+
+            }
+
         }
     }
-*/
+}
+
 
