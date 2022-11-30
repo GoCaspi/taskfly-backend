@@ -57,7 +57,7 @@ class TeamManagementControllerTest {
             }
 
             if (tc.expectSuccess) {
-                ResponseEntity<String> expected = new ResponseEntity<>("successfully updated task", HttpStatus.ACCEPTED);
+                ResponseEntity<String> expected = new ResponseEntity<>("successfully updated Team", HttpStatus.ACCEPTED);
                 try {
                     ResponseEntity<String> actual = t.updateTeam(tc.mockId, new Gson().toJson(tc.updateForTeam));
                     assertEquals(expected, actual);

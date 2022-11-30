@@ -2,7 +2,6 @@ package com.gocaspi.taskfly.task;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,12 +10,23 @@ import org.springframework.web.client.HttpClientErrorException;
 import javax.validation.Valid;
 import java.util.*;
 
+
+/**
+ * Class for TaskController
+ */
 @RestController
+@CrossOrigin("*")
 @ResponseBody
 @RequestMapping("/task")
 public class TaskController {
     @Autowired
     private final TaskService service;
+
+    /**
+     * Constractor for TaskController
+     *
+     * @param service variable for the interface taskrepository
+     */
 
    public TaskController (TaskService service){
        this.service = service;
@@ -110,7 +120,7 @@ public class TaskController {
     /**
      * if there is a task to the provided id (path variable) then that task is removed from the mongoDB, else an exception is thrown
      *
-     * @param id, identifier of the task of interest
+     * @param id, identifier of the task of intereset
      * @return ResponseEntity, containing the task from the db and the http status code
      * @throws HttpClientErrorException.NotFound Exception if no task to the id was found
      */
@@ -130,7 +140,7 @@ public class TaskController {
      * @param id id of the task that should be updated
      * @param body update of the task to the provided id
      * @return ResponseEntity containing success message and updated task id and the http status code
-     * @throws ChangeSetPersister.NotFoundException Exception if no task to the id was found
+     * @throws HttpClientErrorException.NotFound Exception if no task to the id was found
      */
     @PutMapping("/{id}")
     public ResponseEntity<String> handleUpdateTask(@PathVariable String id,@RequestBody Task body) throws HttpClientErrorException.NotFound {
@@ -138,4 +148,5 @@ public class TaskController {
         var msg = "successfully updated task with id: "+ id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
+
 }

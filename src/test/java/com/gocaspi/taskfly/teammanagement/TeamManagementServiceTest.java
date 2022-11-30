@@ -3,7 +3,6 @@ package com.gocaspi.taskfly.teammanagement;
 
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.Optional;
 
@@ -39,7 +38,7 @@ class TeamManagementServiceTest {
         Testcase[] testcases = new Testcase[]{
                 new Testcase(mockTeamManagement, true),
                 new Testcase(new TeamManagement(null,null,null,null),false),
-                new Testcase(new TeamManagement("test", "test", mockMembers, "test"),true)
+                new Testcase(new TeamManagement("test", "test", mockMembers, "test"),true),
         };
 
         for (Testcase tc : testcases) {
@@ -64,14 +63,17 @@ class TeamManagementServiceTest {
 
         Testcase[] testcases = new Testcase[]{
                 new Testcase("1", true),
-                /*new Testcase("", false),
-                new Testcase(null,true),
-                new Testcase("", false)*/
+                new Testcase("", false),
         };
 
         for (Testcase tc : testcases) {
-            service.deleteService(tc.mockId);
-            verify(mockRepository, times(1)).deleteById(tc.mockId);
+            try {
+                when(mockRepository.existsById(tc.mockId)).thenReturn(tc.expected);
+                service.deleteService(tc.mockId);
+                verify(mockRepository, times(1)).deleteById(tc.mockId);
+            } catch (Exception e){
+
+            }
         }
     }
 
@@ -144,6 +146,8 @@ class TeamManagementServiceTest {
     @Test
     void addTeamMember(){
         TeamManagementService service = new TeamManagementService(mockRepository);
+
+        TeamManagement mockTeamTest = new TeamManagement();
         class Testcase{
             final String mockId;
             final String[] mockMember;
@@ -162,12 +166,13 @@ class TeamManagementServiceTest {
 
         Testcase[] testcases = new Testcase[]{
                 new Testcase("1", mockMembers, "1", mockTeamManagement, true),
-                new Testcase("0", mockMembers, "1", mockTeamManagement, false),
-                new Testcase("1", mockMembers, "0", mockTeamManagement, false),
+                new Testcase("", mockMembers, "1", mockTeamTest, false),
+                new Testcase("1", mockMembers, "", mockTeamManagement, false),
         };
 
         for (Testcase tc : testcases) {
             try{
+                when(mockRepository.existsById(tc.mockId)).thenReturn(tc.expected);
                 service.addMemberService(tc.mockId, tc.mockMember, tc.mockNewMember, tc.mockTeam);
                 verify(mockService, times(1)).updateService(tc.mockId, tc.mockTeam);
             } catch (Exception e){
@@ -220,23 +225,29 @@ class TeamManagementServiceTest {
     @Test
     void getTeamById(){
         TeamManagementService service = new TeamManagementService(mockRepository);
+
+        TeamManagement emptyTeam = new TeamManagement(null, null, null,null);
         class Testcase{
             final String mockId;
             final boolean expected;
-            public Testcase(String mockId, boolean expected){
+            final TeamManagement mockTeam;
+            public Testcase(String mockId, boolean expected, TeamManagement mockTeam){
                 this.mockId = mockId;
                 this.expected = expected;
+                this.mockTeam = mockTeam;
             }
         }
         Testcase[] testcases = new Testcase[]{
-                new Testcase("1",true),
-                new Testcase("2", false )
+                new Testcase("1",true, mockTeamManagement),
+                new Testcase(null, false, null )
         };
 
         for (Testcase tc : testcases) {
             try{
+                Optional<TeamManagement> optionalTeamManagement = Optional.ofNullable(tc.mockTeam);
+                when(mockRepository.findById(tc.mockId)).thenReturn(optionalTeamManagement);
                 service.getTeamById(tc.mockId);
-                verify(mockService, times(1)).getTeamById(tc.mockId);
+                verify(mockRepository, times(1)).findById(tc.mockId);
             } catch (Exception e){
 
             }
