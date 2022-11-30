@@ -9,9 +9,18 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-
+/**
+ * Class for SecurityConfiguration
+ */
 @Configuration
 public class SecurityConfiguration {
+    /**
+     * commit access to the endpoint user, task, tc and actuator
+     *
+     * @param http HttpSecurity
+     * @return SecurityFilterChain
+     * @throws Exception error
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.cors().and().csrf().disable().authorizeRequests()

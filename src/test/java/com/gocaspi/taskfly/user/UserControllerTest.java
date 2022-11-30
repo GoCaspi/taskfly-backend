@@ -1,14 +1,15 @@
 package com.gocaspi.taskfly.user;
 
-
 import com.google.gson.Gson;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,7 +27,6 @@ import static org.mockito.Mockito.when;
     String mockLastName = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
-    ObjectId mockObject_Id = new ObjectId();
     User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword,false);
     User[] mockUseArr = new User[]{mockUser,mockUser};
     @Test
@@ -214,7 +214,6 @@ import static org.mockito.Mockito.when;
     }
 
 }
-/*
     @Test
      void getAllUser() {
         UserController t = new UserController(mockRepo);
@@ -255,12 +254,10 @@ import static org.mockito.Mockito.when;
                 ResponseEntity<List<User>> actual1 = t.handleGetAllUsers();
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
-                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
+                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, "bad payload", null, null, null);
                 assertEquals(e.getClass(), expectedException.getClass());
             }
         }
     }
-
- */
 
 }

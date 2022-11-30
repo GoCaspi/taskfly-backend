@@ -12,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
 /**
  * Class of the ResetService, it provides the funtionilty to interact with the mongo database
  */

@@ -3,6 +3,7 @@ package com.gocaspi.taskfly.task;
 
 import com.google.gson.Gson;
 import org.bson.types.ObjectId;
+import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
  class TaskServiceTest {
 
 	TaskRepository mockRepo = mock(TaskRepository.class);
-	HttpClientErrorException er = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "no tasks are assigned to the provided userId", null, null, null);
+
 	String mockUserIds = "123";
 	String mockListId = "1";
 	String mockTeam = "team1";
@@ -30,7 +30,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 
 
 	@Test
-	 void getService_AllTasksOfUser() {
+	void getService_AllTasksOfUser() {
 
 		TaskService t = new TaskService(mockRepo);
 		Task[] mockTaskArr = new Task[]{mockTask, mockTask};
@@ -42,25 +42,25 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 			final List<Task> dbReturn;
 			final List<Task> expected;
 
-		public	Testcase(String id,  List<Task> dbReturn, List<Task> expected) {
+			public Testcase(String id, List<Task> dbReturn, List<Task> expected) {
 				this.id = id;
-			this.dbReturn = dbReturn;
+				this.dbReturn = dbReturn;
 				this.expected = expected;
 			}
 		}
 		Testcase[] testcases = new Testcase[]{
 				new Testcase("123", mockList,mockList),
-				new Testcase("1",new ArrayList<Task>(),new ArrayList<Task>())
+				new Testcase("1",new ArrayList<>(),new ArrayList<>())
 		};
 		for(Testcase tc : testcases){
-				when(mockRepo.findAll()).thenReturn(tc.dbReturn);
+			when(mockRepo.findAll()).thenReturn(tc.dbReturn);
 			List actual = t.getServiceAllTasksOfUser(tc.id);
 			assertEquals(tc.expected, actual);
 		}
 	}
 
 	@Test
-	 void validateTaskFields() {
+	void validateTaskFields() {
 		TaskService t = new TaskService(mockRepo);
 		class Testcase {
 			final Task taskInput;
@@ -75,7 +75,8 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 		Testcase[] testcases = new Testcase[]{
 				new Testcase(mockTask, true),
 				new Testcase(new Task(null,null,null,null,new ObjectId(),mockbody),false),
-				new Testcase(new Task("test","test","test","test",new ObjectId(),mockbody),true)
+				new Testcase(new Task("test","test","test","test",new ObjectId(),mockbody),true),
+				new Testcase(new Task("","","","",new ObjectId(),mockbody),true)
 		};
 
 		for (Testcase tc : testcases) {
@@ -121,5 +122,65 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic","mockPrio","mockDescripti
 
 		}
 	}
+
+	 @Test
+	 void deleteTask(){
+
+		 TaskService service = new TaskService(mockRepo);
+		 class Testcase{
+			 final String mockId;
+			 final boolean expected;
+
+			 public Testcase(String mockId, boolean expected){
+				 this.mockId = mockId;
+				 this.expected = expected;
+			 }
+		 }
+
+		 Testcase[] testcases = new Testcase[]{
+				 new Testcase("1", true),
+				 new Testcase("", false),
+		 };
+
+		 for (Testcase tc : testcases) {
+			 try {
+				 when(mockRepo.existsById(tc.mockId)).thenReturn(tc.expected);
+				 service.deleteService(tc.mockId);
+				 verify(mockRepo, times(1)).deleteById(tc.mockId);
+			 } catch (Exception e){
+
+			 }
+		 }
+	 }
+	 @Test
+	 void insertTeam(){
+		 TaskService service = new TaskService(mockRepo);
+		 Task mockTeamTest = new Task();
+
+		 class Testcase{
+			 final Task mockInsert;
+			 final boolean expected;
+
+			 public Testcase(Task mockInsert, boolean expected){
+				 this.mockInsert = mockInsert;
+				 this.expected = expected;
+			 }
+		 }
+
+		 Testcase[] testcases = new Testcase[]{
+				 new Testcase(mockTask, false),
+				 new Testcase(mockTeamTest, true)
+		 };
+
+		 for (Testcase tc : testcases) {
+			 try{
+				 service.postService(tc.mockInsert);
+				 verify(mockRepo, times(1)).insert(tc.mockInsert);
+			 } catch (Exception e){
+
+			 }
+
+		 }
+	 }
 }
 
