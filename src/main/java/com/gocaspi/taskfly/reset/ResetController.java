@@ -153,7 +153,7 @@ public class ResetController {
             this.sendResetMail(resetRequest.getEmail(), "!Password reset for TaskFly!", "Your Password has been reseted. Please copy your userId : " + userId + " and follow the link: to assign a new password. ");
 
 
-        return new ResponseEntity<>(users, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }
 
     }
