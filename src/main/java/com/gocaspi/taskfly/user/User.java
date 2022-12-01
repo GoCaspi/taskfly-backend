@@ -111,6 +111,10 @@ public Userbody getBody(){
      * @return String, password of the user
      */
     public String getPassword(){return this.password;}
+
+    public String getUserId(){
+        return this.body.userId;
+    }
     /**
      * sets the userId of a user to a new userId
      *
@@ -146,6 +150,7 @@ public Userbody getBody(){
      *
      * @param password, new value of user-field: password
      */
+
     public void setPassword(String password) {
         this.password = password;
     }

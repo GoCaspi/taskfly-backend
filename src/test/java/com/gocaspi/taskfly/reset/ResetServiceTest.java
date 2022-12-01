@@ -12,6 +12,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.bson.types.ObjectId;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -21,8 +23,8 @@ import static org.mockito.Mockito.when;
 	UserRepository repo = mock(UserRepository.class);
 	Reset reset = new Reset("lName","fName@mail.to");
 	ResetService resetService = new ResetService(repo);
-
-	User mockUser = new User("fName", "lName", "fName@mail.to", "admin123", "red", "1", "12345",false);
+	User.Userbody mockUserBody = new User.Userbody(new ObjectId().toHexString(), new ObjectId().toHexString(), new ObjectId().toHexString());
+	User mockUser = new User("fName", "lName", "fName@mail.to", "admin123", "red", mockUserBody, false);
 	List <User> mockList = new ArrayList<>();
 
 

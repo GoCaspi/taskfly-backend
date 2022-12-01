@@ -168,7 +168,6 @@ public class ResetController {
         if(users.size() !=1){ return new ResponseEntity<>(emptyList, HttpStatus.NOT_FOUND); }
         else{
             String userId = users.get(0).getId();
-            //    this.sendResetMail(resetRequest.getEmail(), "Password reset for TaskFly","Your Password has been reseted. Please copy your userId : "+ userId +" and follow the link: to assign a new password. ");
             //  For testing: send email to host: taskfly.info@gmail.com
             this.sendResetMail("taskfly.info@gmail.com", "!Password reset for TaskFly!", "Your Password has been reseted. Please copy your userId : " + userId + " and follow the link: to assign a new password. ");
 

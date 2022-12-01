@@ -21,15 +21,11 @@ import static org.mockito.Mockito.*;
  class UserControllerTest {
     UserRepository mockRepo = mock(UserRepository.class);
     UserService mockService = mock(UserService.class);
-    String mockUserIds = "123";
-    String mockListId = "1";
     String mockFistName = "topic1";
-    String mockTeam = "team1";
     String mockLastName = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     String mocksrole ="ADMIN";
-    ObjectId mockObject_Id = new ObjectId();
     User.Userbody mockbody =new User.Userbody("mockTeam","mockListId","mockUserId");
     User mockUser = new User(mockFistName, mockLastName, mockEmail, mockPassword,mocksrole,mockbody,false);
     PasswordEncoder mockencoder = mock(PasswordEncoder.class);
@@ -261,7 +257,7 @@ import static org.mockito.Mockito.*;
                 ResponseEntity<List<User>> actual1 = t.handleGetAllUsers();
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
-                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, "bad payload", null, null, null);
+                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
                 assertEquals(e.getClass(), expectedException.getClass());
             }
         }

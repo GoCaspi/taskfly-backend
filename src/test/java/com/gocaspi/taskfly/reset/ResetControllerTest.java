@@ -5,6 +5,7 @@ import com.gocaspi.taskfly.user.User;
 import com.gocaspi.taskfly.user.UserRepository;
 import com.google.gson.Gson;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,8 @@ import static org.mockito.Mockito.*;
 	ResetService mockService = mock(ResetService.class);
 	Reset mockReset = new Reset("lName", "abc@mail.to");
 	Reset mockResetEmptyLName = new Reset("", "abc@mail.to");
-
-	 User mockUser = new User("1", "1", "1", "1", "1", "1", "1", true);
+	User.Userbody mockUserBody = new User.Userbody(new ObjectId().toHexString(), new ObjectId().toHexString(), new ObjectId().toHexString());
+	User mockUser = new User("1", "1", "1", "1", "1", mockUserBody, true);
 
 	 public static class uIdAndPwdBody {
 		 private String pwd;
@@ -101,9 +102,9 @@ import static org.mockito.Mockito.*;
 	@Test
 	 void handleReset() {
 		ArrayList<User> mockList = new ArrayList<>();
-		mockList.add(new User("fName", "lName", "abc@mail.to", "123", "red", "1", "123", false));
+		mockList.add(new User("fName", "lName", "abc@mail.to", "123", "red", mockUserBody, false));
 		ArrayList<User> mockList1 = new ArrayList<>();
-		mockList1.add(new User("fName", "lName", "abc@mail.to", "123", "red", "1", "123", false));
+		mockList1.add(new User("fName", "lName", "abc@mail.to", "123", "red", mockUserBody, false));
 		ResetController r = new ResetController(mockRepo); // TODO Replace default value.
 		String body = new Gson().toJson(mockReset); // TODO Replace default value.
 		ResponseEntity expected = null; // TODO Replace default value.
@@ -134,7 +135,7 @@ import static org.mockito.Mockito.*;
 				assertEquals(HttpStatus.BAD_REQUEST, actual1.getStatusCode() );
 			}
 			if (tc.expectedCode == 404) {
-				mockList.add(new User("fName", "lName", "abc@mail.to", "123", "red", "1", "123", false));
+				mockList.add(new User("fName", "lName", "abc@mail.to", "123", "red", mockUserBody, false));
 				when(mockRepo.findUserByEmail(mockReset.hashStr(mockReset.getEmail()))).thenReturn(mockList);
 				//			when(mockService.getUserByEmail(mockReset.hashStr(mockReset.getEmail()),mockReset.getLastName())).thenReturn(mockList);
 
@@ -143,9 +144,9 @@ import static org.mockito.Mockito.*;
 			}
 
 			if (tc.expectedCode == 200) {
-				mockList.add(new User("fName", "lName", "abc@mail.to", "123", "red", "1", "123", false));
+				mockList.add(new User("fName", "lName", "abc@mail.to", "123", "red", mockUserBody, false));
 				when(mockRepo.findUserByEmail(mockReset.hashStr(mockReset.getEmail()))).thenReturn(mockList1);
-				when(mockRepo.findById(null)).thenReturn(Optional.of(new User("fName", "lName", "abc@mail.to", "123", "red", "1", "123", false)));
+				when(mockRepo.findById(null)).thenReturn(Optional.of(new User("fName", "lName", "abc@mail.to", "123", "red", mockUserBody, false)));
 				when(mockRepo.existsById(null)).thenReturn(true);
 				//			when(mockService.getUserByEmail(mockReset.hashStr(mockReset.getEmail()),mockReset.getLastName())).thenReturn(mockList);
 
