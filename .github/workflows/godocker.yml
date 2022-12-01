@@ -18,7 +18,7 @@ env:
   REGISTRY: taskflyrepo.azurecr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: taskflybackend
-  DOCKER_USER: TaskFly
+  DOCKER_USER: taskflyrepo
 
 
 jobs:
