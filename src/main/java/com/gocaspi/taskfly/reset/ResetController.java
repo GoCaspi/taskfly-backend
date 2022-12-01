@@ -9,14 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Properties;
 
 /**
  * Class for the Reset Controller with the request mapping /reset
@@ -27,8 +25,6 @@ import java.util.Properties;
 @ResponseBody
 @RequestMapping("/reset")
 public class ResetController {
-    @Autowired
-    private UserRepository repository;
     private final ResetService service;
     @Autowired
     private JavaMailSender emailSender;
@@ -45,10 +41,11 @@ public class ResetController {
      *
      * @param repository UserRepository
      */
-    public ResetController (UserRepository repository){
+    public ResetController (UserRepository repository, JavaMailSender javaMailSender){
         super();
-        this.repository = repository;
-        this.service = new ResetService(repository);}
+        this.service = new ResetService(repository);
+        this.emailSender = javaMailSender;
+    }
 
     /**
      * returns the service  of type ResetService

@@ -1,6 +1,8 @@
 
 package com.gocaspi.taskfly.user;
 import com.gocaspi.taskfly.auth.UserAuthenticationProvider;
+import com.gocaspi.taskfly.reset.Reset;
+import com.google.common.hash.Hashing;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -8,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.security.auth.Subject;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -130,5 +133,15 @@ class UserAuthenticationProviderTest {
            assertEquals(tc.expected.get(0).toString(),actual.get(0).toString());
        }
 
+    }
+
+    @Test
+    void hashStr(){
+        UserAuthenticationProvider Test = new UserAuthenticationProvider(mockRepo, mockEncoder);
+        String expected = Hashing.sha256()
+                .hashString(mockEmail, StandardCharsets.UTF_8)
+                .toString();
+        String actual = Test.hashStr(mockEmail);
+        assertEquals(expected,actual);
     }
 }

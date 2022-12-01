@@ -2,6 +2,7 @@ package com.gocaspi.taskfly.auth;
 
 import com.gocaspi.taskfly.user.User;
 import com.gocaspi.taskfly.user.UserRepository;
+import com.google.common.hash.Hashing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -13,6 +14,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +40,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         if (authentication.getCredentials() == null){
             throw new BadCredentialsException("Details not found");
         }
-        String email = authentication.getName();
+        String email = hashStr(authentication.getName());
         String password = authentication.getCredentials().toString();
 
         User user = repository.findByEmail(email);
@@ -68,5 +71,10 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     @Override
     public boolean supports(Class<?> authentication) {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
+    }
+    public String hashStr(String str)  {
+        return Hashing.sha256()
+                .hashString(str, StandardCharsets.UTF_8)
+                .toString();
     }
 }
