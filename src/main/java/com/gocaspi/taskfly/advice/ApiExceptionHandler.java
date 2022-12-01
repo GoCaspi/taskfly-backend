@@ -11,10 +11,21 @@ import javax.validation.ConstraintViolationException;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * Class for ApiExceptionHandler
+ */
 @RestControllerAdvice
 public class ApiExceptionHandler {
+    /**
+     * A string varible initialized with error_msg
+     */
     public static final String ERRORMSGKEY = "error_msg";
+
+    /**
+     * This method is called whenever another method returns Not Found Exception
+     * @param na HttpClientErrorException NotFound
+     * @return returns a map that returns an error message as described in the method
+     */
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(HttpClientErrorException.NotFound.class)
     public Map<String, String> handleResourceNotFound(HttpClientErrorException.NotFound na){
@@ -25,6 +36,11 @@ public class ApiExceptionHandler {
         return errorMap;
     }
 
+    /**
+     * This method is called whenever another method returns Bad Request Exception
+     * @param na HttpClientErrorException BadRequest
+     * @return returns a map that returns an error message as described in the method
+     */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpClientErrorException.BadRequest.class)
     public Map<String, String> handleBadRequest(HttpClientErrorException.BadRequest na){
@@ -35,6 +51,11 @@ public class ApiExceptionHandler {
         return errorMap;
     }
 
+    /**
+     * This method is called whenever another method returns Bad Request Exception
+     * @param ce ConstraintViolationException
+     * @return returns a map that returns an error message as described in the method
+     */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public Map<String, String> handleConstraintError(ConstraintViolationException ce){
