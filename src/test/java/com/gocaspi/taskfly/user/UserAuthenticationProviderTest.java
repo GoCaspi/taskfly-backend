@@ -26,7 +26,7 @@ class UserAuthenticationProviderTest {
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     String mocksrole = "ADMIN";
-    User.Userbody mockbody =new User.Userbody("mockTeam","mockListId","mockUserId");
+    User.Userbody mockbody =new User.Userbody("mockTeam");
     User mockUser = new User(mocksrole, mockFistName, mockLastName, mockEmail, mockPassword,mockbody, true);
 
     public class testauth implements Authentication {

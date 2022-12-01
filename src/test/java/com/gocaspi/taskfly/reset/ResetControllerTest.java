@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 	ResetService mockService = mock(ResetService.class);
 	Reset mockReset = new Reset("lName", "abc@mail.to");
 	Reset mockResetEmptyLName = new Reset("", "abc@mail.to");
-	User.Userbody mockUserBody = new User.Userbody(new ObjectId().toHexString(), new ObjectId().toHexString(), new ObjectId().toHexString());
+	User.Userbody mockUserBody = new User.Userbody(new ObjectId().toHexString());
 	User mockUser = new User("1", "1", "1", "1", "1", mockUserBody, true);
 
 	 public static class uIdAndPwdBody {

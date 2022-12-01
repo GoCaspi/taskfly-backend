@@ -23,7 +23,7 @@ class UserServiceTest {
     String mockPassword = "11-11-2022";
     String mocksrole = "ADMIN";
     ObjectId mockObject_Id = new ObjectId();
-    User.Userbody mockbody = new User.Userbody("mockTeam", "mockListId", "mockUserId");
+    User.Userbody mockbody = new User.Userbody("mockTeam");
     User mockUser = new User(mocksrole, mockFistName, mockLastName, mockEmail, mockPassword, mockbody,true);
     UserService ts = new UserService(mockRepo);
 
@@ -87,7 +87,7 @@ class UserServiceTest {
     @Test
     void updateUserService() {
         UserService s = new UserService(mockRepo);
-        var emptyBody = new User.Userbody("", "", "");
+        var emptyBody = new User.Userbody("");
         var emptyUser = new User("", "", "", "", "", emptyBody,true);
         class Testcase {
             final User mockUser;

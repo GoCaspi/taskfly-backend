@@ -66,10 +66,6 @@ public class UserService {
             throw exceptionnotFound;
         }
         user.ifPresent(t -> {
-           if (update.getEmail() != null) {
-                   t.setEmail(hashStr(update.getEmail()));
-           }
-
             if (update.getTeam() != null) {
                 t.setTeam(update.getTeam());
             }
@@ -82,9 +78,6 @@ public class UserService {
             if (update.getPassword() != null) {
                 t.setPassword(update.getPassword());
             }
-            if (update.getListId() != null) {
-                t.setListId(update.getListId());
-            }
             if (update.getFirstName() != null) {
                 t.setFirstName(update.getFirstName());
             }
@@ -92,7 +85,6 @@ public class UserService {
                 t.setLastName(update.getLastName());
             }
             getRepo().save(t);
-
         });
 
     }

@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
     String mocksrole ="ADMIN";
-    User.Userbody mockbody =new User.Userbody("mockTeam","mockListId","mockUserId");
+    User.Userbody mockbody =new User.Userbody("mockTeam");
     User mockUser = new User(mockFistName, mockLastName, mockEmail, mockPassword,mocksrole,mockbody,false);
     PasswordEncoder mockencoder = mock(PasswordEncoder.class);
     User[] mockUseArr = new User[]{mockUser,mockUser};

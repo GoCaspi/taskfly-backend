@@ -20,24 +20,12 @@ public class User  {
 
 public static class Userbody implements java.io.Serializable{
     private String team;
-    private String listId;
-    private String userId;
 
-
-
-
-     public Userbody(String team,String listId,String userId){
-
+     public Userbody(String team){
          this.team = team;
-         this.listId = listId;
-         this.userId = userId;
      }
 
-    public void setListId(String str){ this.listId = str;}
     public void setTeam(String str){ this.team = str;}
-    public void setUserId(String str){this.userId=str;}
-    public String getUserId(){return this.userId;}
-    public String getListId(){ return this.listId;}
     public String getTeam(){ return this.team;}
 
 }
@@ -88,12 +76,6 @@ public Userbody getBody(){
      */
     public String getEmail(){ return this.email;}
     /**
-     * returns the listId of the user
-     *
-     * @return String, listId of the user
-     */
-    public String getListId(){ return this.body.listId;}
-    /**
      * returns the team of the user
      *
      * @return String, team of the user
@@ -111,28 +93,12 @@ public Userbody getBody(){
      * @return String, password of the user
      */
     public String getPassword(){return this.password;}
-
-    public String getUserId(){
-        return this.body.userId;
-    }
-    /**
-     * sets the userId of a user to a new userId
-     *
-     * @param str, new value of user-field: userID
-     */
-    public void setUserId(String str){ this.body.userId = str;}
     /**
      * sets the email of a user to a new email
      *
      * @param str, new value of user-field: email
      */
     public void setEmail(String str){ this.email = str;}
-    /**
-     * sets the listId of a user to a new listId
-     *
-     * @param str, new value of user-field: listId
-     */
-    public void setListId(String str){ this.body.listId = str;}
     /**
      * sets the team of a user to a new team
      *
