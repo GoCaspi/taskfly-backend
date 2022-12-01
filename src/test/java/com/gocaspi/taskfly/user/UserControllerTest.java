@@ -1,11 +1,13 @@
 package com.gocaspi.taskfly.user;
 
+
 import com.google.gson.Gson;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.HttpClientErrorException;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,27 +15,25 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
  class UserControllerTest {
     UserRepository mockRepo = mock(UserRepository.class);
     UserService mockService = mock(UserService.class);
-    String mockUserIds = "123";
-    String mockListId = "1";
     String mockFistName = "topic1";
-    String mockTeam = "team1";
     String mockLastName = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
-    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword,false);
+    String mocksrole ="ADMIN";
+    User.Userbody mockbody =new User.Userbody("mockTeam");
+    User mockUser = new User(mockFistName, mockLastName, mockEmail, mockPassword,mocksrole,mockbody,false);
+    PasswordEncoder mockencoder = mock(PasswordEncoder.class);
     User[] mockUseArr = new User[]{mockUser,mockUser};
     @Test
      void deleteUser() {
-
-
-        UserController t = new UserController(mockRepo);
+         UserService s = new UserService(mockRepo);
+        UserController t = new UserController(s);
 
         class Testcase {
             final String userId;
@@ -51,21 +51,20 @@ import static org.mockito.Mockito.when;
 
         Testcase[] testcases = new Testcase[]{
                 new Testcase("1", false, mockUser, ""),
-                new Testcase("1", true, mockUser, "no tasks were found to the provided id"),
-                new Testcase(null, true, mockUser, "no tasks were found to the provided id"),
-                new Testcase("", true, mockUser, "no tasks were found to the provided id"),
-                new Testcase(null, false, mockUser, "no tasks were found to the provided id")
+                new Testcase("1", true, mockUser, "no user were found to the provided id"),
+                new Testcase(null, true, mockUser, "no user were found to the provided id"),
+                new Testcase("", true, mockUser, "no user were found to the provided id"),
+                new Testcase(null, false, mockUser, "no user were found to the provided id")
         };
         for (Testcase tc : testcases) {
             if (tc.dbReturnSize0) {
                 when(mockRepo.existsById(tc.userId)).thenReturn(false);
             } else {
                 when(mockRepo.existsById(tc.userId)).thenReturn(true);
-                //	when(mockRepo.deleteById(tc.userId)).thenReturn(mockTask);
             }
 
             try {
-                ResponseEntity<String> expected = new ResponseEntity<>("successfully deleted task with id: " + tc.userId, HttpStatus.ACCEPTED);
+                ResponseEntity<String> expected = new ResponseEntity<>("successfully deleted user with id: " + tc.userId, HttpStatus.ACCEPTED);
                 ResponseEntity<String> actual1 = t.deleteUser(tc.userId);
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
@@ -76,8 +75,8 @@ import static org.mockito.Mockito.when;
     }
     @Test
      void updateUser() {
-        UserController t = new UserController(mockRepo);
-        User mockUpdate = new User(mockUserIds, mockListId, mockEmail + "updated", mockPassword + "updated", mockFistName, mockLastName + "updated",mockService+"updated",false);
+        UserController t = new UserController(mockService);
+        User mockUpdate = new User( mockEmail + "updated", mockPassword + "updated", mockFistName, mockLastName + "updated",mocksrole+"update",mockbody,true);
 
         class Testcase {
             final String mockId;
@@ -131,7 +130,7 @@ import static org.mockito.Mockito.when;
     }
     @Test
      void getUserById() {
-        UserController t = new UserController(mockRepo);
+        UserController t = new UserController(mockService);
 
         class Testcase {
             final String userId;
@@ -149,10 +148,10 @@ import static org.mockito.Mockito.when;
 
         Testcase[] testcases = new Testcase[]{
                 new Testcase("1", false, mockUser, ""),
-                new Testcase("1", true, mockUser, "no tasks were found to the provided id"),
-                new Testcase(null, true, mockUser, "no tasks were found to the provided id"),
-                new Testcase("", true, mockUser, "no tasks were found to the provided id"),
-                new Testcase(null, false, mockUser, "no tasks were found to the provided id")
+                new Testcase("1", true, mockUser, "no user were found to the provided id"),
+                new Testcase(null, true, mockUser, "no user were found to the provided id"),
+                new Testcase("", true, mockUser, "no user were found to the provided id"),
+                new Testcase(null, false, mockUser, "no user were found to the provided id")
         };
         for (Testcase tc : testcases) {
             if (tc.dbReturnSize0) {
@@ -175,7 +174,7 @@ import static org.mockito.Mockito.when;
 
 @Test
  void Handle_create() {
-        UserController t = new UserController(mockRepo);
+        UserController t = new UserController(mockService);
 
     class Testcase {
         final String userId;
@@ -198,9 +197,11 @@ import static org.mockito.Mockito.when;
     for (Testcase tc : testcases) {
         if (tc.badPayload) {
             when(mockService.validateTaskFields(tc.mockPayload)).thenReturn(false);
+            when(mockencoder.encode(tc.mockPayload)).thenReturn("0123");
         } else {
             when(mockService.validateTaskFields(tc.mockPayload)).thenReturn(true);
             when(mockRepo.insert(tc.mockUser)).thenReturn(mockUser);
+            when(mockencoder.encode(tc.mockPayload)).thenReturn("");
         }
 
         try {
@@ -216,7 +217,9 @@ import static org.mockito.Mockito.when;
 }
     @Test
      void getAllUser() {
-        UserController t = new UserController(mockRepo);
+        UserService s = new UserService(mockRepo);
+        UserController t = new UserController(s);
+
         ArrayList<User> mockList = new ArrayList<>();
         for (User task : mockUseArr) {
             mockList.add(task);
@@ -237,16 +240,16 @@ import static org.mockito.Mockito.when;
 
         Testcase[] testcases = new Testcase[]{
                 new Testcase("1", false, mockList, new Gson().toJson(mockList)),
-                new Testcase("1", true, new ArrayList<>(), "no tasks were found to the provided id"),
-                new Testcase(null, true, new ArrayList<>(), "no tasks were found to the provided id"),
-                new Testcase("", true, new ArrayList<>(), "no tasks were found to the provided id"),
-                new Testcase(null, false, new ArrayList<>(), "no tasks were found to the provided id")
+                new Testcase("1", true, new ArrayList<>(), "no user were found to the provided id"),
+                new Testcase(null, true, new ArrayList<>(), "no user were found to the provided id"),
+                new Testcase("", true, new ArrayList<>(), "no user were found to the provided id"),
+                new Testcase(null, false, new ArrayList<>(), "no user were found to the provided id")
         };
         for (Testcase tc : testcases) {
             if (tc.dbReturnSize0) {
-                when(mockRepo.findAll()).thenReturn(new ArrayList<>());
+                when(s.getServiceAllUser()).thenReturn(new ArrayList<>());
             } else {
-                when(mockRepo.findAll()).thenReturn(tc.mockArrayList);
+                when(s.getServiceAllUser()).thenReturn(tc.mockArrayList);
             }
 
             try {
@@ -254,10 +257,89 @@ import static org.mockito.Mockito.when;
                 ResponseEntity<List<User>> actual1 = t.handleGetAllUsers();
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
-                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, "bad payload", null, null, null);
+                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
                 assertEquals(e.getClass(), expectedException.getClass());
             }
         }
     }
+     @Test
+     void getUserRole() {
+         UserController t = new UserController(mockService);
+         class Testcase {
+             final String email;
+             final boolean dbReturnSize0;
 
+
+             public Testcase(String email, boolean dbReturnSize0) {
+                 this.email = email;
+                 this.dbReturnSize0 = dbReturnSize0;
+             }
+         }
+         Testcase[] testcases = new Testcase[]{
+                 new Testcase("test@gmail.com", false ),
+                   new Testcase("", false),
+         };
+         for (Testcase tc : testcases) {
+             try {
+                 when(mockService.getUserRoles(tc.email)).thenReturn(tc.email);
+                 t.getUserRoles(tc.email);
+                 verify(mockService, times(1)).getUserRoles(tc.email);
+             } catch (Exception e) {
+             }
+         }
+     }
+    @Test
+     void getUserInfo() {
+         UserController t = new UserController(mockService);
+         class Testcase {
+             final String email;
+             final boolean dbReturnSize0;
+
+
+             public Testcase(String email, boolean dbReturnSize0) {
+                 this.email = email;
+                 this.dbReturnSize0 = dbReturnSize0;
+             }
+         }
+         Testcase[] testcases = new Testcase[]{
+                 new Testcase("test@gmail.com", true ),
+                 new Testcase("", true),
+         };
+         for (Testcase tc : testcases) {
+             try {
+
+                 when(mockService.getDetails(tc.email)).thenReturn(mockUser);
+                 User actual = t.getUserInfo(tc.email);
+                 assertEquals(mockUser,actual);
+             } catch (Exception e) {
+             }
+         }
+     }
+           @Test
+     void getLogin() {
+         UserController t = new UserController(mockService);
+         class Testcase {
+             final String email;
+             final boolean dbReturnSize0;
+
+
+             public Testcase(String email, boolean dbReturnSize0) {
+                 this.email = email;
+                 this.dbReturnSize0 = dbReturnSize0;
+             }
+         }
+         Testcase[] testcases = new Testcase[]{
+                 new Testcase("test@gmail.com", false ),
+                   new Testcase("", false),
+         };
+         for (Testcase tc : testcases) {
+             try {
+                 when(mockService.getDetails(tc.email)).thenReturn(mockUser);
+                t.login();
+                 verify(mockService, times(1)).getUserRoles(tc.email);
+             } catch (Exception e) {
+             }
+         }
+     }
 }
+

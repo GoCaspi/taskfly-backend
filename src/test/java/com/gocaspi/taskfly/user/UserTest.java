@@ -5,181 +5,169 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 class UserTest {
-    String mockUserIds = "123";
-    String mockListId = "1";
     String mockFistName = "topic1";
-    String mockTeam = "team1";
     String mockLastName = "prio1";
     String mockEmail = "desc1";
     String mockPassword = "11-11-2022";
+    String mocksrole ="ADMIN";
 
-    User mockUser = new User(mockUserIds, mockListId, mockFistName, mockTeam, mockLastName, mockEmail, mockPassword,false);
-    class Testcase_setString{
+     User.Userbody mockbody =new User.Userbody("mockTeam");
+     User mockUser = new User(mocksrole, mockFistName, mockLastName, mockEmail, mockPassword,mockbody,true);
+    class TestcasesetString{
         final String newText;
 
-        Testcase_setString(String newText) {
+        TestcasesetString(String newText) {
             this.newText = newText;
         }
     }
-    Testcase_setString[] testcases = new Testcase_setString[]{
-            new Testcase_setString("abc"),
-            new Testcase_setString(null),
-            new Testcase_setString(""),
+    TestcasesetString[] testcases = new TestcasesetString[]{
+            new TestcasesetString("abc"),
+            new TestcasesetString(null),
+            new TestcasesetString(""),
     };
-    class Testcase_getString{
+    class TestcasegetString{
         final String expected;
 
-        Testcase_getString(String expected) {
+        TestcasegetString(String expected) {
             this.expected = expected;
         }
     }
-    Testcase_getString[] testcases_get = new Testcase_getString[]{
-            new Testcase_getString("abc"),
-            new Testcase_getString(null),
-            new Testcase_getString(""),
+    TestcasegetString[] testcases_get = new TestcasegetString[]{
+            new TestcasegetString("abc"),
+            new TestcasegetString(null),
+            new TestcasegetString(""),
     };
     @Test
-    void getUserId(){
-        User user = mockUser;
-        for (UserTest.Testcase_getString tc : testcases_get){
-            user.setUserId(tc.expected);
-            String actual = user.getUserId();
-            assertEquals(actual,tc.expected);
-        }
-    }
-    @Test
-    void setUserId(){
-        User user = mockUser;
-        for (UserTest.Testcase_setString tc : testcases){
-            user.setUserId(tc.newText);
-            assertEquals(user.getUserId(),tc.newText);
-        }
-    }
-    @Test
-    void getListId(){
+     void getId(){
         User t = mockUser;
+
         String oId = new String("");
-        t.setListId(oId);
-        String actual = t.getListId();
+        t.setId(oId);
+        String actual = t.getId();
         assertEquals(oId,actual);
     }
+  @Test
+    void getpassword(){
+        User t = mockUser;
+        for (TestcasegetString tc : testcases_get){
+            t.setPassword(tc.expected);
+            String actual = t.getPassword();
+            assertEquals(actual,tc.expected);
+        }
+  }
+
     @Test
-    void setListId(){
-        User user = mockUser;
-        for (UserTest.Testcase_setString tc : testcases){
-            user.setListId(tc.newText);
-            assertEquals(user.getListId(),tc.newText);
+    void getemail(){
+        User t = mockUser;
+        for (TestcasegetString tc : testcases_get){
+            t.setEmail(tc.expected);
+            String actual = t.getEmail();
+            assertEquals(actual,tc.expected);
         }
     }
     @Test
-    void getFirstName(){
-        User user = mockUser;
-        for (UserTest.Testcase_getString tc : testcases_get){
-            user.setFirstName(tc.expected);
-            String actual = user.getFirstName();
+    void getfirstname(){
+        User t = mockUser;
+        for (TestcasegetString tc : testcases_get){
+            t.setFirstName(tc.expected);
+            String actual = t.getFirstName();
+            assertEquals(actual,tc.expected);
+        }
+    }
+    @Test
+    void getlastname(){
+        User t = mockUser;
+        for (TestcasegetString tc : testcases_get){
+            t.setLastName(tc.expected);
+            String actual = t.getLastName();
+            assertEquals(actual,tc.expected);
+        }
+    }
+    @Test
+    void getteam(){
+        User.Userbody t = mockbody;
+        for (TestcasegetString tc : testcases_get){
+            t.setTeam(tc.expected);
+            String actual = t.getTeam();
+            assertEquals(actual,tc.expected);
+        }
+    }
+    @Test
+    void getid(){
+        User t = mockUser;
+        for (TestcasegetString tc : testcases_get){
+            t.setId(tc.expected);
+            String actual = t.getId();
             assertEquals(actual,tc.expected);
         }
     }
 
     @Test
-    void setFirstName(){
-        User user = mockUser;
-        for (UserTest.Testcase_setString tc : testcases){
-            user.setFirstName(tc.newText);
-            assertEquals(user.getFirstName(),tc.newText);
-        }
-    }
-
-    @Test
-    void getTeam(){
-        User user = mockUser;
-        for (UserTest.Testcase_getString tc : testcases_get){
-            user.setTeam(tc.expected);
-            String actual = user.getTeam();
-            assertEquals(actual,tc.expected);
-        }
-    }
-
-    @Test
-    void setTeam(){
-        User user = mockUser;
-        for (UserTest.Testcase_setString tc : testcases){
-            user.setTeam(tc.newText);
-            assertEquals(user.getTeam(),tc.newText);
+    void setteam(){
+        User.Userbody t = mockbody;
+        for (TestcasesetString tc : testcases){
+            t.setTeam(tc.newText);
+            assertEquals(t.getTeam(),tc.newText);
         }
     }
     @Test
-    void getLastName(){
-        User user = mockUser;
-        for (UserTest.Testcase_getString tc : testcases_get){
-            user.setLastName(tc.expected);
-            String actual = user.getLastName();
-            assertEquals(actual,tc.expected);
+    void setfirstname(){
+        User t = mockUser;
+        for (TestcasesetString tc : testcases){
+            t.setFirstName(tc.newText);
+            assertEquals(t.getFirstName(),tc.newText);
         }
     }
     @Test
-    void setLastName(){
-        User user = mockUser;
-        for (UserTest.Testcase_setString tc : testcases){
-            user.setLastName(tc.newText);
-            assertEquals(user.getLastName(),tc.newText);
+    void setlastname(){
+        User t = mockUser;
+        for (TestcasesetString tc : testcases){
+            t.setLastName(tc.newText);
+            assertEquals(t.getLastName(),tc.newText);
         }
     }
-
     @Test
-    void getEmail(){
-        User user = mockUser;
-        for (UserTest.Testcase_getString tc : testcases_get){
-            user.setEmail(tc.expected);
-            String actual = user.getEmail();
-            assertEquals(actual,tc.expected);
+    void setid(){
+        User t = mockUser;
+        for (TestcasesetString tc : testcases){
+            t.setId(tc.newText);
+            assertEquals(t.getId(),tc.newText);
         }
     }
     @Test
     void setEmail(){
-        User user = mockUser;
-        for (UserTest.Testcase_setString tc : testcases){
-            user.setEmail(tc.newText);
-            assertEquals(user.getEmail(),tc.newText);
-        }
-    }
-
-    @Test
-    void getPassword(){
-        User user = mockUser;
-        for (UserTest.Testcase_getString tc : testcases_get){
-            user.setPassword(tc.expected);
-            String actual = user.getPassword();
-            assertEquals(actual,tc.expected);
+        User t = mockUser;
+        for (TestcasesetString tc : testcases){
+            t.setEmail(tc.newText);
+            assertEquals(t.getEmail(),tc.newText);
         }
     }
     @Test
-    void setPassword(){
-        User user = mockUser;
-        for (UserTest.Testcase_setString tc : testcases){
-            user.setPassword(tc.newText);
-            assertEquals(user.getPassword(),tc.newText);
-        }
-    }
-
-    @Test
-    void getId(){
-        User user = mockUser;
-        for (UserTest.Testcase_getString tc : testcases_get){
-            user.setId(tc.expected);
-            String actual = user.getId();
-            assertEquals(actual,tc.expected);
+    void setsrole(){
+        User t = mockUser;
+        for (TestcasesetString tc : testcases){
+            t.setSrole(tc.newText);
+            assertEquals(t.getSrole(),tc.newText);
         }
     }
     @Test
-    void setId(){
-        User user = mockUser;
-        for (UserTest.Testcase_setString tc : testcases){
-            user.setId(tc.newText);
-            assertEquals(user.getId(),tc.newText);
+    void setpassword(){
+        User t = mockUser;
+        for (TestcasesetString tc : testcases){
+            t.setPassword(tc.newText);
+            assertEquals(t.getPassword(),tc.newText);
         }
     }
+     @Test
+     void setBody() {
+         User t = mockUser;
+         User.Userbody mockbody =  new User.Userbody("mockTeam");
+         t.setBody(mockbody);
+         User.Userbody actual = t.getBody();
+         assertEquals(actual,mockbody);
+     }
 
 }
+
+

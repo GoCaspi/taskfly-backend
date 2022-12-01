@@ -6,6 +6,9 @@ import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.nio.charset.StandardCharsets;
@@ -15,11 +18,14 @@ import java.util.Optional;
 /**
  * Class of the ResetService, it provides the funtionilty to interact with the mongo database
  */
+@Service
 public class ResetService {
     @Autowired
     private UserRepository repo;
     private final HttpClientErrorException exceptionNotFound;
     private final HttpClientErrorException exceptionBadRequest;
+    @Autowired
+    private PasswordEncoder encoder;
 
     /**
      * Constructor for the ResetService, it takes an UserRepository
@@ -27,6 +33,7 @@ public class ResetService {
      */
     public ResetService (UserRepository repo){
         this.repo = repo;
+        this.encoder = new BCryptPasswordEncoder();
         this.exceptionNotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
         this.exceptionBadRequest = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, "bad payload", new HttpHeaders(), "".getBytes(), null);
     }
@@ -56,8 +63,7 @@ public class ResetService {
 
         user.ifPresent(t -> {
             if (t.getReseted()){
-              t.setPassword(newPwd);
-               // t.setPassword(hashStr(newPwd));
+              t.setPassword(encoder.encode(newPwd));
               t.setReseted(false);
               getRepo().save(t);
             }
@@ -121,7 +127,6 @@ public class ResetService {
         return Hashing.sha256()
                 .hashString(str, StandardCharsets.UTF_8)
                 .toString();
-
     }
 
 

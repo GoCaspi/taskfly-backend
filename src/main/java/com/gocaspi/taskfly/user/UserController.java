@@ -1,58 +1,83 @@
 package com.gocaspi.taskfly.user;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import org.springframework.web.client.HttpClientErrorException;
 import java.util.List;
-/**
- * Class for UserController
- */
 @RestController
 @ResponseBody
+@CrossOrigin("*")
 @RequestMapping("/user")
+
 public class UserController {
     @Autowired
-    private UserRepository repository;
+    private PasswordEncoder encoder;
+    @Autowired
     private final UserService service;
     /**
      * Constractor for UserController
      *
-     * @param repository variable for the interface userRepository
+     * @param userService variable for the interface userRepository
      */
-    public UserController(UserRepository repository) {
+    public UserController(UserService userService) {
         super();
-
-        this.repository = repository;
-        this.service = new UserService(repository);
+        this.service = userService;
+        this.encoder = new BCryptPasswordEncoder();
     }
     /**
-     * given a request body this endpoint converts the body to a user and validates the input Data against set criteria (see method below)
-     * If criteria are matched returns HttpStatus:202, else throws an exception.
-     *
-     * @param body json of the user that should be created
-     * @return ResponseEntity containing a success message along with the http status code
-     * @throws HttpClientErrorException.BadRequest Exception if the provided requestbody is missing fields
+     * Any user can access this API - No Authentication required
+     * @param body
+     * @return
      */
     @PostMapping("/create")
     public ResponseEntity<String> handlerCreateUser(@RequestBody String body) throws HttpClientErrorException.BadRequest {
         var user = jsonToUser(body);
+        user.setEmail(service.hashStr(user.getEmail()));
+        user.setPassword(encoder.encode(user.getPassword()));
+        user.setSrole(user.getSrole());
         getService().postService(user);
         var msg = "Successfully created User";
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
     /**
-     * returns a user from a Json
-     *
-     * @param jsonPayload String
-     * @return user fetched from the jsonPayload
+     * User who has logged in successfully can access this API
+     * @param email
+     * @return
      */
+    @GetMapping("/userInfo")
+    public User getUserInfo(@RequestParam("email")String email){
+        return service.getDetails(email);
+    }
+
+    /**
+     * User Login
+     * @return
+     */
+  @PostMapping("/login")
+
+    public String login()throws AuthenticationException {
+
+     return "Successfully logged in by user :"+ SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+    /**
+     * User who has the role ROLE_WRITE can only access this API
+     * @param email
+     * @return
+     */
+    @GetMapping("/getUserRoles")
+    public String getUserRoles(@RequestParam("email")String email){
+        return service.getUserRoles(email);
+    }
+
     public User jsonToUser(String jsonPayload) {
         return new Gson().fromJson(jsonPayload, User.class);
     }
-
 
     /**
      * calls the service to fetch the user of the provided id. If the service does not throw an exception (no user to the provided id was found)

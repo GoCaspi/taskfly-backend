@@ -4,18 +4,17 @@ import com.gocaspi.taskfly.user.User;
 import com.gocaspi.taskfly.user.UserRepository;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Properties;
 
 /**
  * Class for the Reset Controller with the request mapping /reset
@@ -26,44 +25,26 @@ import java.util.Properties;
 @ResponseBody
 @RequestMapping("/reset")
 public class ResetController {
-    @Autowired
-    private UserRepository repository;
     private final ResetService service;
+    @Autowired
     private JavaMailSender emailSender;
-
+    @Value("${mail.username}")
+    private String emailUsername;
+    @Value("${mail.password}")
+    private String emailPassword;
+    @Value("${mail.host}")
+    private String emailHost;
+    @Value("${mail.port}")
+    private int emailPort;
     /**
      * Construtor for the reset controller with a injected UserRepository
      *
      * @param repository UserRepository
      */
-    public ResetController (UserRepository repository){
+    public ResetController (UserRepository repository, JavaMailSender javaMailSender){
         super();
-        this.repository = repository;
         this.service = new ResetService(repository);
-        this.emailSender = getJavaMailSender();
-    }
-
-    /**
-     * Initializes an object of the JavaMailSender and sets the properties to the smtp-server data
-     *
-     * @return JavaMailSender mailsender
-     */
-    public JavaMailSender getJavaMailSender() {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.sendgrid.net");
-        mailSender.setPort(465);
-
-        mailSender.setUsername("apikey");
-        mailSender.setPassword("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");
-
-        Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.debug", "true");
-        props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.ssl.checkserveridentity",true);
-
-        return mailSender;
+        this.emailSender = javaMailSender;
     }
 
     /**
@@ -168,9 +149,8 @@ public class ResetController {
         if(users.size() !=1){ return new ResponseEntity<>(emptyList, HttpStatus.NOT_FOUND); }
         else{
             String userId = users.get(0).getId();
-            //    this.sendResetMail(resetRequest.getEmail(), "Password reset for TaskFly","Your Password has been reseted. Please copy your userId : "+ userId +" and follow the link: to assign a new password. ");
             //  For testing: send email to host: taskfly.info@gmail.com
-            this.sendResetMail("taskfly.info@gmail.com", "!Password reset for TaskFly!", "Your Password has been reseted. Please copy your userId : " + userId + " and follow the link: to assign a new password. ");
+            this.sendResetMail(resetRequest.getEmail(), "!Password reset for TaskFly!", "Your Password has been reseted. Please copy your userId : " + userId + " and follow the link: to assign a new password. ");
 
 
         return new ResponseEntity<>(users, HttpStatus.ACCEPTED);
@@ -186,7 +166,7 @@ public class ResetController {
      */
     public void sendResetMail(String to, String subject, String text){
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("taskfly.info@gmail.com");
+        message.setFrom("wok.gocaspi@gmail.com");
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);

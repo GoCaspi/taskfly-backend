@@ -5,7 +5,12 @@ import com.gocaspi.taskfly.user.User;
 import com.gocaspi.taskfly.user.UserRepository;
 import com.google.gson.Gson;
 
+import org.bson.types.ObjectId;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -22,10 +27,13 @@ import static org.mockito.Mockito.*;
  class ResetControllerTest {
 	UserRepository mockRepo = mock(UserRepository.class);
 	ResetService mockService = mock(ResetService.class);
+	JavaMailSender mockJavaMailSender = mock(JavaMailSender.class);
 	Reset mockReset = new Reset("lName", "abc@mail.to");
 	Reset mockResetEmptyLName = new Reset("", "abc@mail.to");
+	User.Userbody mockUserBody = new User.Userbody(new ObjectId().toHexString());
+	User mockUser = new User("1", "1", "1", "1", "1", mockUserBody, true);
 
-	 User mockUser = new User("1", "1", "1", "1", "1", "1", "1", true);
+
 
 	 public static class uIdAndPwdBody {
 		 private String pwd;
@@ -55,7 +63,7 @@ import static org.mockito.Mockito.*;
 
 	 @Test
 	  void handleSetNewUserPwd() {
-		 ResetController resetController = new ResetController(mockRepo);
+		 ResetController resetController = new ResetController(mockRepo, mockJavaMailSender);
 		 uIdAndPwdBody uIdAndPwdBody = new uIdAndPwdBody("1", "1");
 
 		 class Testcase {
@@ -101,10 +109,10 @@ import static org.mockito.Mockito.*;
 	@Test
 	 void handleReset() {
 		ArrayList<User> mockList = new ArrayList<>();
-		mockList.add(new User("fName", "lName", "abc@mail.to", "123", "red", "1", "123", false));
+		mockList.add(new User("fName", "lName", "abc@mail.to", "123", "red", mockUserBody, false));
 		ArrayList<User> mockList1 = new ArrayList<>();
-		mockList1.add(new User("fName", "lName", "abc@mail.to", "123", "red", "1", "123", false));
-		ResetController r = new ResetController(mockRepo); // TODO Replace default value.
+		mockList1.add(new User("fName", "lName", "abc@mail.to", "123", "red", mockUserBody, false));
+		ResetController r = new ResetController(mockRepo, mockJavaMailSender); // TODO Replace default value.
 		String body = new Gson().toJson(mockReset); // TODO Replace default value.
 		ResponseEntity expected = null; // TODO Replace default value.
 		ResponseEntity actual = r.handleReset(body);
@@ -134,7 +142,7 @@ import static org.mockito.Mockito.*;
 				assertEquals(HttpStatus.BAD_REQUEST, actual1.getStatusCode() );
 			}
 			if (tc.expectedCode == 404) {
-				mockList.add(new User("fName", "lName", "abc@mail.to", "123", "red", "1", "123", false));
+				mockList.add(new User("fName", "lName", "abc@mail.to", "123", "red", mockUserBody, false));
 				when(mockRepo.findUserByEmail(mockReset.hashStr(mockReset.getEmail()))).thenReturn(mockList);
 				//			when(mockService.getUserByEmail(mockReset.hashStr(mockReset.getEmail()),mockReset.getLastName())).thenReturn(mockList);
 
@@ -143,9 +151,9 @@ import static org.mockito.Mockito.*;
 			}
 
 			if (tc.expectedCode == 200) {
-				mockList.add(new User("fName", "lName", "abc@mail.to", "123", "red", "1", "123", false));
+				mockList.add(new User("fName", "lName", "abc@mail.to", "123", "red", mockUserBody, false));
 				when(mockRepo.findUserByEmail(mockReset.hashStr(mockReset.getEmail()))).thenReturn(mockList1);
-				when(mockRepo.findById(null)).thenReturn(Optional.of(new User("fName", "lName", "abc@mail.to", "123", "red", "1", "123", false)));
+				when(mockRepo.findById(null)).thenReturn(Optional.of(new User("fName", "lName", "abc@mail.to", "123", "red", mockUserBody, false)));
 				when(mockRepo.existsById(null)).thenReturn(true);
 				//			when(mockService.getUserByEmail(mockReset.hashStr(mockReset.getEmail()),mockReset.getLastName())).thenReturn(mockList);
 
@@ -156,30 +164,8 @@ import static org.mockito.Mockito.*;
 	}
 
 	@Test
-	 void getJavaMailSender() {
-		ResetController r = new ResetController(mockRepo); // TODO Replace default value.
-
-		JavaMailSender expected = new JavaMailSenderImpl();
-		((JavaMailSenderImpl) expected).setHost("smtp.sendgrid.net");
-		((JavaMailSenderImpl) expected).setPort(465);
-
-		((JavaMailSenderImpl) expected).setUsername("apikey");
-		((JavaMailSenderImpl) expected).setPassword("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");
-
-		Properties props = ((JavaMailSenderImpl) expected).getJavaMailProperties();
-		props.put("mail.transport.protocol", "smtp");
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.debug", "true");
-		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-		props.put("mail.smtp.ssl.checkserveridentity", true);
-		JavaMailSender actual = r.getJavaMailSender();
-
-		assertEquals(expected.getClass(), actual.getClass());
-	}
-
-	@Test
 	 void jsonToReset() {
-		ResetController r = new ResetController(mockRepo); // TODO Replace default value.
+		ResetController r = new ResetController(mockRepo, mockJavaMailSender); // TODO Replace default value.
 		String jsonPayload = new Gson().toJson(mockReset); // TODO Replace default value.
 		Reset expected = mockReset; // TODO Replace default value.
 		Reset actual = r.jsonToReset(jsonPayload);
@@ -191,8 +177,7 @@ import static org.mockito.Mockito.*;
 
 	@Test
 	 void sendResetMail() {
-		ResetController r = new ResetController(mockRepo); // TODO Replace default value.
-		JavaMailSender mockSender = mock(JavaMailSender.class);
+		ResetController r = new ResetController(mockRepo, mockJavaMailSender); // TODO Replace default value.
 		String to = "toMock"; // TODO Replace default value.
 		String subject = "subjectMock"; // TODO Replace default value.
 		String text = "textMock"; // TODO Replace default value.
