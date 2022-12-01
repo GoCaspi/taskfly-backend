@@ -1,4 +1,4 @@
-package com.gocaspi.taskfly.task;
+package com.gocaspi.taskfly.taskcollection;
 
 import com.gocaspi.taskfly.taskcollection.TaskCollection;
 import com.mongodb.client.MongoClients;

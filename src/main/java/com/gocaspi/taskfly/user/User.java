@@ -117,7 +117,6 @@ public Userbody getBody(){
      * @param str, new value of user-field: userID
      */
     public void setUserId(String str){ this.body.userId = str;}
-
     /**
      * sets the email of a user to a new email
      *
