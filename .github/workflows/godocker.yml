@@ -15,7 +15,7 @@ on: workflow_dispatch
 
 env:
   # Use docker.io for Docker Hub if empty
-  REGISTRY: taskfly.azurecr.io
+  REGISTRY: taskflyrepo.azurecr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: taskflybackend
   DOCKER_USER: TaskFly
