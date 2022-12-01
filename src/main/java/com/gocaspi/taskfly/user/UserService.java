@@ -150,11 +150,9 @@ public class UserService {
 
 
     public String hashStr(String str)  {
-
         return Hashing.sha256()
                 .hashString(str, StandardCharsets.UTF_8)
                 .toString();
-
     }
 }
 
