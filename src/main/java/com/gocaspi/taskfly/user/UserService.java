@@ -15,6 +15,9 @@ package com.gocaspi.taskfly.user;
         import java.util.List;
         import java.util.Objects;
         import java.util.Optional;
+/**
+ * Class for UserService
+ */
         @Service
 public class UserService {
 
@@ -22,6 +25,11 @@ public class UserService {
     private UserRepository repo;
     private final HttpClientErrorException exceptionnotFound;
     private final HttpClientErrorException exceptionbadRequest;
+    /**
+     * Constractor for UserService
+     *
+     * @param repo variable for the interface UserRepository
+     */
     public UserService(UserRepository repo){
 
         this.repo = repo ;
@@ -29,6 +37,11 @@ public class UserService {
         this.exceptionbadRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", new HttpHeaders(), "".getBytes(), null);
     }
 
+    /**
+     * Throws an exception if nothing is found
+     *
+     * @return exceptionbadRequest
+     */
     public HttpClientErrorException getNotFound() {
 
         return this.exceptionbadRequest;
@@ -88,7 +101,11 @@ public class UserService {
         });
 
     }
-
+    /**
+     * given a requestbody (Json of a User) the method checks if all fields are null-safe.
+     * @param jsonPayload, request body
+     * @return true if the mentioned criteria holds for that user-payload, else return false
+     */
     public boolean validateTaskFields(String jsonPayload){
         var user = jsonToUser(jsonPayload);
         return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getSrole(), null) && !Objects.equals(user.getEmail(), null);
@@ -127,9 +144,19 @@ public class UserService {
         }
         return usersToId;
     }
+    /**
+     * returns the email of the user
+     *
+     * @return String, email of the user
+     */
     public User getDetails(String email){
         return repo.findByEmail(email);
     }
+    /**
+     * returns the email of the user, to find out the role
+     *
+     * @return String, email of the user
+     */
     public String getUserRoles(String email){
 
         return repo.findByEmail(email).getSrole();
@@ -141,14 +168,16 @@ public class UserService {
              * @throws RuntimeException Exception if not all fields are filled
              */
     public void postService(User t) throws HttpClientErrorException {
-        if(!validateTaskFields(new Gson().toJson(t))){
+        if (!validateTaskFields(new Gson().toJson(t))) {
             throw exceptionbadRequest;
         }
         getRepo().insert(t);
     }
-
-
-
+            /**
+             *
+             * @param str str
+             * @return Hashing
+             */
     public String hashStr(String str)  {
         return Hashing.sha256()
                 .hashString(str, StandardCharsets.UTF_8)

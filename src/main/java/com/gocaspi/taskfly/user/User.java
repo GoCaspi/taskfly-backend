@@ -25,12 +25,25 @@ public class User  {
      */
     public static class Userbody implements java.io.Serializable{
     private String team;
-
+        /**
+         * Constractor for Userbody
+         *
+         * @param team team of the User
+         */
      public Userbody(String team){
          this.team = team;
      }
-
-    public void setTeam(String str){ this.team = str;}
+        /**
+         * sets the team of a user to a new team
+         *
+         * @param team, new value of user-field: team
+         */
+    public void setTeam(String team){ this.team = team;}
+        /**
+         * returns the team of the user
+         *
+         * @return String, team of the user
+         */
     public String getTeam(){ return this.team;}
 
 }
@@ -54,9 +67,19 @@ public class User  {
         this.body = body;
         this.reseted = reseted;
     }
+    /**
+     * sets the body of Userbody to a new body
+     *
+     * @param body, new value of the Userbody-field: body
+     */
 public void setBody(Userbody body){
     this.body=body;
 }
+    /**
+     * returns the body of the Userbody
+     *
+     * @return String, body of the Userbody
+     */
 public Userbody getBody(){
     return this.body;
 }
