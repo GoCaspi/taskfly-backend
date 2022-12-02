@@ -18,21 +18,29 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Class for UserAuthenticationProvider
+ */
 @Component
 public class UserAuthenticationProvider implements AuthenticationProvider {
     Logger logger = LoggerFactory.getLogger(UserAuthenticationProvider.class);
     private UserRepository repository;
     private PasswordEncoder encoder;
+    /**
+     * Constractor for UserController
+     *
+     * @param repository variable for the interface userRepository
+     * @param encoder variable for the interface PasswordEncoder
+     */
  public UserAuthenticationProvider(UserRepository repository,PasswordEncoder encoder){
      this.encoder = encoder;
      this.repository = repository;
  }
     /**
      * Get the email and password from authentication object and validate with password encoders matching method
-     * @param authentication
-     * @return
-     * @throws AuthenticationException
+     * @param authentication of the user
+     * @return various error messages
+     * @throws AuthenticationException error messages
      */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -56,8 +64,8 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     }
     /**
      * User can have more than roles separated by ",". We are splitting each role separately(ROLE_WRITE/ROLE_READ)
-     * @param userRoles
-     * @return
+     * @param userRoles the role of the user
+     * @return returns the role from the user
      */
      public  List<GrantedAuthority> getUserRoles(String userRoles){
 
@@ -68,10 +76,24 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         }
         return grantedAuthorityList;
      }
+
+    /**
+     * compares two tokens with each other
+     *
+     * @param authentication
+     * @return true or false
+     */
     @Override
     public boolean supports(Class<?> authentication) {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
+
+    /**
+     *
+     *
+     * @param str
+     * @return
+     */
     public String hashStr(String str)  {
         return Hashing.sha256()
                 .hashString(str, StandardCharsets.UTF_8)

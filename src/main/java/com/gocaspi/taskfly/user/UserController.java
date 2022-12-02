@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import org.springframework.web.client.HttpClientErrorException;
 import java.util.List;
+/**
+ * Class for UserController
+ */
 @RestController
 @ResponseBody
 @CrossOrigin("*")
@@ -32,8 +35,8 @@ public class UserController {
     }
     /**
      * Any user can access this API - No Authentication required
-     * @param body
-     * @return
+     * @param body of a user
+     * @return HttpClientErrorException.BadRequest Exception if the provided requestbody is missing fields
      */
     @PostMapping("/create")
     public ResponseEntity<String> handlerCreateUser(@RequestBody String body) throws HttpClientErrorException.BadRequest {
@@ -47,8 +50,8 @@ public class UserController {
     }
     /**
      * User who has logged in successfully can access this API
-     * @param email
-     * @return
+     * @param email of a user
+     * @return the information from the user
      */
     @GetMapping("/userInfo")
     public User getUserInfo(@RequestParam("email")String email){
@@ -57,7 +60,7 @@ public class UserController {
 
     /**
      * User Login
-     * @return
+     * @return when a user has successfully logged in
      */
   @PostMapping("/login")
 
@@ -67,14 +70,19 @@ public class UserController {
     }
     /**
      * User who has the role ROLE_WRITE can only access this API
-     * @param email
-     * @return
+     * @param email of a user
+     * @return the role of the user whether he has admin rights or not
      */
     @GetMapping("/getUserRoles")
     public String getUserRoles(@RequestParam("email")String email){
         return service.getUserRoles(email);
     }
-
+    /**
+     * returns a user from a Json
+     *
+     * @param jsonPayload String
+     * @return user fetched from the jsonPayload
+     */
     public User jsonToUser(String jsonPayload) {
         return new Gson().fromJson(jsonPayload, User.class);
     }
