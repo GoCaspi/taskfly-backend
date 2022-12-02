@@ -83,14 +83,14 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: $${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{github.head_ref || github.ref_name}}-{{ $github.sha }}
+          tags: $${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{github.head_ref || github.ref_name}}-${{ github.sha }}
 
       - name: Deploy Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: "taskflybackend"
           publish-profile: ${{secrets.AZURE_WEB_APP_PUBLISH_PROFILE}}
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{github.head_ref || github.ref_name}}-{{ $github.sha }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{github.head_ref || github.ref_name}}-${{ github.sha }}
       - name: Configure App Environments
         uses: Azure/appservice-settings@v1
         with:
