@@ -74,6 +74,11 @@
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-core</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>de.flapdoodle.embed</groupId>
+			<artifactId>de.flapdoodle.embed.mongo</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>io.micrometer</groupId>
@@ -124,6 +129,11 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.7.0.1746</version>
 			</plugin>
 			<plugin>
 				<groupId>org.jacoco</groupId>

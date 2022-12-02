@@ -7,6 +7,7 @@ package com.gocaspi.taskfly.user;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.http.HttpHeaders;
         import org.springframework.http.HttpStatus;
+        import org.springframework.stereotype.Service;
         import org.springframework.web.client.HttpClientErrorException;
 
         import java.nio.charset.StandardCharsets;
@@ -14,31 +15,20 @@ package com.gocaspi.taskfly.user;
         import java.util.List;
         import java.util.Objects;
         import java.util.Optional;
-/**
- * Class for UserService
- */
+        @Service
 public class UserService {
 
     @Autowired
     private UserRepository repo;
     private final HttpClientErrorException exceptionnotFound;
     private final HttpClientErrorException exceptionbadRequest;
-    /**
-     * Constractor for UserService
-     *
-     * @param repo variable for the interface userRepository
-     */
     public UserService(UserRepository repo){
 
-        this.repo = repo;
-        this.exceptionnotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(), null);
-        this.exceptionbadRequest = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, "bad payload", new HttpHeaders(), "".getBytes(), null);
+        this.repo = repo ;
+        this.exceptionnotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
+        this.exceptionbadRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", new HttpHeaders(), "".getBytes(), null);
     }
-    /**
-     * returns the HttpClientErrorException
-     *
-     * @return exceptionNotFound
-     */
+
     public HttpClientErrorException getNotFound() {
 
         return this.exceptionbadRequest;
@@ -76,18 +66,17 @@ public class UserService {
             throw exceptionnotFound;
         }
         user.ifPresent(t -> {
-           if (update.getEmail() != null) {
-                   t.setEmail(hashStr(update.getEmail()));
-           }
-
             if (update.getTeam() != null) {
                 t.setTeam(update.getTeam());
             }
+            if (update.getEmail() != null) {
+                t.setEmail(update.getEmail());
+            }
+            if (update.getSrole() != null) {
+                t.setSrole(update.getSrole());
+            }
             if (update.getPassword() != null) {
                 t.setPassword(update.getPassword());
-            }
-            if (update.getListId() != null) {
-                t.setListId(update.getListId());
             }
             if (update.getFirstName() != null) {
                 t.setFirstName(update.getFirstName());
@@ -96,30 +85,13 @@ public class UserService {
                 t.setLastName(update.getLastName());
             }
             getRepo().save(t);
-
         });
+
     }
-    /**
-     * throws an error if not all necessary fields of the provided user are assigned. If all fields are validated the
-     * user will be saved to the mongodb
-     * @param t user to get validated and saved
-     * @throws RuntimeException Exception if not all fields are filled
-     */
-    public void postService(User t) throws HttpClientErrorException {
-        if (!validateTaskFields(new Gson().toJson(t))) {
-            throw exceptionbadRequest;
-        }
-        t.setEmail(hashStr(t.getEmail()));
-        getRepo().insert(t);
-    }
-    /**
-     * given a requestbody (Json of a user) the method checks if all fields are null-safe.
-     * @param jsonPayload, request body
-     * @return true if the mentioned criteria holds for that user-payload, else return false
-     */
+
     public boolean validateTaskFields(String jsonPayload){
         var user = jsonToUser(jsonPayload);
-        return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getListId(), null) && !Objects.equals(user.getEmail(), null) && !Objects.equals(user.getTeam(), null);
+        return !Objects.equals(user.getFirstName(), null) && !Objects.equals(user.getLastName(), null) && !Objects.equals(user.getSrole(), null) && !Objects.equals(user.getEmail(), null);
     }
     /**
      * returns a user from a json String
@@ -136,7 +108,7 @@ public class UserService {
     public User getServicebyid(String id)throws HttpClientErrorException.NotFound{
         if(!getRepo().existsById(id)){ throw exceptionnotFound;}
         var user = getRepo().findById(id);
-        if (user.isEmpty()) {
+        if (user.isEmpty()){
             throw exceptionnotFound;
         }
         return user.get();
@@ -150,19 +122,37 @@ public class UserService {
     public List<User> getServiceAllUser(){
         List<User> users = getRepo().findAll();
         List<User> usersToId = new ArrayList<>();
-        for (User t : users) {
-            usersToId.add(t);
+        for (User t : users){
+                usersToId.add(t);
         }
         return usersToId;
     }
+    public User getDetails(String email){
+        return repo.findByEmail(email);
+    }
+    public String getUserRoles(String email){
+
+        return repo.findByEmail(email).getSrole();
+    }
+            /**
+             * throws an error if not all necessary fields of the provided user are assigned. If all fields are validated the
+             * user will be saved to the mongodb
+             * @param t user to get validated and saved
+             * @throws RuntimeException Exception if not all fields are filled
+             */
+    public void postService(User t) throws HttpClientErrorException {
+        if(!validateTaskFields(new Gson().toJson(t))){
+            throw exceptionbadRequest;
+        }
+        getRepo().insert(t);
+    }
+
 
 
     public String hashStr(String str)  {
-
         return Hashing.sha256()
                 .hashString(str, StandardCharsets.UTF_8)
                 .toString();
-
     }
 }
 

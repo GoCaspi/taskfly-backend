@@ -1,161 +1,81 @@
 package com.gocaspi.taskfly.task;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.format.annotation.DateTimeFormat;
 
-/**
- * Class for Task
- */
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 public class Task {
+    @NotBlank
     private String userId;
+    @NotBlank
     private String listId;
     private String team;
-    private String deadline;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
+    private LocalDateTime deadline;
+    @Id
     private ObjectId id;
-    private String taskId;
     private Taskbody body;
-
-    /**
-     * Class for Taskbody
-     */
-    public static class Taskbody {
+   public static class Taskbody {
         private String topic;
-        private String priority;
+        private Boolean highPriority;
         private String description;
 
-       /**
-        * Constractor for Taskbody
-        *
-        * @param topic title of the task
-        * @param priority priority of the task
-        * @param description description of the task
-        */
-        public Taskbody(String topic, String priority,String description){
+        public Taskbody(String topic, Boolean highPriority,String description){
             this.topic = topic;
-            this.priority = priority;
+            this.highPriority = highPriority;
             this.description = description;
-        }
-       /**
-        * sets the priority of a task to a new priority
-        *
-        * @param priority, new value of the task-field: priority
-        */
-        public void setPriority(String priority){
-            this.priority = priority;
-        }
-       /**
-        * sets the description of a task to a new description
-        *
-        * @param description, new value of the task-field: description
-        */
-        public void setDescription(String description){
-            this.description = description;
-        }
-       /**
-        * sets the topic of a task to a new topic
-        *
-        * @param topic, new value of the task-field: topic
-        */
-        public void setTopic(String topic){
-            this.topic = topic;
         }
 
-       /**
-        * returns the topic of the task
-        *
-        * @return String, topic of the task
-        */
+        public void setHighPriority(Boolean str){
+            this.highPriority = str;
+        }
+        public void setDescription(String str){
+            this.description = str;
+        }
+        public void setTopic(String str){
+            this.topic = str;
+        }
+
         public String getTopic(){
             return this.topic;
         }
-       /**
-        * returns the description of the task
-        *
-        * @return String, description of the task
-        */
         public String getDescription(){
             return this.description;
         }
-       /**
-        * returns the priority of the task
-        *
-        * @return String, priority of the task
-        */
-        public String getPriority(){
-            return this.priority;
+        public Boolean getHighPriority(){
+            return this.highPriority;
         }
+
+
 
     }
 
-    /**
-     * Constractor for Task
-     * @param userId userid for the task
-     * @param listId listId for the task
-     * @param team team for the task
-     * @param deadline deadline for the task
-     * @param id id for the task
-     * @param body body for the task
-     */
-    public Task(String userId, String listId, String team,  String deadline, ObjectId id, Taskbody body){
+
+
+    public Task(String userId, String listId, String team, LocalDateTime deadline, ObjectId id, Taskbody body){
         this.userId = userId;
         this.listId = listId;
         this.team = team;
         this.deadline = deadline;
         this.id = id;
-        this.taskId = id.toString();
         this.body = body;
     }
 
-    /**
-     * Empty Constractor Task for testing
-     */
     public Task(){
+
     }
-    /**
-     * sets the body of a task to a new body
-     *
-     * @param body, new value of task-field: body
-     */
+
+
     public void setBody(Taskbody body){
         this.body = body;
     }
-    /**
-     * returns the body of the task
-     *
-     * @return String, body of the task
-     */
     public Taskbody getBody(){
         return this.body;
     }
-
-
-    /**
-     * returns the id string of the ObjectId of the task
-     *
-     * @return String, id string of the ObjectId _id
-     */
-    public String getTaskId(){
-        return this.taskId;
-    }
-
-    /**
-     * sets the description of the task to a provided string (text)
-     *
-     * @param text, new description of the task
-     */
-    public void setTaskId(String text){
-        this.taskId = text;
-    }
-
-    /**
-     * returns the id string of the ObjectId of the task
-     *
-     * @return String, id string of the ObjectId _id
-     */
-    public String getTaskIdString(){
-        return this.id.toString();
-    }
-
-
     /**
      * sets the userIDs array of a task to the provided String-array (newUserIds)
      *
@@ -172,6 +92,13 @@ public class Task {
      */
     public String getUserId(){ return this.userId; }
 
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
 
     /**
      * sets the team of a task to a new team (team)
@@ -194,16 +121,16 @@ public class Task {
      *
      * @param deadline, new value of task-field: deadline
      */
-    public void setDeadline(String deadline){
+    public void setDeadline(LocalDateTime deadline){
         this.deadline = deadline;
     }
 
     /**
      * returns the deadline of the task
      *
-     * @return String, deadline of the task
+     * @return LocalDateTime, deadline of the task
      */
-    public String getDeadline(){ return this.deadline; }
+    public LocalDateTime getDeadline(){ return this.deadline; }
 
 
     /**

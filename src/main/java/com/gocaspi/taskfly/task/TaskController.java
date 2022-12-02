@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.google.gson.Gson;
 import org.springframework.web.client.HttpClientErrorException;
 
+import javax.validation.Valid;
 import java.util.*;
 
 
@@ -20,42 +20,29 @@ import java.util.*;
 @RequestMapping("/task")
 public class TaskController {
     @Autowired
-    private TaskRepository repository;
     private final TaskService service;
 
     /**
      * Constractor for TaskController
      *
-     * @param repository variable for the interface taskrepository
+     * @param service variable for the interface taskrepository
      */
-   public TaskController (TaskRepository repository){
-       super();
-       this.repository = repository;
-       this.service = new TaskService(repository);
+
+   public TaskController (TaskService service){
+       this.service = service;
    }
-
-    /**
-     * returns the service  of type TaskService
-     *
-     * @return TaskService that is injected in the Controller
-     */
-    public TaskService getService() {
-        return this.service;
-    }
-
     /**
      * given a request body this endpoint converts the body to a Task and validates the input Data against set criteria (see method below)
      * If criteria are matched returns HttpStatus:202, else throws an exception.
      *
-     * @param body json of the task that should be created
+     * @param task which is being sent as a json to the controller via http
      * @return ResponseEntity containing a success message along with the http status code
      * @throws HttpClientErrorException.BadRequest Exception if the provided requestbody is missing fields
      */
     @PostMapping
-    public ResponseEntity<String> handleCreateNewTask(@RequestBody String body) throws HttpClientErrorException.BadRequest {
-        var task = jsonToTask(body);
-        getService().postService(task);
-        String msg = "successfully created task with id: " + task.getTaskIdString();
+    public ResponseEntity<String> handleCreateNewTask(@Valid @RequestBody Task task) throws HttpClientErrorException.BadRequest {
+        service.postService(task);
+        String msg = "successfully created task with id: " + task.getId().toHexString();
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
@@ -70,8 +57,7 @@ public class TaskController {
      */
     @GetMapping("/userId/{id}")
     public ResponseEntity<List<Task>> handleGetAllTasks(@PathVariable String id) throws HttpClientErrorException.NotFound {
-        List<Task> tasks = getService().getServiceAllTasksOfUser(id);
-        if(tasks.isEmpty()){ throw getService().getNotFound();}
+        List<Task> tasks = service.getServiceAllTasksOfUser(id);
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
@@ -85,8 +71,50 @@ public class TaskController {
      */
     @GetMapping("/taskId/{id}")
     public ResponseEntity<Task> handleGetTaskById(@PathVariable String id) throws HttpClientErrorException.NotFound {
-        var task = getService().getServiceTaskById(id);
+        var task = service.getServiceTaskById(id);
         return new ResponseEntity<>(task, HttpStatus.OK);
+    }
+
+    @GetMapping("/priority/{userid}")
+    public ResponseEntity<List<Task>> handleGetTaskByUserIDandPriority(@PathVariable String userid) throws HttpClientErrorException.NotFound{
+        var taskList = service.getTasksByHighPriorityService(userid);
+        return new ResponseEntity<>(taskList, HttpStatus.OK);
+    }
+
+    /**
+     *
+     * @param userid
+     * @return
+     * @throws HttpClientErrorException.NotFound
+     */
+    @GetMapping("/private/{userid}")
+    public ResponseEntity<List<Task>> handleGetPrivateTasksByUser(@PathVariable String userid) throws  HttpClientErrorException.NotFound{
+        var taskList = service.getPrivateTasks(userid);
+        return new ResponseEntity<>(taskList, HttpStatus.OK);
+    }
+
+    /**
+     *
+     * @param userid, identifier for the user of interest
+     * @return ResponseEntity, containing a List of Tasks and the http status code.
+     * @throws HttpClientErrorException.NotFound Exception
+     */
+    @GetMapping("/shared/{userid}")
+    public ResponseEntity<List<Task>> handleGetSharedTasksByUser(@PathVariable String userid) throws  HttpClientErrorException.NotFound{
+        var taskList = service.getSharedTasks(userid);
+        return new ResponseEntity<>(taskList, HttpStatus.OK);
+    }
+
+    /**
+     *
+     * @param userid, identifier for the user of interest
+     * @return ResponseEntity, containing a List of Tasks and the http status code.
+     * @throws HttpClientErrorException.NotFound Exception if no matching task is found.
+     */
+    @GetMapping("/scheduled/week/{userid}")
+    public ResponseEntity<List<Task>> handleTasksScheduledForOneWeekByUser(@PathVariable String userid) throws HttpClientErrorException.NotFound{
+        var taskList = service.getTasksScheduledForOneWeek(userid);
+        return new ResponseEntity<>(taskList, HttpStatus.OK);
     }
 
     /**
@@ -98,7 +126,7 @@ public class TaskController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> handleDeleteTask(@PathVariable String id) throws HttpClientErrorException.NotFound {
-        getService().deleteService(id);
+        service.deleteService(id);
         var msg = "successfully deleted task with id: "+id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
@@ -115,19 +143,10 @@ public class TaskController {
      * @throws HttpClientErrorException.NotFound Exception if no task to the id was found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<String> handleUpdateTask(@PathVariable String id,@RequestBody String body) throws HttpClientErrorException.NotFound {
-
-        var update = jsonToTask(body);
-        getService().updateService(id,update);
-        var msg = "successfully updated task with id: "+id;
+    public ResponseEntity<String> handleUpdateTask(@PathVariable String id,@RequestBody Task body) throws HttpClientErrorException.NotFound {
+        service.updateService(id,body);
+        var msg = "successfully updated task with id: "+ id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
-    /**
-     * returns a Task from a Json
-     *
-     * @param jsonPayload String
-     * @return Task fetched from the jsonPayload
-     */
-    public Task jsonToTask(String jsonPayload){ return new Gson().fromJson(jsonPayload, Task.class);}
 }

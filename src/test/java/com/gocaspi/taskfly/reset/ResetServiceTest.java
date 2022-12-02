@@ -12,6 +12,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.bson.types.ObjectId;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -21,8 +23,8 @@ import static org.mockito.Mockito.when;
 	UserRepository repo = mock(UserRepository.class);
 	Reset reset = new Reset("lName","fName@mail.to");
 	ResetService resetService = new ResetService(repo);
-
-	User mockUser = new User("fName", "lName", "fName@mail.to", "admin123", "red", "1", "12345",false);
+	User.Userbody mockUserBody = new User.Userbody(new ObjectId().toHexString());
+	User mockUser = new User("fName", "lName", "fName@mail.to", "admin123", "red", mockUserBody, false);
 	List <User> mockList = new ArrayList<>();
 
 
@@ -115,10 +117,10 @@ import static org.mockito.Mockito.when;
 		};
 		for(Testcase tc : testcases){
 			if(tc.notFound){
-				when(repo.findById(tc.dbReturn.getUserId())).thenReturn(null);
-				when(repo.existsById(tc.dbReturn.getUserId())).thenReturn(false);
+				when(repo.findById(tc.dbReturn.getId())).thenReturn(null);
+				when(repo.existsById(tc.dbReturn.getId())).thenReturn(false);
 				try {
-					resetService.resetPwdOfUser(tc.dbReturn.getUserId(),"newPwd");
+					resetService.resetPwdOfUser(tc.dbReturn.getId(),"newPwd");
 				}
 				catch (HttpClientErrorException e){
 					HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
@@ -127,9 +129,9 @@ import static org.mockito.Mockito.when;
 			}
 			else{
 				mockUser.setReseted(true);
-				when(repo.findById(tc.dbReturn.getUserId())).thenReturn(Optional.ofNullable(mockUser));
-				when(repo.existsById(tc.dbReturn.getUserId())).thenReturn(true);
-				Optional<User> actual = resetService.resetPwdOfUser(tc.dbReturn.getUserId(),"newPwd");
+				when(repo.findById(tc.dbReturn.getId())).thenReturn(Optional.ofNullable(mockUser));
+				when(repo.existsById(tc.dbReturn.getId())).thenReturn(true);
+				Optional<User> actual = resetService.resetPwdOfUser(tc.dbReturn.getId(),"newPwd");
 				assertEquals(actual,tc.expected);
 			}
 
@@ -157,19 +159,19 @@ import static org.mockito.Mockito.when;
 
 		for(Testcase tc : testcases){
 			if(!tc.notFound){
-				when(repo.findById(tc.dbReturn.getUserId())).thenReturn(Optional.ofNullable(mockUser));
-				when(repo.existsById(tc.dbReturn.getUserId())).thenReturn(true);
+				when(repo.findById(tc.dbReturn.getId())).thenReturn(Optional.ofNullable(mockUser));
+				when(repo.existsById(tc.dbReturn.getId())).thenReturn(true);
 				try {
-					 resetService.enablePwdReset(tc.dbReturn.getUserId(),true);
-					resetService.enablePwdReset(tc.dbReturn.getUserId(),false);
+					 resetService.enablePwdReset(tc.dbReturn.getId(),true);
+					resetService.enablePwdReset(tc.dbReturn.getId(),false);
 				}
 				catch (HttpClientErrorException e){}
 			}
 			else {
-				when(repo.findById(tc.dbReturn.getUserId())).thenReturn(null);
-				when(repo.existsById(tc.dbReturn.getUserId())).thenReturn(false);
+				when(repo.findById(tc.dbReturn.getId())).thenReturn(null);
+				when(repo.existsById(tc.dbReturn.getId())).thenReturn(false);
 				try {
-					resetService.enablePwdReset(tc.dbReturn.getUserId(),true);
+					resetService.enablePwdReset(tc.dbReturn.getId(),true);
 				}
 				catch (HttpClientErrorException e){
 					HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
