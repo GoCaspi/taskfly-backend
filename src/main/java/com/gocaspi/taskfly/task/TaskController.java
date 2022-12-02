@@ -83,9 +83,9 @@ public class TaskController {
 
     /**
      *
-     * @param userid
-     * @return
-     * @throws HttpClientErrorException.NotFound
+     * @param userid of the user
+     * @return ResponseEntity, containing the task from the db and the http status code
+     * @throws HttpClientErrorException.NotFound throws an error if the user id is not found
      */
     @GetMapping("/private/{userid}")
     public ResponseEntity<List<Task>> handleGetPrivateTasksByUser(@PathVariable String userid) throws  HttpClientErrorException.NotFound{
