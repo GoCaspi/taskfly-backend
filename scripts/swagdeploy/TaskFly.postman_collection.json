@@ -1,0 +1,1701 @@
+{
+	"info": {
+		"_postman_id": "03bad3c9-6eeb-4ec5-a969-70c38a80f7ec",
+		"name": "TaskFly",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "CreateUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create User\", function(){",
+									"    pm.response.to.have.status(202)",
+									"})",
+									"",
+									"var body2 = JSON.stringify([{",
+									"    \"firstNnname\": \"Miled\",",
+									"    \"lastName\": \"Müller\",",
+									"    \"email\":\"Müller@gmail.com\",",
+									"    \"password\":\"password\",",
+									"    \"team\":\"Okapi\",",
+									"    \"listId\":\"1\"",
+									"}])",
+									"",
+									"pm.sendRequest({",
+									"    url:pm.environment.get(\"host\")+\"/user/create/\",",
+									"    method: \"POST\",",
+									"    body: body2,",
+									"}, (err, res) => {",
+									"    pm.test(\"Body error\", function(){",
+									"        pm.expect(res).to.have.status(500)",
+									"       ",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"POST\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Sahand\",\n    \"lastName\": \"Armin\",\n    \"email\":\"s.armin@gmail.com\",\n    \"password\":\"password\",\n    \"team\":\"Okapi\",\n    \"listId\":\"1\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/user/create",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user",
+								"create"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "CreateUser",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"firstName\": \"Sahand\",\n    \"lastName\": \"Armin\",\n    \"email\":\"s.armin@gmail.com\",\n    \"password\":\"password\",\n    \"team\":\"Okapi\",\n    \"listId\":\"1\"\n\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/user/create",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"user",
+										"create"
+									]
+								}
+							},
+							"status": "Accepted",
+							"code": 202,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "25"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 28 Nov 2022 10:44:51 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "Successfully created User\n"
+						},
+						{
+							"name": "CreateUser",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"firstName\": \"Sahand\",\n    \"lastName\": \"Armin\",\n    \"emmmmmail\":\"s.armin@gmail.com\",\n    \"password\":\"password\",\n    \"team\":\"Okapi\",\n    \"listId\":\"1\"\n\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/user/create",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"user",
+										"create"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 28 Nov 2022 10:47:21 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"local_msg\": \"404 bad payload\",\n    \"error_msg\": \"the requested resource was not found in the database\",\n    \"status_txt\": \"bad payload\"\n}"
+						}
+					]
+				},
+				{
+					"name": "GetallUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status check\", () => {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/user",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Getalluser",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/user",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "309"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 28 Oct 2022 06:23:10 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[{\"id\":\"635b74f37a4fc27d889f187c\",\"firstName\":\"Müller\",\"lastName\":\"Müller\",\"email\":\"Müller@gmail.com\",\"password\":\"password\",\"team\":\"Okapi\",\"listId\":\"1\"},{\"id\":\"635b75067a4fc27d889f187d\",\"firstName\":\"Patrik\",\"lastName\":\"Müller\",\"email\":\"Patrik@gmail.com\",\"password\":\"password\",\"team\":\"Okapi\",\"listId\":\"1\"}]"
+						}
+					]
+				},
+				{
+					"name": "GetUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status check\", () => {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									" ",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/user/1\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"User does not exist\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/user/{{taskFlyUserId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user",
+								"{{taskFlyUserId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GetUser",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/user/635a75c03ac4195d34f72be2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"635a75c03ac4195d34f72be2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "122"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 27 Oct 2022 12:27:50 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"635a75c03ac4195d34f72be2\",\n    \"firstName\": \"Bremen\",\n    \"lastName\": \"Müller\",\n    \"email\": \"Luca@gmail.com\",\n    \"password\": \"password\"\n}"
+						}
+					]
+				},
+				{
+					"name": "UpdateUser",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status check\", () => {",
+									"    pm.response.to.have.status(202)",
+									"})",
+									"",
+									"var body2 = JSON.stringify([{",
+									"    \"firstName\": \"Miled\",",
+									"    \"lastName\": \"Müller\",",
+									"    \"email\":\"Müller@gmail.com\",",
+									"    \"password\":\"password\",",
+									"    \"team\":\"Okapi\",",
+									"    \"liiiistId\":\"1\"",
+									"}])",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"PUT\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/user/6376638f3cd43b77f66001a5\",",
+									"    method: \"PUT\",",
+									"    body:body2,",
+									"}, (err, res) => {",
+									"    pm.test(\"Body error\", () => {",
+									"        pm.expect(res).to.have.status(500)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/user\",",
+									"    method: \"PUT\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Plese enter a UserID\", () => {",
+									"        pm.expect(res).to.have.status(405)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Sahand\",\n    \"lastName\": \"Armin\",\n    \"email\":\"s.armin@gmail.com\",\n    \"password\":\"password\",\n    \"team\":\"Okapi\",\n    \"listId\":\"1\"\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/user/{{taskFlyUserId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user",
+								"{{taskFlyUserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User Status check\", () => {",
+									"    pm.response.to.have.status(202)",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/user/123\",",
+									"    method: \"DELETE\",",
+									"    ",
+									"}, (err, res) =>{",
+									"    pm.test(\"User does not exist\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/user/\",",
+									"    method: \"DELETE\",",
+									"    ",
+									"}, (err, res) =>{",
+									"    pm.test(\"Please enter a UserID\", () => {",
+									"        pm.expect(res).to.have.status(405)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"DELETE\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/user/{{taskFlyUserId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user",
+								"{{taskFlyUserId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Task",
+			"item": [
+				{
+					"name": "UpdateTask",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status check\", () => {",
+									"    pm.response.to.have.status(202)",
+									"})",
+									"",
+									"var body2 = JSON.stringify([{",
+									"     \"userId\":\"1\",",
+									"    \"listId\":\"MyDay\",",
+									"    \"team\":\"blue\",",
+									"    \"deaaaaadline\":\"11-11-2022\",",
+									"    \"body\":{",
+									"        \"topic\":\"new topic\",",
+									"        \"priority\":\"new priority\",",
+									"        \"description\":\"new description text\"",
+									"    }",
+									"}])",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"PUT\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/task/637cddd69be345601d062130\",",
+									"    method: \"PUT\",",
+									"    body:body2,",
+									"}, (err, res) => {",
+									"    pm.test(\"Body error\", () => {",
+									"        pm.expect(res).to.have.status(500)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/task\",",
+									"    method: \"PUT\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Plese enter a TaskID\", () => {",
+									"        pm.expect(res).to.have.status(405)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\":\"1\",\n    \"listId\":\"MyDay\",\n    \"team\":\"OKAPI\",\n    \"deadline\":\"11-11-2022\",\n    \"body\":{\n        \"topic\":\"new topic\",\n        \"priority\":\"new priority\",\n        \"description\":\"new description text\"\n    }\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/task/{{taskFlyTaskId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"task",
+								"{{taskFlyTaskId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteTaskById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Task Status check\", () => {",
+									"    pm.response.to.have.status(202)",
+									"})",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/task/123\",",
+									"    method: \"DELETE\",",
+									"    ",
+									"}, (err, res) =>{",
+									"    pm.test(\"Task does not exist\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"DELETE\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/task\",",
+									"    method: \"DELETE\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Please enter a TaskID \", () => {",
+									"        pm.expect(res).to.have.status(405)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/task/{{taskFlyTaskId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"task",
+								"{{taskFlyTaskId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTaskById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status check\", () => {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									" ",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/task/taskId/1\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Task does not exist\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/task/\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path /taskId/'id' is missing\", () => {",
+									"        pm.expect(res).to.have.status(405)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/task/taskId/\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Please enter a TaskId\", () => {",
+									"        pm.expect(res).to.have.status(405)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/task/taskId/{{taskFlyTaskId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"task",
+								"taskId",
+								"{{taskFlyTaskId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllTasks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status check\", () => {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/task\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path /userId/'id' is missing\", () => {",
+									"        pm.expect(res).to.have.status(405)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/task/userId\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Please enter a UserID\", () => {",
+									"        pm.expect(res).to.have.status(405)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/task/userId/99\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"User does not exist\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/task/userId/{{taskFlyUserId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"task",
+								"userId",
+								"{{taskFlyUserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateNewTask",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create Team\", function(){",
+									"    pm.response.to.have.status(202)",
+									"})",
+									"",
+									"var body2 = JSON.stringify([{",
+									"    \"userId\":\"1\",",
+									"    \"listId\":\"MyDay\",",
+									"    \"team\":\"blue\",",
+									"    \"deadline\":\"11-11-2022\",",
+									"    \"body\":{",
+									"        \"topiiiiic\":\"new topic\",",
+									"        \"priority\":\"new priority\",",
+									"        \"description\":\"new description text\"",
+									"    }",
+									"}])",
+									"",
+									"pm.sendRequest({",
+									"    url:pm.environment.get(\"host\")+\"/task/\",",
+									"    method: \"POST\",",
+									"    body: body2,",
+									"}, (err, res) => {",
+									"    pm.test(\"Body error\", function(){",
+									"       pm.expect(res).to.have.status(500)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"POST\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\":\"1\",\n    \"listId\":\"MyDay\",\n    \"team\":\"blue\",\n    \"deadline\":\"11-11-2022\",\n    \"body\":{\n        \"topic\":\"new topic\",\n        \"priority\":\"new priority\",\n        \"description\":\"new description text\"\n    }\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/task",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"task"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TeamManagement",
+			"item": [
+				{
+					"name": "CreateTeam",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create Team\", function(){",
+									"    pm.response.to.have.status(202)",
+									"})",
+									"",
+									"var body2 = JSON.stringify([{",
+									"    \"teamname\": \"Rot\",",
+									"    \"members\": [\"3\",\"4\",\"7\"],",
+									"    \"userID\": \"1\"",
+									"}])",
+									"",
+									"pm.sendRequest({",
+									"    url:pm.environment.get(\"host\")+\"/teammanagement/\",",
+									"    method: \"POST\",",
+									"    body: body2,",
+									"}, (err, res) => {",
+									"    pm.test(\"Body error\", function(){",
+									"        pm.expect(res).to.have.status(500)",
+									"       ",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"POST\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"teamName\": \"Rot\",\n    \"members\": [\"3\",\"4\",\"7\"],\n    \"userID\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/teammanagement",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"teammanagement"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteTeam",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status check\", () => {",
+									"    pm.response.to.have.status(202)",
+									"})",
+									"",
+									"var body2 = JSON.stringify([{",
+									"    \"teamNaaaame\": \"uuuu\",",
+									"    \"members\": [\"3\",\"4\",\"7\"],",
+									"    \"userID\": \"1\"",
+									"}])",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"Patch\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/teammanagement/637ccd5a757ff76715114300\",",
+									"    method: \"Patch\",",
+									"    body:body2,",
+									"}, (err, res) => {",
+									"    pm.test(\"Body error\", () => {",
+									"        pm.expect(res).to.have.status(500)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/teammanagement\",",
+									"    method: \"Patch\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Plese enter a TeamID\", () => {",
+									"        pm.expect(res).to.have.status(405)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/teammanagement/{{taskFlyTeamId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"teammanagement",
+								"{{taskFlyTeamId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTeam",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status check\", () => {",
+									"    pm.response.to.have.status(202)",
+									"})",
+									"",
+									"var body2 = JSON.stringify([{",
+									"    \"teamNaaaame\": \"uuuu\",",
+									"    \"members\": [\"3\",\"4\",\"7\"],",
+									"    \"userID\": \"1\"",
+									"}])",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"Patch\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/teammanagement/637ccd5a757ff76715114300\",",
+									"    method: \"Patch\",",
+									"    body:body2,",
+									"}, (err, res) => {",
+									"    pm.test(\"Body error\", () => {",
+									"        pm.expect(res).to.have.status(500)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/teammanagement\",",
+									"    method: \"Patch\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Plese enter a TeamID\", () => {",
+									"        pm.expect(res).to.have.status(405)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"teamName\": \"OKAPI\",\n    \"members\": [\"3\",\"4\",\"7\"],\n    \"userID\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/teammanagement/{{taskFlyTeamId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"teammanagement",
+								"{{taskFlyTeamId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddMembersTeam",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Team and Member Status check\", function(){",
+									"    pm.response.to.have.status(202)",
+									"})",
+									"",
+									"",
+									"var body2 = JSON.stringify([{",
+									"    \"_id\": \"637601207a4f5027912c869e\",",
+									"    \"teamname\": \"Rot\",",
+									"    \"members\": [\"3\",\"4\",\"7\"],",
+									"    \"userID\": \"1\"",
+									"}])",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/teammanagement/\" + \"123\",",
+									"    method: \"POST\",",
+									"}, (err, res) =>{",
+									"    pm.test(\"Add Team Member\", () => {",
+									"        pm.expect(res).to.have.status(405)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/teammanagement/637c8268cc250363b6dd7f9b/3\",",
+									"    method: \"POST\",",
+									"}, (err, res) =>{",
+									"    pm.test(\"Team Member existiert\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"POST\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url:pm.environment.get(\"host\")+\"/teammanagement/\",",
+									"    method: \"POST\",",
+									"}, (err, res) => {",
+									"    pm.test(\"Enter the Team\", function(){",
+									"        pm.expect(res).to.have.status(400)",
+									"       ",
+									"    })",
+									"    ",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/teammanagement/{{taskFlyTeamId}}/{{taskFlyUserId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"teammanagement",
+								"{{taskFlyTeamId}}",
+								"{{taskFlyUserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteMemberTeam",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Team and Member Status check\", () => {",
+									"    pm.response.to.have.status(202)",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/teammanagement/123\",",
+									"    method: \"DELETE\",",
+									"}, (err, res) =>{",
+									"    pm.test(\"Team does not exist\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/teammanagement/123/55\",",
+									"    method: \"DELETE\",",
+									"}, (err, res) =>{",
+									"    pm.test(\"Team Member does not exist\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"DELETE\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/teammanagement\",",
+									"    method: \"DELETE\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Please enter a TeamID\", () => {",
+									"        pm.expect(res).to.have.status(405)",
+									"    })",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/teammanagement/{{taskFlyTeamId}}/{{taskFlyUserId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"teammanagement",
+								"{{taskFlyTeamId}}",
+								"{{taskFlyUserId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TaskCollection",
+			"item": [
+				{
+					"name": "UpdateTaskCollection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check Status Code\", () => {",
+									"    pm.response.to.have.status(202)",
+									"})",
+									"",
+									"var invalidJSON = \"{naem: 123'}\"",
+									"var validJSON = {",
+									"    \"name\": \"TaskCollection2\",",
+									"    \"ownerID\": \"321\"",
+									"}",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/tc?id=\" + pm.environment.get(\"tcTempID\"),",
+									"    method: \"PATCH\",",
+									"    body: invalidJSON,",
+									"    header: {",
+									"        'Content-Type': 'application/json'",
+									"    }",
+									"}, (err, res) => {",
+									"    pm.test(\"Invalid JSON\", () => {",
+									"        pm.expect(res).to.have.status(400)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/tc?id=123\" ,",
+									"    method: \"PATCH\",",
+									"    body: JSON.stringify(validJSON),",
+									"    header: {",
+									"        'Content-Type': 'application/json'",
+									"    }",
+									"}, (err, res) => {",
+									"    pm.test(\"Invalid JSON\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"TestCollection3\",\n    \"ownerID\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/tc?id={{tcTempID}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"tc"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{tcTempID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteTaskCollectionByID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check for Status Code\", () => {",
+									"    pm.response.to.have.status(202)",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/tc/123\",",
+									"    method: \"DELETE\"",
+									"}, (err, res) => {",
+									"    pm.test(\"404 User dosen't exist\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/tc/{{tcTempID}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"tc",
+								"{{tcTempID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTaskCollectionsByTeamID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful Request\", () => {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/tc/team/123\",",
+									"    method: \"GET\"",
+									"}, (err, res) => {",
+									"    pm.test(\"404 User dosent exist\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/tc/team/123456789",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"tc",
+								"team",
+								"123456789"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTaskCollectionByID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful Request\", () => {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/tc/id/123\",",
+									"    method: \"GET\"",
+									"}, (err, res) => {",
+									"    pm.test(\"Not existing User\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/tc/id/637662515622b20a4dee512f",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"tc",
+								"id",
+								"637662515622b20a4dee512f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTaskCollectionsByOwnerID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful Request\", () => {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/tc/user/123\",",
+									"    method: \"GET\"",
+									"}, (err, res) => {",
+									"    pm.test(\"Not existing User\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "2539192522269EFA040CFE76117EBB85",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{host}}/tc/user/12346544",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"tc",
+								"user",
+								"12346544"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateTaskCollection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Valid Request\", () => {",
+									"    pm.response.to.have.status(201)",
+									"})",
+									"",
+									"pm.environment.set(\"tcTempID\", pm.response.json().id)",
+									"",
+									"var bodyInvalidJSON = \"{naem: '123'}\"",
+									"var missingContent = {",
+									"    \"name\": \"TestCollection1\",",
+									"    \"ownerID\": \"\"",
+									"}",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/tc\",",
+									"    method: \"POST\",",
+									"    body: bodyInvalidJSON,",
+									"    header: {",
+									"        'Content-Type': 'application/json'",
+									"    }",
+									"}, (err, res) => {",
+									"    pm.test(\"Test Invalid JSON\", () => {",
+									"        pm.expect(res).to.have.status(400)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/tc\",",
+									"    method: \"POST\",",
+									"    body: missingContent,",
+									"    header: {",
+									"        'Content-Type': 'application/json'",
+									"    }",
+									"}, (err, res) => {",
+									"    pm.test(\"Missing JSON Content\", () => {",
+									"        pm.expect(res).to.have.status(400)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{xsrf-token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"6543\",\n    \"ownerID\": \"12346544\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/tc",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"tc"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}

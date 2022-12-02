@@ -17,6 +17,10 @@ public class User {
     @Id
     private String id;
     private String userId;
+
+
+    private boolean reseted;
+
     /**
      * Constractor for User
      * @param firstName firstName for the user
@@ -26,12 +30,8 @@ public class User {
      * @param team team for the user
      * @param listId listId for the user
      * @param userId userId for the user
+     * @param reseted reset for the user
      */
-
-    private boolean reseted;
-
-
-
     public User(String firstName, String lastName, String email, String password, String team, String listId, String userId, Boolean reseted) {
         this.userId = userId;
         this.firstName = firstName;
