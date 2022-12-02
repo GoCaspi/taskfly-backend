@@ -15,6 +15,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+/**
+ * Class for SecurityConfiguration
+ */
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true,jsr250Enabled = true)
 @Configuration
@@ -23,9 +26,9 @@ public class SecurityConfiguration {
     /**
      * “/userInfo” – can be access by any user who has successfully authenticated.
      * “/getUserRoles” – can be accessed by the user who has role/authority – “ROLE_WRITE”
-     * @param http
-     * @return
-     * @throws Exception
+     * @param http HttpSecurity
+     * @return http.build
+     * @throws Exception Error Massage
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -45,7 +48,7 @@ public class SecurityConfiguration {
 
     /**
      * In our example we are going to use BCryptPasswordEncoder to encode the password and save it in database.
-     * @return
+     * @return BCryptPasswordEncoder
      */
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
