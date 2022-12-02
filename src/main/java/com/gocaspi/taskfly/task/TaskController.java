@@ -75,6 +75,12 @@ public class TaskController {
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param userid of the user
+     * @return ResponseEntity, containing the task from the db and the http status code
+     * @throws HttpClientErrorException.NotFound Exception if no task to the userid was found
+     */
     @GetMapping("/priority/{userid}")
     public ResponseEntity<List<Task>> handleGetTaskByUserIDandPriority(@PathVariable String userid) throws HttpClientErrorException.NotFound{
         var taskList = service.getTasksByHighPriorityService(userid);

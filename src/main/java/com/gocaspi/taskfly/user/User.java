@@ -24,7 +24,10 @@ public class User  {
      * Class for Userbody
      */
     public static class Userbody implements java.io.Serializable{
-    private String team;
+        /**
+         * String team of User
+         */
+        private String team;
         /**
          * Constractor for Userbody
          *

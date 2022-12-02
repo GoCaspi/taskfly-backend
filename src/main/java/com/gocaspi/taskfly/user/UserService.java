@@ -147,7 +147,8 @@ public class UserService {
     /**
      * returns the email of the user
      *
-     * @return String, email of the user
+     * @return User, email of the user
+     * @param email of the user
      */
     public User getDetails(String email){
         return repo.findByEmail(email);
@@ -156,6 +157,7 @@ public class UserService {
      * returns the email of the user, to find out the role
      *
      * @return String, email of the user
+     * @param email of the user
      */
     public String getUserRoles(String email){
 
