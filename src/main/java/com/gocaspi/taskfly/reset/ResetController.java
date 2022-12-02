@@ -134,26 +134,26 @@ public class ResetController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity<List<User>> handleReset(@RequestBody String body) {
+    public ResponseEntity<String> handleReset(@RequestBody String body) {
         Reset resetRequest = jsonToReset(body);
         String hashMail = resetRequest.hashStr(resetRequest.getEmail());
         List<User> emptyList = new ArrayList<>();
         if (Objects.equals(resetRequest.getLastName(), "")) {
-            return new ResponseEntity<>(emptyList, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         List<User> users = new ArrayList<>();
         try {
             users = getService().getUserByEmail(hashMail, resetRequest.getLastName());
         }
-        catch (HttpClientErrorException ex) { return new ResponseEntity<>(emptyList, ex.getStatusCode()); }
-        if(users.size() !=1){ return new ResponseEntity<>(emptyList, HttpStatus.NOT_FOUND); }
+        catch (HttpClientErrorException ex) { return new ResponseEntity<>(ex.getStatusCode()); }
+        if(users.size() !=1){ return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
         else{
             String userId = users.get(0).getId();
             //  For testing: send email to host: taskfly.info@gmail.com
             this.sendResetMail(resetRequest.getEmail(), "!Password reset for TaskFly!", "Your Password has been reseted. Please copy your userId : " + userId + " and follow the link: to assign a new password. ");
 
 
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Test123", HttpStatus.ACCEPTED);
         }
 
     }
