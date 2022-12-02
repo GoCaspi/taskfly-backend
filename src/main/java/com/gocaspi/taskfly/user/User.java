@@ -5,7 +5,9 @@ package com.gocaspi.taskfly.user;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
+/**
+ * Class for User
+ */
 @Document
 public class User  {
     private Userbody body;
@@ -18,7 +20,10 @@ public class User  {
 @Id
     private String id;
 
-public static class Userbody implements java.io.Serializable{
+    /**
+     * Class for Userbody
+     */
+    public static class Userbody implements java.io.Serializable{
     private String team;
 
      public Userbody(String team){
@@ -55,8 +60,18 @@ public void setBody(Userbody body){
 public Userbody getBody(){
     return this.body;
 }
+    /**
+     * returns the firstName of the user
+     *
+     * @return String, firstName of the user
+     */
     public String getFirstName(){ return this.firstName;}
-    public void setFirstName(String str){ this.firstName = str;}
+    /**
+     * sets the firstName of a user to a new firstName
+     *
+     * @param firstName, new value of user-field: firstName
+     */
+    public void setFirstName(String firstName){ this.firstName = firstName;}
     /**
      * returns the lastName of the user
      *
@@ -66,9 +81,9 @@ public Userbody getBody(){
     /**
      * sets the lastName of a user to a new lastName
      *
-     * @param str, new value of user-field: lastName
+     * @param lastName, new value of user-field: lastName
      */
-    public void setLastName(String str){ this.lastName = str;}
+    public void setLastName(String lastName){ this.lastName = lastName;}
     /**
      * returns the email of the user
      *
@@ -116,20 +131,38 @@ public Userbody getBody(){
      *
      * @param password, new value of user-field: password
      */
-
     public void setPassword(String password) {
         this.password = password;
     }
+    /**
+     * returns true or false if a user has already reseted his password or if the reset has worked
+     *
+     * @return boolen true or false
+     */
     public boolean getReseted(){
         return this.reseted;
     }
-    public void setReseted(Boolean b){
-        this.reseted = b;
+    /**
+     * sets the reset of a user to a reset true or false
+     *
+     * @param reseted, new value of user-field: reseted
+     */
+    public void setReseted(Boolean reseted){
+        this.reseted = reseted;
     }
+    /**
+     * returns whether a user has admin rights or not
+     *
+     * @return srole of the user
+     */
     public String getSrole() {
         return srole;
     }
-
+    /**
+     * sets the role of a user to a new role
+     *
+     * @param srole, new value of user-field: srole
+     */
     public void setSrole(String srole) {
         this.srole = srole;
     }

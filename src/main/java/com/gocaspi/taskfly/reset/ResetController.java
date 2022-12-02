@@ -104,7 +104,7 @@ public class ResetController {
         /**
          * Returns the value of the field userId of the UIdAndPwdBody class
          *
-         * @return
+         * @return String, Userid of the user
          */
         public String getUserId() {
             return userId;

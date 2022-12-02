@@ -7,6 +7,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+/**
+ * Class for Task
+ */
 public class Task {
     @NotBlank
     private String userId;
@@ -19,43 +22,84 @@ public class Task {
     @Id
     private ObjectId id;
     private Taskbody body;
+    /**
+     * Class for Taskbody
+     */
    public static class Taskbody {
         private String topic;
         private Boolean highPriority;
         private String description;
 
+        /**
+         * Constractor for Taskbody
+         *
+         * @param topic topic of the task
+         * @param highPriority priority of the task
+         * @param description description of the task
+         */
         public Taskbody(String topic, Boolean highPriority,String description){
             this.topic = topic;
             this.highPriority = highPriority;
             this.description = description;
         }
-
-        public void setHighPriority(Boolean str){
-            this.highPriority = str;
+        /**
+         * sets the highPriority of a task to a new highPriority
+         *
+         * @param highPriority, new value of task-field: highPriority
+         */
+        public void setHighPriority(Boolean highPriority){
+            this.highPriority = highPriority;
         }
-        public void setDescription(String str){
-            this.description = str;
+        /**
+         * sets the description of a task to a new description
+         *
+         * @param description, new value of task-field: description
+         */
+        public void setDescription(String description){
+            this.description = description;
         }
-        public void setTopic(String str){
-            this.topic = str;
+        /**
+         * sets the topic of a task to a new topic
+         *
+         * @param topic, new value of task-field: topic
+         */
+        public void setTopic(String topic){
+            this.topic = topic;
         }
-
+        /**
+         * returns the topic of the task
+         *
+         * @return String, topic of the task
+         */
         public String getTopic(){
             return this.topic;
         }
+        /**
+         * returns the description of the task
+         *
+         * @return String, description of the task
+         */
         public String getDescription(){
             return this.description;
         }
+        /**
+         * returns the highPriority of the task
+         *
+         * @return String, highPriority of the task
+         */
         public Boolean getHighPriority(){
             return this.highPriority;
         }
-
-
-
     }
-
-
-
+    /**
+     * Constractor for Task
+     * @param userId userId of the Task
+     * @param listId listId of the Task
+     * @param team team of the Task
+     * @param deadline deadline of the Task
+     * @param id id of the Task
+     * @param body body for the Task
+     */
     public Task(String userId, String listId, String team, LocalDateTime deadline, ObjectId id, Taskbody body){
         this.userId = userId;
         this.listId = listId;
@@ -65,14 +109,25 @@ public class Task {
         this.body = body;
     }
 
+    /**
+     * Empty Constractor Task for testing
+     */
     public Task(){
-
     }
 
-
+    /**
+     * sets the body of a Taskbody to a new body
+     *
+     * @param body, new value of the Taskbody-field: body
+     */
     public void setBody(Taskbody body){
         this.body = body;
     }
+    /**
+     * returns the body of the Taskbody
+     *
+     * @return String, body of the Taskbody
+     */
     public Taskbody getBody(){
         return this.body;
     }
@@ -91,11 +146,19 @@ public class Task {
      * @return String[], userIds that are assigned to that task
      */
     public String getUserId(){ return this.userId; }
-
+    /**
+     * returns the id of the task
+     *
+     * @return ObjectId, id of the task
+     */
     public ObjectId getId() {
         return id;
     }
-
+    /**
+     * sets the id of a task to a new id
+     *
+     * @param id, new value of task-field: id
+     */
     public void setId(ObjectId id) {
         this.id = id;
     }

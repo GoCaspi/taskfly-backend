@@ -95,9 +95,9 @@ public class ResetService {
 
     /**
      *
-     * @param id
-     * @param status
-     * @throws HttpClientErrorException
+     * @param id id
+     * @param status status
+     * @throws HttpClientErrorException exceptionNotFound
      */
     public void enablePwdReset(String id, Boolean status) throws HttpClientErrorException {
         Optional<User> user = getRepo().findById(id);
