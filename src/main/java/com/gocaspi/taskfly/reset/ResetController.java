@@ -36,10 +36,12 @@ public class ResetController {
     private String emailHost;
     @Value("${mail.port}")
     private int emailPort;
+
     /**
-     * Construtor for the reset controller with a injected UserRepository
+     * Construtor for the reset controller with a injected UserRepository and JavaMailSender
      *
-     * @param repository UserRepository
+     * @param repository, UserRepository
+     * @param javaMailSender, JavaMailSender
      */
     public ResetController (UserRepository repository, JavaMailSender javaMailSender){
         super();

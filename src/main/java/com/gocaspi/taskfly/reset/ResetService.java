@@ -77,7 +77,7 @@ public class ResetService {
      * @param hashMail, String hashed email address
      * @param lastName, String
      * @return User
-     * @throws HttpClientErrorException, Status Code
+     * @throws Exception, HttpClientErrorException
      */
     public List<User> getUserByEmail(String hashMail, String lastName) throws HttpClientErrorException{
         List<User> users = getRepo().findUserByEmail(hashMail);
