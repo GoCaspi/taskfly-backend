@@ -40,6 +40,7 @@ public class ResetController {
      * Construtor for the reset controller with a injected UserRepository
      *
      * @param repository UserRepository
+     * @param javaMailSender JavaMailSender
      */
     public ResetController (UserRepository repository, JavaMailSender javaMailSender){
         super();

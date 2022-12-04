@@ -1,7 +1,9 @@
 package com.gocaspi.taskfly.task;
 
 import java.util.List;
-
+/**
+ * Interface for the TaskRepositoryCustom
+ */
 public interface TaskRepositoryCustom {
     /**
      *

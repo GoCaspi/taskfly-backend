@@ -80,7 +80,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     /**
      * compares two tokens with each other
      *
-     * @param authentication
+     * @param authentication autentication
      * @return true or false
      */
     @Override
@@ -91,8 +91,8 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     /**
      *
      *
-     * @param str
-     * @return
+     * @param str haststring
+     * @return hashcode
      */
     public String hashStr(String str)  {
         return Hashing.sha256()
