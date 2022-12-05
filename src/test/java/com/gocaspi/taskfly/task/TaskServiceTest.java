@@ -155,7 +155,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		for (Testcase tc : testcases) {
 			try {
 
-				when(mockRepo.getTaskByUserIdAndBody_HighPriority(tc.mockID, true)).thenReturn(tc.mockTasks);
+				when(mockRepo.getTaskByUserIdAndBodyHighPriority(tc.mockID, true)).thenReturn(tc.mockTasks);
 				var actual = s.getTasksByHighPriorityService(tc.mockID);
 				assertEquals(tc.mockTasks, actual);
 			} catch (Exception e) {
