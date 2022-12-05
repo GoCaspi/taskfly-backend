@@ -77,7 +77,7 @@ class TaskCollectionControllerTest {
 
     }
     @Test
-    void getTaskCollectionByUserID() {
+    void getTaskCollectionByOwnerID() {
         TaskCollectionController t = new TaskCollectionController(mockService);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
@@ -102,14 +102,14 @@ class TaskCollectionControllerTest {
         };
         for (Testcase tc : testcases) {
             if (tc.notFound) {
-                when(mockService.getTaskCollectionsByUser(tc.mockUserID)).thenThrow(httpNotFoundError);
+                when(mockService.getTaskCollectionsByOwnerID(tc.mockUserID)).thenThrow(httpNotFoundError);
             } else {
-                when(mockService.getTaskCollectionsByUser(tc.mockUserID)).thenReturn(tc.mockTaskCollection);
+                when(mockService.getTaskCollectionsByOwnerID(tc.mockUserID)).thenReturn(tc.mockTaskCollection);
             }
 
             try {
                 ResponseEntity<List<TaskCollectionGetQuery>> expected = new ResponseEntity<>(HttpStatus.OK);
-                ResponseEntity<List<TaskCollectionGetQuery>> actual1 = t.getTaskCollectionsByUserID(tc.mockUserID);
+                ResponseEntity<List<TaskCollectionGetQuery>> actual1 = t.getTaskCollectionsByOwnerID(tc.mockUserID);
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
                 HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);

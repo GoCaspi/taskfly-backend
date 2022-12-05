@@ -114,7 +114,7 @@ class TaskCollectionServiceTest {
         for (Testcase tc : testcases) {
             try {
                 when(mockRepo.findByOwnerID(tc.mockID)).thenReturn(tc.mockTaskCollection);
-                List<TaskCollectionGetQuery> actual = s.getTaskCollectionsByUser(tc.mockID);
+                List<TaskCollectionGetQuery> actual = s.getTaskCollectionsByOwnerID(tc.mockID);
                 assertEquals(actual, tc.mockTaskCollection);
             } catch (Exception e) {
 

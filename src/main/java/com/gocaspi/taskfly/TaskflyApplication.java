@@ -15,5 +15,4 @@ public class TaskflyApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TaskflyApplication.class, args);
 	}
-
 }

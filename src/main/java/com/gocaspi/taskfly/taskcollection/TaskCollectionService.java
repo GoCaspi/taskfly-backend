@@ -26,7 +26,7 @@ public class TaskCollectionService {
         return body;
     }
 
-    public List<TaskCollectionGetQuery> getTaskCollectionsByUser(String userID) {
+    public List<TaskCollectionGetQuery> getTaskCollectionsByOwnerID(String userID) {
         List<TaskCollectionGetQuery> tc = repo.findByOwnerID(userID);
         if(tc.isEmpty()){
             throw httpNotFoundError;
@@ -43,6 +43,14 @@ public class TaskCollectionService {
 
     public List<TaskCollectionGetQuery> getTaskCollectionByTeamID(String teamID){
         List<TaskCollectionGetQuery> tc = repo.findByTeamID(teamID);
+        if(tc.isEmpty()){
+            throw httpNotFoundError;
+        }
+        return tc;
+    }
+
+    public List<TaskCollectionGetQuery> getTaskCollectionsByUserID(String userid){
+        List<TaskCollectionGetQuery> tc = repo.findByUserID(userid);
         if(tc.isEmpty()){
             throw httpNotFoundError;
         }
