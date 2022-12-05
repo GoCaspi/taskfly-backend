@@ -17,6 +17,9 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
     private static final String COLLECTIONNAME = "taskCollection";
     private static final String FOREIGNCOLLECTION = "task";
     private static final String LOOKUPFIELD = "tasks";
+    private static final String REMOVE_KEY = "$$REMOVE";
+    private static final String TEAM_ID = "$teamID";
+    private static final String TEAM_RESULT = "teamResult";
     @Autowired
     public TaskCollectionRepositoryImpl(MongoTemplate mongoTemplate){
         this.mongoTemplate = mongoTemplate;
@@ -35,9 +38,9 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
                 new Document("listIdObj",
                         new Document("$toString", "$_id"))
                         .append("teamIDObj",
-                                new Document("$cond", Arrays.asList(new Document("$ifNull", Arrays.asList("$teamID", "$$REMOVE")),
-                                        new Document("$cond", Arrays.asList(new Document("$ne", Arrays.asList("$teamID", "")),
-                                                new Document("$toObjectId", "$teamID"), "$$REMOVE")), "$$REMOVE"))));
+                                new Document("$cond", Arrays.asList(new Document("$ifNull", Arrays.asList(TEAM_ID, REMOVE_KEY)),
+                                        new Document("$cond", Arrays.asList(new Document("$ne", Arrays.asList(TEAM_ID, "")),
+                                                new Document("$toObjectId", TEAM_ID), REMOVE_KEY)), REMOVE_KEY))));
     }
     @Override
     public List<TaskCollectionGetQuery> findByOwnerID(String userID){
@@ -84,7 +87,7 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
                 .from("teamManagement")
                 .localField("teamIDObj")
                 .foreignField("_id")
-                .as("teamResult");
+                .as(TEAM_RESULT);
         var taskLookup = LookupOperation.newLookup()
                 .from(FOREIGNCOLLECTION)
                 .localField("listIdObj")
@@ -94,8 +97,8 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
                 new Criteria().orOperator(
                         Criteria.where("ownerID").is(userID),
                         new Criteria().andOperator(
-                                Criteria.where("teamResult").exists(true),
-                                Criteria.where("teamResult").not().size(0),
+                                Criteria.where(TEAM_RESULT).exists(true),
+                                Criteria.where(TEAM_RESULT).not().size(0),
                                 new Criteria().orOperator(
                                         Criteria.where("teamResult.ownerID").is(userID),
                                         Criteria.where("teamResult.members").is(userID)
