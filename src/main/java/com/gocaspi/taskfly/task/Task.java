@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class Task {
     @NotBlank
     private String userId;
-    @NotBlank
+
     private String listId;
     private String team;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
