@@ -30,6 +30,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.cors().and().anonymous().and().csrf().disable().authorizeRequests()
+                .antMatchers("/portfolio").permitAll()
                 .antMatchers("/user/userInfo").authenticated()
                 .antMatchers("/user/login").authenticated()
                 .antMatchers("/user/getUserRoles").hasAuthority("ROLE_WRITE")

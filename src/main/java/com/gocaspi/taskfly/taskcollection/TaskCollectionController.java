@@ -4,6 +4,9 @@ package com.gocaspi.taskfly.taskcollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -52,5 +55,11 @@ public class TaskCollectionController {
     public ResponseEntity<TaskCollection> patchTaskCollectionByID(@RequestParam("id") String id, @RequestBody TaskCollection tc){
         service.updateTaskCollectionByID(id, tc);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+    @MessageMapping("/chat")
+    @SendTo("/topic/messages")
+    public String send(Message message) throws Exception{
+        System.out.println(message.getPayload());
+        return message.getPayload().toString();
     }
 }

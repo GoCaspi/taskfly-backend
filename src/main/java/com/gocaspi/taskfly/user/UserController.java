@@ -12,7 +12,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.List;
 @RestController
 @ResponseBody
-@CrossOrigin("*")
 @RequestMapping("/user")
 
 public class UserController {
