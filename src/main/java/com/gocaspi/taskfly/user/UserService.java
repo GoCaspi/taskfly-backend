@@ -83,7 +83,7 @@ public class UserService {
                 t.setTeam(update.getTeam());
             }
             if (update.getEmail() != null) {
-                t.setEmail(update.getEmail());
+                t.setEmail(hashStr(update.getEmail()));
             }
             if (update.getSrole() != null) {
                 t.setSrole(update.getSrole());
@@ -151,7 +151,7 @@ public class UserService {
      * @param email of the user
      */
     public User getDetails(String email){
-        return repo.findByEmail(email);
+        return repo.findByEmail(hashStr(email));
     }
     /**
      * returns the email of the user, to find out the role
@@ -161,7 +161,7 @@ public class UserService {
      */
     public String getUserRoles(String email){
 
-        return repo.findByEmail(email).getSrole();
+        return repo.findByEmail(hashStr(email)).getSrole();
     }
             /**
              * throws an error if not all necessary fields of the provided user are assigned. If all fields are validated the
