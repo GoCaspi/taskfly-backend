@@ -148,7 +148,6 @@ public class UserController {
     public ResponseEntity<String> handleUpdateUser(@PathVariable String id, @RequestBody String body) throws HttpClientErrorException.NotFound {
         var update = jsonToUser(body);
         getService().updateService(id, update);
-        var msg = "Successfully update User with id :" + id;
-        return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

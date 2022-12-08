@@ -11,6 +11,7 @@ import org.springframework.web.client.HttpClientErrorException;
 /**
  * Class for TeamManagementController
  */
+@CrossOrigin("*")
 @RestController
 @ResponseBody
 @RequestMapping("/teammanagement")
@@ -51,8 +52,7 @@ public class TeamManagementController {
     public ResponseEntity<String> createTeam(@RequestBody String body) throws HttpClientErrorException.BadRequest {
         var insert = jsonToTeamManagement(body);
         getService().insertService(insert);
-        var msg = "successfully created Team";
-        return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     /**

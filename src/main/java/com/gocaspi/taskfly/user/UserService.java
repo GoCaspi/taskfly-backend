@@ -89,7 +89,7 @@ public class UserService {
                 t.setSrole(update.getSrole());
             }
             if (update.getPassword() != null) {
-                t.setPassword(update.getPassword());
+                t.setPassword(hashStr(update.getPassword()));
             }
             if (update.getFirstName() != null) {
                 t.setFirstName(update.getFirstName());
