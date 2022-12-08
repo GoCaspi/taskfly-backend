@@ -1,8 +1,10 @@
 package com.gocaspi.taskfly.taskcollection;
 
+import com.gocaspi.taskfly.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -14,6 +16,8 @@ import java.util.Optional;
 public class TaskCollectionService {
     @Autowired
     private TaskCollectionRepository repo;
+    @Autowired
+    private UserService userService;
 
     private final HttpClientErrorException httpNotFoundError = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
 
@@ -68,4 +72,6 @@ public class TaskCollectionService {
             repo.save(t);
         });
     }
+
+
 }
