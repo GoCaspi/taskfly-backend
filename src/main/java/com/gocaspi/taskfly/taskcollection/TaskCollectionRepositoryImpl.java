@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCustom {
@@ -19,6 +20,18 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
     @Autowired
     public TaskCollectionRepositoryImpl(MongoTemplate mongoTemplate){
         this.mongoTemplate = mongoTemplate;
+    }
+
+    private AggregationOperation addConvertedIDandTeamIDFields(){
+        return aggregationOperation -> {
+            return new Document("$addFields",
+                    new Document("tcIDObj",
+                            new Document("$toString", "$_id"))
+                            .append("teamIDObj",
+                                    new Document("$cond", Arrays.asList(new Document("$ifNull", Arrays.asList("$teamID", "$$REMOVE")),
+                                            new Document("$cond", Arrays.asList(new Document("$ne", Arrays.asList("$teamID", "")),
+                                                    new Document("$toObjectId", "$teamID"), "$$REMOVE")), "$$REMOVE"))));
+        };
     }
 
     private AggregationOperation addConvertedIDField(){
@@ -66,4 +79,30 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
         var aggregation = Aggregation.newAggregation(match, addConvertedIDField(), lookupOperation);
         return mongoTemplate.aggregate(aggregation, COLLECTIONNAME, TaskCollectionGetQuery.class).getMappedResults();
     }
+
+    @Override
+    public Boolean hasAccessToCollection(String userid, String collectionID){
+        MatchOperation matchTCID = Aggregation.match(new Criteria("tcIDObj").is(collectionID));
+        var lookupOperation = LookupOperation.newLookup()
+                .from("teamManagement")
+                .localField("teamIDObj")
+                .foreignField("_id")
+                .as("result");
+        var matchOperation1 = Aggregation.match(
+                new Criteria().orOperator(
+                        new Criteria().andOperator(
+                                Criteria.where("result.").exists(true),
+                                Criteria.where(RESULT_TEAM_ID).ne("")
+                        ),
+                        new Criteria().andOperator(
+                                Criteria.where("count").gt(0),
+                                Criteria.where(RESULT_MEMBERS).exists(true)
+                        )
+
+                )
+        );
+        var matchOperation2 = Aggregation.match(new Criteria(USER_ID).is(userid));
+
+    }
+
 }

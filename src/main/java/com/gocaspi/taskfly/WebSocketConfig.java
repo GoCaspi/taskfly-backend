@@ -1,5 +1,6 @@
 package com.gocaspi.taskfly;
 
+import com.gocaspi.taskfly.taskcollection.TaskCollectionChannelInterceptor;
 import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +43,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new WebSocketSubscriptionInterceptor());
+        registration.interceptors(new TaskCollectionChannelInterceptor());
         registration.interceptors(new ChannelInterceptor() {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {

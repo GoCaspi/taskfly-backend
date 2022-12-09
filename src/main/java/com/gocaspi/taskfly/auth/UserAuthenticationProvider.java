@@ -49,7 +49,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         }
         if (encoder.matches(password,user.getPassword())){
             logger.info("Successfully Authenticated the User");
-            return new UsernamePasswordAuthenticationToken(email,password, getUserRoles(user.getSrole()));
+            return new UsernamePasswordAuthenticationToken(user,password, getUserRoles(user.getSrole()));
         }else{
             throw new BadCredentialsException("Password mismatch");
         }

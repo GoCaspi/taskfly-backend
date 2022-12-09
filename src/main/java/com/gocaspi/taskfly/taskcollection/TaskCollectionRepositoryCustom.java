@@ -6,5 +6,6 @@ public interface TaskCollectionRepositoryCustom {
     List<TaskCollectionGetQuery> findByOwnerID(String ownerID);
     List<TaskCollectionGetQuery> findByTeamID(String teamID);
     TaskCollectionGetQuery findByID(String id);
+    Boolean hasAccessToCollection(String userid, String collectionID);
 
 }
