@@ -67,12 +67,14 @@ public class TaskCollectionService {
     }
 
     public void updateTaskCollectionByID(String id, TaskCollection update){
+        String[] emptyArr = new String[0];
         Optional<TaskCollection> task = repo.findById(id);
         if(!repo.existsById(id)){ throw httpNotFoundError; }
         task.ifPresent( t->{
             if(!Objects.equals(update.getName(), "")){t.setName(update.getName());}
             if(!Objects.equals(update.getOwnerID(), "")){t.setOwnerID(update.getOwnerID());}
             if(!Objects.equals(update.getTeamID(), "")){t.setTeamID(update.getTeamID());}
+            if(!Objects.equals(update.getMembers(), emptyArr)){t.setMembers(update.getMembers());}
             repo.save(t);
         });
     }

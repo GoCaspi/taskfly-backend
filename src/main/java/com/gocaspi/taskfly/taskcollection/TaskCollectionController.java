@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @ResponseBody
 @RequestMapping("/tc")
 public class TaskCollectionController {
