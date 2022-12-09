@@ -7,6 +7,11 @@ package com.gocaspi.taskfly.user;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.http.HttpHeaders;
         import org.springframework.http.HttpStatus;
+        import org.springframework.security.authentication.AuthenticationProvider;
+        import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+        import org.springframework.security.core.Authentication;
+        import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+        import org.springframework.security.crypto.password.PasswordEncoder;
         import org.springframework.stereotype.Service;
         import org.springframework.web.client.HttpClientErrorException;
 
@@ -20,6 +25,10 @@ public class UserService {
 
     @Autowired
     private UserRepository repo;
+    @Autowired
+    private AuthenticationProvider authManager;
+    @Autowired
+    private PasswordEncoder encoder;
     private final HttpClientErrorException exceptionnotFound;
     private final HttpClientErrorException exceptionbadRequest;
     public UserService(UserRepository repo){
@@ -27,6 +36,7 @@ public class UserService {
         this.repo = repo ;
         this.exceptionnotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
         this.exceptionbadRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", new HttpHeaders(), "".getBytes(), null);
+        this.encoder = new BCryptPasswordEncoder();
     }
 
     public HttpClientErrorException getNotFound() {
@@ -128,11 +138,11 @@ public class UserService {
         return usersToId;
     }
     public User getDetails(String email){
-        return repo.findByEmail(email);
+        return repo.findByEmail(hashStr(email));
     }
     public String getUserRoles(String email){
 
-        return repo.findByEmail(email).getSrole();
+        return repo.findByEmail(hashStr(email)).getSrole();
     }
             /**
              * throws an error if not all necessary fields of the provided user are assigned. If all fields are validated the
@@ -146,6 +156,7 @@ public class UserService {
         }
         getRepo().insert(t);
     }
+
 
 
 

@@ -25,6 +25,18 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
         this.mongoTemplate = mongoTemplate;
     }
 
+    private AggregationOperation addConvertedIDandTeamIDFields(){
+        return aggregationOperation -> {
+            return new Document("$addFields",
+                    new Document("tcIDObj",
+                            new Document("$toString", "$_id"))
+                            .append("teamIDObj",
+                                    new Document("$cond", Arrays.asList(new Document("$ifNull", Arrays.asList("$teamID", "$$REMOVE")),
+                                            new Document("$cond", Arrays.asList(new Document("$ne", Arrays.asList("$teamID", "")),
+                                                    new Document("$toObjectId", "$teamID"), "$$REMOVE")), "$$REMOVE"))));
+        };
+    }
+
     private AggregationOperation addConvertedIDField(){
         return aggregationOperation -> {
             var toString = new Document("$toString", "$_id");
@@ -113,5 +125,29 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
 
     }
 
+
+    public Boolean hasAccessToCollection(String userid, String collectionID){
+        MatchOperation matchTCID = Aggregation.match(new Criteria("tcIDObj").is(collectionID));
+        var lookupOperation = LookupOperation.newLookup()
+                .from("teamManagement")
+                .localField("teamIDObj")
+                .foreignField("_id")
+                .as("result");
+        var matchOperation1 = Aggregation.match(
+                new Criteria().orOperator(
+                        new Criteria().andOperator(
+                                Criteria.where("result.").exists(true),
+                                Criteria.where(RESULT_TEAM_ID).ne("")
+                        ),
+                        new Criteria().andOperator(
+                                Criteria.where("count").gt(0),
+                                Criteria.where(RESULT_MEMBERS).exists(true)
+                        )
+
+                )
+        );
+        var matchOperation2 = Aggregation.match(new Criteria(USER_ID).is(userid));
+
+    }
 
 }
