@@ -17,6 +17,9 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
     private static final String COLLECTIONNAME = "taskCollection";
     private static final String FOREIGNCOLLECTION = "task";
     private static final String LOOKUPFIELD = "tasks";
+    private static final String REMOVE_KEY = "$$REMOVE";
+    private static final String TEAM_ID = "$teamID";
+    private static final String TEAM_RESULT = "teamResult";
     @Autowired
     public TaskCollectionRepositoryImpl(MongoTemplate mongoTemplate){
         this.mongoTemplate = mongoTemplate;
@@ -40,6 +43,16 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
             var id = new Document(OBJECTID, toString);
             return new Document("$addFields", id);
         };
+    }
+
+    private AggregationOperation addTeamIDandConvertedIDField(){
+        return aggreationOperation -> new Document("$addFields",
+                new Document("listIdObj",
+                        new Document("$toString", "$_id"))
+                        .append("teamIDObj",
+                                new Document("$cond", Arrays.asList(new Document("$ifNull", Arrays.asList(TEAM_ID, REMOVE_KEY)),
+                                        new Document("$cond", Arrays.asList(new Document("$ne", Arrays.asList(TEAM_ID, "")),
+                                                new Document("$toObjectId", TEAM_ID), REMOVE_KEY)), REMOVE_KEY))));
     }
     @Override
     public List<TaskCollectionGetQuery> findByOwnerID(String userID){
@@ -81,6 +94,38 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
     }
 
     @Override
+    public List<TaskCollectionGetQuery> findByUserID(String userID){
+        var teamManagementLookup = LookupOperation.newLookup()
+                .from("teamManagement")
+                .localField("teamIDObj")
+                .foreignField("_id")
+                .as(TEAM_RESULT);
+        var taskLookup = LookupOperation.newLookup()
+                .from(FOREIGNCOLLECTION)
+                .localField("listIdObj")
+                .foreignField(LISTID)
+                .as(LOOKUPFIELD);
+        var matchOperation = Aggregation.match(
+                new Criteria().orOperator(
+                        Criteria.where("ownerID").is(userID),
+                        new Criteria().andOperator(
+                                Criteria.where(TEAM_RESULT).exists(true),
+                                Criteria.where(TEAM_RESULT).not().size(0),
+                                new Criteria().orOperator(
+                                        Criteria.where("teamResult.ownerID").is(userID),
+                                        Criteria.where("teamResult.members").is(userID)
+                                )
+                        ),
+                        Criteria.where("members").is(userID)
+
+                )
+        );
+        var aggregation = Aggregation.newAggregation(addTeamIDandConvertedIDField(), teamManagementLookup, taskLookup, matchOperation);
+        return mongoTemplate.aggregate(aggregation, COLLECTIONNAME, TaskCollectionGetQuery.class).getMappedResults();
+
+    }
+
+
     public Boolean hasAccessToCollection(String userid, String collectionID){
         MatchOperation matchTCID = Aggregation.match(new Criteria("tcIDObj").is(collectionID));
         var lookupOperation = LookupOperation.newLookup()

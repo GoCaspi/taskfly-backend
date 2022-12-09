@@ -30,7 +30,7 @@ public class TaskCollectionService {
         return body;
     }
 
-    public List<TaskCollectionGetQuery> getTaskCollectionsByUser(String userID) {
+    public List<TaskCollectionGetQuery> getTaskCollectionsByOwnerID(String userID) {
         List<TaskCollectionGetQuery> tc = repo.findByOwnerID(userID);
         if(tc.isEmpty()){
             throw httpNotFoundError;
@@ -53,6 +53,14 @@ public class TaskCollectionService {
         return tc;
     }
 
+    public List<TaskCollectionGetQuery> getTaskCollectionsByUserID(String userid){
+        List<TaskCollectionGetQuery> tc = repo.findByUserID(userid);
+        if(tc.isEmpty()){
+            throw httpNotFoundError;
+        }
+        return tc;
+    }
+
 
 
     public void deleteTaskCollectionByID(String id){
@@ -63,12 +71,14 @@ public class TaskCollectionService {
     }
 
     public void updateTaskCollectionByID(String id, TaskCollection update){
+        String[] emptyArr = new String[0];
         Optional<TaskCollection> task = repo.findById(id);
         if(!repo.existsById(id)){ throw httpNotFoundError; }
         task.ifPresent( t->{
             if(!Objects.equals(update.getName(), "")){t.setName(update.getName());}
             if(!Objects.equals(update.getOwnerID(), "")){t.setOwnerID(update.getOwnerID());}
             if(!Objects.equals(update.getTeamID(), "")){t.setTeamID(update.getTeamID());}
+            if(!Objects.equals(update.getMembers(), emptyArr)){t.setMembers(update.getMembers());}
             repo.save(t);
         });
     }

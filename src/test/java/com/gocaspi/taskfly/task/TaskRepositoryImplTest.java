@@ -90,7 +90,7 @@ class TaskRepositoryImplTest {
         assertEquals(correctList.get(0).getListId(), taskList.get(0).getListId());
     }
     @Test
-    void findSharedTasksByUserIDTest(){
+    void findSharedTasksByOwnerIDTest(){
         TaskRepositoryImpl tri = new TaskRepositoryImpl(mongoTemplate);
         ObjectId privateTCObjectID = new ObjectId();
         TaskCollection privateTC = new TaskCollection(privateTCObjectID.toHexString(), mockTCName, "", mockUserID, new ArrayList<>());
@@ -111,4 +111,6 @@ class TaskRepositoryImplTest {
         assertEquals(correctList.get(0).getUserId(), taskList.get(0).getUserId());
         assertEquals(correctList.get(0).getListId(), taskList.get(0).getListId());
     }
+
+
 }
