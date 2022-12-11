@@ -62,6 +62,9 @@ public class TaskService {
             if(!Objects.equals(update.getBody().getDescription(), "")) {
                 t.getBody().setDescription(update.getBody().getDescription());
             }
+            if(!Objects.equals(update.getBody().getHighPriority(), "")) {
+                t.getBody().setHighPriority(update.getBody().getHighPriority());
+            }
             if(!Objects.equals(update.getBody().getTopic(), "")){
                 t.getBody().setTopic(update.getBody().getTopic());
             }
