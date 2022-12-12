@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 class TaskTest {
 	LocalDateTime mockTime = LocalDateTime.now();
 	String mockUserIds = "1"; String mockListId = ""; String mockTopic = ""; String mockTeam = "";
-	String mockPrio = ""; String mockDesc = ""; String mockDeadline = ""; ObjectId mockObjectId = new ObjectId();
+	String mockPrio = ""; String mockDesc = ""; String mockDeadline = ""; String mockObjectId = new ObjectId().toHexString();
 //	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
 Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
@@ -161,7 +161,7 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,m
 	 @Test
 	 void getID(){
 		 Task t = mockTask;
-		 ObjectId oID = new ObjectId();
+		 String oID = new ObjectId().toHexString();
 		 t.setId(oID);
 		 assertEquals(t.getId(), oID);
 	 }
@@ -178,7 +178,7 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,m
 	@Test
 	void setID(){
 		Task t = mockTask;
-		ObjectId oID = new ObjectId();
+		String oID = new ObjectId().toHexString();
 		t.setId(oID);
 		assertEquals(t.getId(), oID);
 	}

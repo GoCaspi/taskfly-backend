@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 class TaskCollectionGetQueryTest {
@@ -16,7 +17,8 @@ class TaskCollectionGetQueryTest {
     private final String mockOwnerID = new ObjectId().toHexString();
     private final String mockUserID = "1";
     private final String mockListID = "1";
-    final private ObjectId mockObjectID = new ObjectId();
+    final private String mockObjectID = new ObjectId().toHexString();
+    final private List<String> mockMember = Arrays.asList("123", "456", "789");
     LocalDateTime mockTime = LocalDateTime.now();
     private final Task.Taskbody mockBody = new Task.Taskbody("mockTopic", true, "mockDescription");
     @Test
@@ -24,29 +26,32 @@ class TaskCollectionGetQueryTest {
         Task task1 = new Task(mockUserID, mockListID, mockTeamID, mockTime, mockObjectID, mockBody);
         List<Task> taskList = new ArrayList<>();
         taskList.add(0, task1);
-        TaskCollectionGetQuery taskCollectionGetQuery = new TaskCollectionGetQuery(mockName, mockTeamID, mockID, mockOwnerID, taskList);
+        TaskCollectionGetQuery taskCollectionGetQuery = new TaskCollectionGetQuery(mockName, mockTeamID, mockID, mockOwnerID, taskList, mockMember);
         assertEquals(mockName, taskCollectionGetQuery.getName());
         assertEquals(mockID, taskCollectionGetQuery.getId());
         assertEquals(mockTeamID, taskCollectionGetQuery.getTeamID());
         assertEquals(mockOwnerID, taskCollectionGetQuery.getOwnerID());
         assertEquals(taskList, taskCollectionGetQuery.getTasks());
+        assertEquals(mockMember, taskCollectionGetQuery.getMembers());
     }
     @Test
     void TestTaskCollectionGetQuerySetter(){
         Task task1 = new Task(mockUserID, mockListID, mockTeamID, mockTime, mockObjectID, mockBody);
         List<Task> taskList = new ArrayList<>();
         taskList.add(0, task1);
-        TaskCollectionGetQuery taskCollectionGetQuery = new TaskCollectionGetQuery(mockName, mockTeamID, mockID, mockOwnerID, taskList);
+        TaskCollectionGetQuery taskCollectionGetQuery = new TaskCollectionGetQuery(mockName, mockTeamID, mockID, mockOwnerID, taskList, mockMember);
         taskCollectionGetQuery.setId(mockID);
         taskCollectionGetQuery.setName(mockName);
         taskCollectionGetQuery.setOwnerID(mockOwnerID);
         taskCollectionGetQuery.setTeamID(mockTeamID);
         taskCollectionGetQuery.setTasks(taskList);
+        taskCollectionGetQuery.setMembers(mockMember);
         assertEquals(mockName, taskCollectionGetQuery.getName());
         assertEquals(mockID, taskCollectionGetQuery.getId());
         assertEquals(mockTeamID, taskCollectionGetQuery.getTeamID());
         assertEquals(mockOwnerID, taskCollectionGetQuery.getOwnerID());
         assertEquals(taskList, taskCollectionGetQuery.getTasks());
+        assertEquals(mockMember, taskCollectionGetQuery.getMembers());
 
     }
 }

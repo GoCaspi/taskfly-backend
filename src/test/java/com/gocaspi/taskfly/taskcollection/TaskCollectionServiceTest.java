@@ -22,6 +22,8 @@ import static org.mockito.Mockito.*;
 
 class TaskCollectionServiceTest {
     final private TaskCollectionRepository mockRepo = mock(TaskCollectionRepository.class);
+    final private List<String> mockMember = Arrays.asList("123", "456", "789");
+
     final private String mockTCID = "1234";
     final private String mockTCName = "TaskCollection1";
     final private String mockTCTeamID = new ObjectId().toHexString();
@@ -33,7 +35,7 @@ class TaskCollectionServiceTest {
     final private String mockTeam = "team1";
     LocalDateTime mockTime = LocalDateTime.now();
 
-    final private ObjectId mockObjectId = new ObjectId();
+    final private String mockObjectId = new ObjectId().toHexString();
     final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic",true,"mockDescription");
 
     @Test
@@ -62,7 +64,7 @@ class TaskCollectionServiceTest {
         TaskCollectionService s = new TaskCollectionService(mockRepo);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList, mockMember);
         class Testcase {
             final TaskCollectionGetQuery mockTaskCollection;
             final String mockID;
@@ -93,7 +95,7 @@ class TaskCollectionServiceTest {
         TaskCollectionService s = new TaskCollectionService(mockRepo);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList, mockMember);
         List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
         List<TaskCollectionGetQuery> emptyList = Arrays.asList();
 
@@ -127,7 +129,7 @@ class TaskCollectionServiceTest {
         TaskCollectionService s = new TaskCollectionService(mockRepo);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList, mockMember);
         List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
         List<TaskCollectionGetQuery> emptyList = Arrays.asList();
 
@@ -161,7 +163,7 @@ class TaskCollectionServiceTest {
         TaskCollectionService s = new TaskCollectionService(mockRepo);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList, mockMember);
         List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
         List<TaskCollectionGetQuery> emptyList = Arrays.asList();
 

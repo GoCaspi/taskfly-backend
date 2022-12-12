@@ -54,8 +54,7 @@ public class UserController {
      */
     @GetMapping("/userInfo")
     public User getUserInfo(@RequestParam("email")String email){
-        String hashMail = hashStr(email);
-        return service.getDetails(hashMail);
+        return service.getDetails(email);
     }
 
     /**

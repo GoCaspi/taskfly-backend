@@ -34,7 +34,7 @@ class TaskRepositoryImplTest {
     LocalDateTime mockTime = LocalDateTime.now().withHour(3).withMinute(0).withSecond(0).withNano(0);
     String mockListId = mockTCID;
     String mockTeam = "team1";
-    ObjectId mockObjectId = new ObjectId();
+    String mockObjectId = new ObjectId().toHexString();
     Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
     Task mockTask = new Task(mockUserID,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
     List<Task> mockTaskList = Arrays.asList(mockTask, mockTask);

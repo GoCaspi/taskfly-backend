@@ -41,7 +41,9 @@ class TaskCollectionControllerTest {
     final private String mockTeam = "team1";
 
     final private String mockDeadline = "11-11-2022";
-    final private ObjectId mockObjectId = new ObjectId();
+    final private List<String> mockMember = Arrays.asList("123", "456", "789");
+
+    final private String mockObjectId = new ObjectId().toHexString();
     final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic", true, "mockDescription");
 
 
@@ -81,7 +83,7 @@ class TaskCollectionControllerTest {
         TaskCollectionController t = new TaskCollectionController(mockService);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList, mockMember);
         List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
 
         class Testcase {
@@ -124,7 +126,7 @@ class TaskCollectionControllerTest {
         TaskCollectionController t = new TaskCollectionController(mockService);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList, mockMember);
         List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
 
         class Testcase {
@@ -166,7 +168,7 @@ class TaskCollectionControllerTest {
         TaskCollectionController t = new TaskCollectionController(mockService);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList, mockMember);
         List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
 
         class Testcase {
@@ -208,7 +210,7 @@ class TaskCollectionControllerTest {
         TaskCollectionController t = new TaskCollectionController(mockService);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList, mockMember);
 
         class Testcase {
             final TaskCollectionGetQuery mockTaskCollection;
