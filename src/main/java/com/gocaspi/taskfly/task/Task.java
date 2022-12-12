@@ -18,7 +18,6 @@ public class Task {
     private LocalDateTime deadline;
     @Id
     private String id;
-    private String taskIdString;
     private Taskbody body;
    public static class Taskbody {
         private String topic;
@@ -29,9 +28,6 @@ public class Task {
             this.topic = topic;
             this.highPriority = highPriority;
             this.description = description;
-        }
-        public void setUserIdString(String str){
-
         }
 
         public void setHighPriority(String str){
@@ -60,14 +56,13 @@ public class Task {
 
 
 
-    public Task(String userId, String listId, String team, LocalDateTime deadline, String id, Taskbody body,String taskIdString){
+    public Task(String userId, String listId, String team, LocalDateTime deadline, String id, Taskbody body){
         this.userId = userId;
         this.listId = listId;
         this.team = team;
         this.deadline = deadline;
         this.id = id;
         this.body = body;
-        this.taskIdString = id.toString();
     }
 
     public Task(){

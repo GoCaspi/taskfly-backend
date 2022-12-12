@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCustom {
     private final MongoTemplate mongoTemplate;
@@ -126,27 +127,31 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
     }
 
 
-    public Boolean hasAccessToCollection(String userid, String collectionID){
+    public Boolean hasAccessToCollection(String userID, String collectionID){
         MatchOperation matchTCID = Aggregation.match(new Criteria("tcIDObj").is(collectionID));
         var lookupOperation = LookupOperation.newLookup()
                 .from("teamManagement")
                 .localField("teamIDObj")
                 .foreignField("_id")
                 .as("result");
-        var matchOperation1 = Aggregation.match(
+        var matchOperation = Aggregation.match(
                 new Criteria().orOperator(
+                        Criteria.where("ownerID").is(userID),
                         new Criteria().andOperator(
-                                Criteria.where("result.").exists(true),
-                                Criteria.where(RESULT_TEAM_ID).ne("")
+                                Criteria.where("result").exists(true),
+                                Criteria.where("result").not().size(0),
+                                new Criteria().orOperator(
+                                        Criteria.where("result.userID").is(userID),
+                                        Criteria.where("result.members").is(userID)
+                                )
                         ),
-                        new Criteria().andOperator(
-                                Criteria.where("count").gt(0),
-                                Criteria.where(RESULT_MEMBERS).exists(true)
-                        )
+                        Criteria.where("members").is(userID)
 
                 )
         );
-        var matchOperation2 = Aggregation.match(new Criteria(USER_ID).is(userid));
+        var aggregation = Aggregation.newAggregation(addConvertedIDandTeamIDFields(), matchTCID, lookupOperation, matchOperation);
+        TaskCollection tc = mongoTemplate.aggregate(aggregation, COLLECTIONNAME, TaskCollection.class).getUniqueMappedResult();
+        return !Objects.isNull(tc);
 
     }
 

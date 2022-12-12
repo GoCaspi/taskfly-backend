@@ -82,6 +82,9 @@ public class TaskCollectionService {
             repo.save(t);
         });
     }
+    public Boolean checkIfUserHasAccess(String userid, String collectionID){
+        return repo.hasAccessToCollection(userid, collectionID);
+    }
 
 
 }

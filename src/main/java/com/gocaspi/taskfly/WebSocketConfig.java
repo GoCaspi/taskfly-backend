@@ -1,6 +1,7 @@
 package com.gocaspi.taskfly;
 
 import com.gocaspi.taskfly.taskcollection.TaskCollectionChannelInterceptor;
+import com.gocaspi.taskfly.taskcollection.TaskCollectionRepository;
 import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +31,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private AuthenticationProvider authManager;
     @Autowired
     private PasswordEncoder encoder;
+    @Autowired
+    private TaskCollectionRepository repository;
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/tcChannel").setAllowedOriginPatterns("*");
@@ -43,7 +46,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new TaskCollectionChannelInterceptor());
+        registration.interceptors(new TaskCollectionChannelInterceptor(repository));
         registration.interceptors(new ChannelInterceptor() {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
