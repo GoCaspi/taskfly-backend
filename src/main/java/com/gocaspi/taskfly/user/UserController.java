@@ -15,7 +15,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 @RestController
 @ResponseBody
-@CrossOrigin("*")
 @RequestMapping("/user")
 
 public class UserController {
