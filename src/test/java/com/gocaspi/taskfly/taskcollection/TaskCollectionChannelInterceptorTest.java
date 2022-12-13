@@ -23,15 +23,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-public class TaskCollectionChannelInterceptorTest {
+class TaskCollectionChannelInterceptorTest {
     final private TaskCollectionRepository mockRepo = mock(TaskCollectionRepository.class);
-    final private User TestUser1 = new User("Peter", "Schmidt", "", "", "", null, false);
-
-    final private Authentication fakeUser1Principal = new UsernamePasswordAuthenticationToken(TestUser1, "");
-    private StompHeaderAccessor fakeSubscriptionHeader;
+    final private User TestUser1 = new User("Peter", "Schmidt", "test123@gmail.com", "test123", "", null, false);
 
     @Test
-    public void TestPreSend(){
+    void TestPreSend(){
 
         TaskCollectionChannelInterceptor interceptor = new TaskCollectionChannelInterceptor(mockRepo);
         MessageChannel testChannel = new MessageChannel() {

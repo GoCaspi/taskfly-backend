@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCustom {
+    public static final String TEAM_ID_OBJ = "teamIDObj";
+    public static final String COND = "$cond";
+    public static final String OWNER_ID = "ownerID";
+    public static final String RESULT = "result";
     private final MongoTemplate mongoTemplate;
 
     private static final String OBJECTID = "objId";
@@ -19,45 +23,46 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
     private static final String FOREIGNCOLLECTION = "task";
     private static final String LOOKUPFIELD = "tasks";
     private static final String REMOVE_KEY = "$$REMOVE";
+    private static final String ADD_FIELDS_KEY = "$addFields";
     private static final String TEAM_ID = "$teamID";
     private static final String TEAM_RESULT = "teamResult";
+    private static final String TO_STRING_KEY = "$toString";
     @Autowired
     public TaskCollectionRepositoryImpl(MongoTemplate mongoTemplate){
         this.mongoTemplate = mongoTemplate;
     }
 
     private AggregationOperation addConvertedIDandTeamIDFields(){
-        return aggregationOperation -> {
-            return new Document("$addFields",
+        return aggregationOperation ->
+            new Document(ADD_FIELDS_KEY,
                     new Document("tcIDObj",
-                            new Document("$toString", "$_id"))
-                            .append("teamIDObj",
-                                    new Document("$cond", Arrays.asList(new Document("$ifNull", Arrays.asList("$teamID", "$$REMOVE")),
-                                            new Document("$cond", Arrays.asList(new Document("$ne", Arrays.asList("$teamID", "")),
-                                                    new Document("$toObjectId", "$teamID"), "$$REMOVE")), "$$REMOVE"))));
-        };
+                            new Document(TO_STRING_KEY, "$_id"))
+                            .append(TEAM_ID_OBJ,
+                                    new Document(COND, Arrays.asList(new Document("$ifNull", Arrays.asList(TEAM_ID, REMOVE_KEY)),
+                                            new Document(COND, Arrays.asList(new Document("$ne", Arrays.asList(TEAM_ID, "")),
+                                                    new Document("$toObjectId", TEAM_ID), REMOVE_KEY)), REMOVE_KEY))));
     }
 
     private AggregationOperation addConvertedIDField(){
         return aggregationOperation -> {
-            var toString = new Document("$toString", "$_id");
+            var toString = new Document(TO_STRING_KEY, "$_id");
             var id = new Document(OBJECTID, toString);
-            return new Document("$addFields", id);
+            return new Document(ADD_FIELDS_KEY, id);
         };
     }
 
     private AggregationOperation addTeamIDandConvertedIDField(){
-        return aggreationOperation -> new Document("$addFields",
+        return aggreationOperation -> new Document(ADD_FIELDS_KEY,
                 new Document("listIdObj",
-                        new Document("$toString", "$_id"))
-                        .append("teamIDObj",
-                                new Document("$cond", Arrays.asList(new Document("$ifNull", Arrays.asList(TEAM_ID, REMOVE_KEY)),
-                                        new Document("$cond", Arrays.asList(new Document("$ne", Arrays.asList(TEAM_ID, "")),
+                        new Document(TO_STRING_KEY, "$_id"))
+                        .append(TEAM_ID_OBJ,
+                                new Document(COND, Arrays.asList(new Document("$ifNull", Arrays.asList(TEAM_ID, REMOVE_KEY)),
+                                        new Document(COND, Arrays.asList(new Document("$ne", Arrays.asList(TEAM_ID, "")),
                                                 new Document("$toObjectId", TEAM_ID), REMOVE_KEY)), REMOVE_KEY))));
     }
     @Override
     public List<TaskCollectionGetQuery> findByOwnerID(String userID){
-        var match = Aggregation.match(new Criteria("ownerID").is(userID));
+        var match = Aggregation.match(new Criteria(OWNER_ID).is(userID));
 
         var lookupOperation = LookupOperation.newLookup()
                 .from(FOREIGNCOLLECTION)
@@ -98,7 +103,7 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
     public List<TaskCollectionGetQuery> findByUserID(String userID){
         var teamManagementLookup = LookupOperation.newLookup()
                 .from("teamManagement")
-                .localField("teamIDObj")
+                .localField(TEAM_ID_OBJ)
                 .foreignField("_id")
                 .as(TEAM_RESULT);
         var taskLookup = LookupOperation.newLookup()
@@ -108,7 +113,7 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
                 .as(LOOKUPFIELD);
         var matchOperation = Aggregation.match(
                 new Criteria().orOperator(
-                        Criteria.where("ownerID").is(userID),
+                        Criteria.where(OWNER_ID).is(userID),
                         new Criteria().andOperator(
                                 Criteria.where(TEAM_RESULT).exists(true),
                                 Criteria.where(TEAM_RESULT).not().size(0),
@@ -131,15 +136,15 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
         MatchOperation matchTCID = Aggregation.match(new Criteria("tcIDObj").is(collectionID));
         var lookupOperation = LookupOperation.newLookup()
                 .from("teamManagement")
-                .localField("teamIDObj")
+                .localField(TEAM_ID_OBJ)
                 .foreignField("_id")
-                .as("result");
+                .as(RESULT);
         var matchOperation = Aggregation.match(
                 new Criteria().orOperator(
-                        Criteria.where("ownerID").is(userID),
+                        Criteria.where(OWNER_ID).is(userID),
                         new Criteria().andOperator(
-                                Criteria.where("result").exists(true),
-                                Criteria.where("result").not().size(0),
+                                Criteria.where(RESULT).exists(true),
+                                Criteria.where(RESULT).not().size(0),
                                 new Criteria().orOperator(
                                         Criteria.where("result.userID").is(userID),
                                         Criteria.where("result.members").is(userID)

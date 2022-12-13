@@ -11,6 +11,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.messaging.Message;
+import org.springframework.messaging.simp.stomp.StompCommand;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.client.HttpClientErrorException;
 
 
@@ -291,6 +297,22 @@ class TaskCollectionControllerTest {
 
         }
 
+    }
+
+    @Test
+    void sendTaskCollectionMessageTest(){
+        String testMessage = "Test123";
+        TaskCollectionController t = new TaskCollectionController(mockService);
+        String actual = t.sendTaskCollectionMessage(createMessage("123", testMessage));
+        assertEquals(testMessage, actual);
+    }
+
+    Message<String> createMessage(String collectionID, String payload){
+        StompHeaderAccessor fakeSubscriptionHeader = StompHeaderAccessor.create(StompCommand.SEND);
+        fakeSubscriptionHeader.setHeader("simpDestination", "/collection/" + collectionID);
+        MessageBuilder<String> fakeSubscriptionMessage = MessageBuilder.withPayload(payload);
+        fakeSubscriptionMessage.setHeaders(fakeSubscriptionHeader);
+        return fakeSubscriptionMessage.build();
     }
 
 

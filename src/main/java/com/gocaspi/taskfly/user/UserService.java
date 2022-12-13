@@ -8,8 +8,6 @@ package com.gocaspi.taskfly.user;
         import org.springframework.http.HttpHeaders;
         import org.springframework.http.HttpStatus;
         import org.springframework.security.authentication.AuthenticationProvider;
-        import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-        import org.springframework.security.core.Authentication;
         import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
         import org.springframework.security.crypto.password.PasswordEncoder;
         import org.springframework.stereotype.Service;
@@ -25,10 +23,6 @@ public class UserService {
 
     @Autowired
     private UserRepository repo;
-    @Autowired
-    private AuthenticationProvider authManager;
-    @Autowired
-    private PasswordEncoder encoder;
     private final HttpClientErrorException exceptionnotFound;
     private final HttpClientErrorException exceptionbadRequest;
     public UserService(UserRepository repo){
@@ -36,7 +30,6 @@ public class UserService {
         this.repo = repo ;
         this.exceptionnotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
         this.exceptionbadRequest = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", new HttpHeaders(), "".getBytes(), null);
-        this.encoder = new BCryptPasswordEncoder();
     }
 
     public HttpClientErrorException getNotFound() {

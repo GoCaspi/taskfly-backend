@@ -5,20 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.annotation.SubscribeMapping;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @CrossOrigin("*")
@@ -72,8 +65,7 @@ public class TaskCollectionController {
     }
     @MessageMapping("/collection/broker/{collectionID}")
     @SendTo("/collection/{collectionID}")
-    public String send(Message<String> message, @DestinationVariable String collectionID){
-        System.out.println(message.getPayload() + collectionID);
+    public String sendTaskCollectionMessage(Message<String> message){
         return message.getPayload();
     }
 

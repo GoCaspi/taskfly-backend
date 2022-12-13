@@ -1,7 +1,6 @@
 package com.gocaspi.taskfly.task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.format.annotation.DateTimeFormat;
 

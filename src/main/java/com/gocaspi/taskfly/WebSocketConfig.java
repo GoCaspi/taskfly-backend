@@ -1,5 +1,6 @@
 package com.gocaspi.taskfly;
 
+import com.gocaspi.taskfly.auth.UserAuthenticationChannelInterceptor;
 import com.gocaspi.taskfly.taskcollection.TaskCollectionChannelInterceptor;
 import com.gocaspi.taskfly.taskcollection.TaskCollectionRepository;
 import com.google.common.hash.Hashing;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -22,6 +24,8 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Objects;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -29,8 +33,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Autowired
     private AuthenticationProvider authManager;
-    @Autowired
-    private PasswordEncoder encoder;
     @Autowired
     private TaskCollectionRepository repository;
     @Override
@@ -47,26 +49,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(new TaskCollectionChannelInterceptor(repository));
-        registration.interceptors(new ChannelInterceptor() {
-            @Override
-            public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                StompHeaderAccessor accessor =
-                        MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-                if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-                    var username = accessor.getNativeHeader("username").get(0);
-                    var password = accessor.getNativeHeader("password").get(0);
-                    UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(username, password);
-                    Authentication user = authManager.authenticate(authReq);
-                    accessor.setUser(user);
-                }
-                return message;
-            }
-        });
-    }
-    public String hashStr(String str)  {
-        return Hashing.sha256()
-                .hashString(str, StandardCharsets.UTF_8)
-                .toString();
+        registration.interceptors(new UserAuthenticationChannelInterceptor(authManager));
     }
 
 }
