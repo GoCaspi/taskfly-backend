@@ -74,13 +74,7 @@ public class TaskCollectionController {
     @SendTo("/collection/{collectionID}")
     public String send(Message<String> message, @DestinationVariable String collectionID){
         System.out.println(message.getPayload() + collectionID);
-        return message.getPayload() + " " + collectionID;
-    }
-    @SubscribeMapping("/collection/{collectionID}")
-    public String brokerSubscription(Message<String> message, @DestinationVariable String collectionID) {
-        MessageHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message);
-        System.out.println(accessor.getId());
-        return "123";
+        return message.getPayload();
     }
 
 
