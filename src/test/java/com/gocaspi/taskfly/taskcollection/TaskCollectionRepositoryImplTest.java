@@ -63,8 +63,6 @@ class TaskCollectionRepositoryImplTest {
                 .net(new Net(ip, port, Network.localhostIsIPv6()))
                 .build();
 
-
-
         MongodStarter starter = MongodStarter.getDefaultInstance();
         mongodExecutable = starter.prepare(mongodConfig);
         mongodExecutable.start();

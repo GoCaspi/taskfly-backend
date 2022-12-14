@@ -209,7 +209,7 @@ class UserServiceTest {
 
         }
     }
-
+/*
     @Test
     void getUserRoles() {
         UserService t = new UserService(mockRepo);
@@ -232,6 +232,9 @@ class UserServiceTest {
             verify(mockRepo,times(1)).findByEmail(t.hashStr(tc.mockemail));
         }
     }
+
+ */
+
     @Test
     void getUserDetails() {
         UserService t = new UserService(mockRepo);
@@ -254,6 +257,8 @@ class UserServiceTest {
             verify(mockRepo,times(1)).findByEmail(t.hashStr(tc.mockemail));
         }
     }
+
+
     @Test
     void createUser() {
         UserService service = new UserService(mockRepo);

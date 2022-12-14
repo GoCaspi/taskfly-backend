@@ -12,8 +12,8 @@ class TaskTest {
 	String mockUserIds = "1"; String mockListId = ""; String mockTopic = ""; String mockTeam = "";
 	String mockPrio = ""; String mockDesc = ""; String mockDeadline = ""; String mockObjectId = new ObjectId().toHexString();
 //	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
-Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
-Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
+Task.Taskbody mockbody = new Task.Taskbody("mockTopic","true","mockDescription");
+Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId.toHexString(),mockbody);
 
 	class Testcase_setString{
 		final String newText;
@@ -74,8 +74,8 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,m
 	 void setHighPriority() {
 		Task t = mockTask;
 		for (Testcase_setString tc : testcases){
-			t.getBody().setHighPriority(false);
-			assertEquals(false, t.getBody().getHighPriority());
+			t.getBody().setHighPriority("false");
+			assertEquals("false", t.getBody().getHighPriority());
 		}
 	}
 
@@ -122,9 +122,9 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,m
 	 void getPriority(){
 		Task t = mockTask;
 		for (Testcase_getString tc : testcases_get){
-			t.getBody().setHighPriority(true);
-			Boolean actual = t.getBody().getHighPriority();
-			assertEquals(true, actual);
+			t.getBody().setHighPriority("true");
+		String actual = t.getBody().getHighPriority();
+			assertEquals("true", actual);
 		}
 	}
 
@@ -186,7 +186,7 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,m
 	 @Test
 	 void setBody() {
 		 Task t = mockTask;
-		 Task.Taskbody mockbody =  new Task.Taskbody("mockTopic",true,"mockDescription");
+		 Task.Taskbody mockbody =  new Task.Taskbody("mockTopic","true","mockDescription");
 		 t.setBody(mockbody);
 		 Task.Taskbody actual = t.getBody();
 		 assertEquals(actual,mockbody);
