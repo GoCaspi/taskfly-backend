@@ -8,13 +8,11 @@ import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
-import java.util.List;
 import java.util.Objects;
 @Configuration
 public class UserAuthenticationChannelInterceptor implements ChannelInterceptor {
@@ -28,7 +26,6 @@ public class UserAuthenticationChannelInterceptor implements ChannelInterceptor 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-
         if (Objects.isNull(accessor)){
             throw new MessagingException("No Stomp Headers available");
         }
@@ -37,12 +34,7 @@ public class UserAuthenticationChannelInterceptor implements ChannelInterceptor 
             String password = extractPassword(accessor);
             UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(username, password);
             Authentication user = authManager.authenticate(authReq);
-            StompHeaderAccessor msgAccessor = StompHeaderAccessor.create(StompCommand.CONNECT);
-            msgAccessor.setUser(user);
-            msgAccessor.copyHeadersIfAbsent(message.getHeaders());
-            MessageBuilder<?> msgBuilder = MessageBuilder.fromMessage(message)
-                    .copyHeadersIfAbsent(msgAccessor.getMessageHeaders());
-            return msgBuilder.build();
+            accessor.setUser(user);
         }
         return message;
     }
@@ -51,27 +43,22 @@ public class UserAuthenticationChannelInterceptor implements ChannelInterceptor 
         if(Objects.isNull(accessor.getNativeHeader("username"))){
             throw new MessagingException("username is not defined");
         }
-        List<String> usernameList = accessor.getNativeHeader("username");
-        if (Objects.isNull(usernameList)){
-            throw new MessagingException("username list couldn't be initialized");
+        String usernameList = Objects.requireNonNull(accessor.getNativeHeader("username")).get(0);
+        if(usernameList.isBlank()){
+            throw new MessagingException("username is empty");
         }
-        if (usernameList.isEmpty()) {
-            throw new MessagingException("username is not defined");
-        }
-        return usernameList.get(0);
+        return usernameList;
     }
 
     String extractPassword(StompHeaderAccessor accessor){
         if(Objects.isNull(accessor.getNativeHeader("password"))){
             throw new MessagingException("password is not defined");
         }
-        List<String> passwordList = accessor.getNativeHeader("password");
-        if (Objects.isNull(passwordList)){
-            throw new MessagingException("password list couldn't be initialized");
+
+        String passwordList = Objects.requireNonNull(accessor.getNativeHeader("password")).get(0);
+        if(passwordList.isBlank()){
+            throw new MessagingException("password is empty");
         }
-        if (passwordList.isEmpty()) {
-            throw new MessagingException("password is not defined");
-        }
-        return passwordList.get(0);
+        return passwordList;
     }
 }

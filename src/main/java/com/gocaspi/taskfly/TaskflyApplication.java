@@ -1,5 +1,6 @@
 package com.gocaspi.taskfly;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -19,12 +20,15 @@ public class TaskflyApplication {
 		SpringApplication.run(TaskflyApplication.class, args);
 	}
 
+	@Value("${crossorigin.url}")
+	private String frontendURL;
 	@Bean
 	public WebMvcConfigurer corsConfigurer(){
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry){
-				registry.addMapping("/**").allowedOrigins("*").allowedMethods("*").allowedHeaders("*");
+
+				registry.addMapping("/**").allowedOrigins(frontendURL).allowedMethods("*").allowedHeaders("*");
 			}
 		};
 	}

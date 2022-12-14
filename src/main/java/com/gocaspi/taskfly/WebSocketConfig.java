@@ -37,8 +37,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private TaskCollectionRepository repository;
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/tcChannel").setAllowedOriginPatterns("*");
-        registry.addEndpoint("/tcChannel").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/tcChannel");
+        registry.addEndpoint("/tcChannel").withSockJS();
     }
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config){

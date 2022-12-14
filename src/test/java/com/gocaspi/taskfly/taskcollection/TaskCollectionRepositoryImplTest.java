@@ -141,4 +141,26 @@ class TaskCollectionRepositoryImplTest {
         assertEquals(1, taskCollectionList.size());
         assertEquals(1, taskCollectionList.get(0).getTasks().size());
     }
+    @Test
+    void hasAccessToTest(){
+        TaskCollectionRepositoryImpl taskCollectionRepositoryImpl = new TaskCollectionRepositoryImpl(mongoTemplate);
+        ObjectId fakeMockUserID = new ObjectId();
+        ObjectId fakeMockTeamID = new ObjectId();
+        TeamManagement fakeTeam = new TeamManagement(fakeMockUserID.toHexString(), mockTeamName, mockTeamMemberArray, fakeMockTeamID.toHexString());
+        mongoTemplate.save(mockTeam, "teamManagement");
+        mongoTemplate.save(fakeTeam, "teamManagement");
+        mongoTemplate.save(mockTC, "taskCollection");
+        ObjectId fakeTaskCollectionID = new ObjectId();
+        ObjectId fakeUserID = new ObjectId();
+        Task validTask = new Task(mockUserID,mockListId,mockTCTeamID,mockTime,mockObjectId,mockbody);
+        mongoTemplate.save(validTask, "task");
+        Task invalidTask = new Task(mockUserID,fakeTaskCollectionID.toHexString(),mockTCTeamID,mockTime,new ObjectId().toHexString(),mockbody);
+        mongoTemplate.save(invalidTask, "task");
+        TaskCollection altCollection = new TaskCollection(fakeTaskCollectionID.toHexString(), mockTCName, new ObjectId().toHexString(), fakeUserID.toHexString(), mockTeamMember);
+        mongoTemplate.save(altCollection, "taskCollection");
+        Boolean taskCollectionResult = taskCollectionRepositoryImpl.hasAccessToCollection(mockUserID, mockTCID);
+        Boolean taskCollectionResultAlt = taskCollectionRepositoryImpl.hasAccessToCollection(fakeUserID.toHexString(), mockTCID);
+        assertEquals(true, taskCollectionResult);
+        assertEquals(false, taskCollectionResultAlt);
+    }
 }
