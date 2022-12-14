@@ -27,12 +27,13 @@ public class TaskCollectionChannelInterceptor implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         StompCommand command = accessor.getCommand();
         if (command == StompCommand.SUBSCRIBE){
-            if (Objects.isNull(accessor.getDestination())){
-                throw new MessagingException("invalid subscription url. valid: /collection/enter_id_here");
+            String destination = accessor.getDestination();
+            if (Objects.isNull(destination)){
+                throw new MessagingException("Invalid or missing stomp headers");
             }
-            if(accessor.getDestination().startsWith("/collection")){
+            if(destination.startsWith("/collection")){
 
-                List<String> urlList = Arrays.stream(accessor.getDestination().split("/")).toList();
+                List<String> urlList = Arrays.stream(destination.split("/")).toList();
                 if (urlList.size() != 3){
                     throw new MessagingException("invalid subscription url. valid: /collection/enter_id_here");
                 }

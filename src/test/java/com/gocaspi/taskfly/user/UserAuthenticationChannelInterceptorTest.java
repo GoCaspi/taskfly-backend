@@ -65,10 +65,10 @@ public class UserAuthenticationChannelInterceptorTest {
         }
     }
     Message<?> buildValidConnectionMessage(String email, String password){
-        NativeMessageHeaderAccessor fakeConnectionHeader = StompHeaderAccessor.create(StompCommand.CONNECT);
+        StompHeaderAccessor fakeConnectionHeader = StompHeaderAccessor.create(StompCommand.CONNECT);
         fakeConnectionHeader.setNativeHeader("username", email);
         fakeConnectionHeader.setNativeHeader("password", password);
-        MessageBuilder<String> fakeConnectionMessage = MessageBuilder.withPayload("123");
+        MessageBuilder<String> fakeConnectionMessage = MessageBuilder.withPayload("");
         fakeConnectionMessage.setHeaders(fakeConnectionHeader);
         return fakeConnectionMessage.build();
     }

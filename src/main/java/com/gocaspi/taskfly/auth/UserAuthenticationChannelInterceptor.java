@@ -8,6 +8,7 @@ import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,8 +27,8 @@ public class UserAuthenticationChannelInterceptor implements ChannelInterceptor 
     }
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        StompHeaderAccessor accessor =
-                MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+
         if (Objects.isNull(accessor)){
             throw new MessagingException("No Stomp Headers available");
         }
@@ -36,7 +37,12 @@ public class UserAuthenticationChannelInterceptor implements ChannelInterceptor 
             String password = extractPassword(accessor);
             UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(username, password);
             Authentication user = authManager.authenticate(authReq);
-            accessor.setUser(user);
+            StompHeaderAccessor msgAccessor = StompHeaderAccessor.create(StompCommand.CONNECT);
+            msgAccessor.setUser(user);
+            msgAccessor.copyHeadersIfAbsent(message.getHeaders());
+            MessageBuilder<?> msgBuilder = MessageBuilder.fromMessage(message)
+                    .copyHeadersIfAbsent(msgAccessor.getMessageHeaders());
+            return msgBuilder.build();
         }
         return message;
     }

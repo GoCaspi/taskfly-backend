@@ -63,7 +63,7 @@ class TaskCollectionChannelInterceptorTest {
                 new Testcase(buildValidSubscriptionMessage(TestUser1, "1234"), testChannel, false, TestUser1, "1234", true, "no access"),
                 new Testcase(buildInvalidSubscriptionMessageWithInvalidUrl(TestUser1), testChannel, true, TestUser1, "", true, "invalid subscription url. valid: /collection/enter_id_here"),
                 new Testcase(buildInvalidSubscriptionMessageWithNullUser("1234"), testChannel, true, null, "1234", true, "Are you currently logged in?"),
-                new Testcase(buildInvalidSubscriptionMessageWithNullDestination(TestUser1), testChannel, true, TestUser1, "", true, "invalid subscription url. valid: /collection/enter_id_here"),
+                new Testcase(buildInvalidSubscriptionMessageWithNullDestination(TestUser1), testChannel, true, TestUser1, "", true, "Invalid or missing stomp headers"),
                 new Testcase(buildValidAlternativeSubscriptionMessage(TestUser1), testChannel, false, TestUser1, "", false, ""),
                 new Testcase(buildValidConnectionMessage(), testChannel, false, null, "", false, "")
         };
