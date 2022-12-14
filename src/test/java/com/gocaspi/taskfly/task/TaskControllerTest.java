@@ -23,9 +23,9 @@ class TaskControllerTest {
 	String mockTeam = "team1";
 	ObjectId mockObjectId = new ObjectId();
 
-	Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
+	Task.Taskbody mockbody = new Task.Taskbody("mockTopic","true","mockDescription");
 
-	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
+	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId.toHexString(),mockbody);
 	Task[] mockTaskArr = new Task[]{mockTask, mockTask};
 
 
@@ -34,7 +34,7 @@ class TaskControllerTest {
 	 void updateTask() {
 		TaskController t = new TaskController(mockService);
 	//	Task mockUpdate = new Task(mockUserIds, mockListId, mockTopic + "updated", mockTeam + "updated", mockPrio, mockDesc + "updated", mockDeadline, mockObjectId);
-		Task mockUpdate = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
+		Task mockUpdate = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId.toHexString(),mockbody);
 		class Testcase {
 			final String mockId;
 			final boolean idFoundInDb;
@@ -139,7 +139,7 @@ class TaskControllerTest {
 		for (Testcase tc : testcases) {
 			when(mockRepo.insert(tc.mockTask)).thenReturn(mockTask);
 			try {
-				ResponseEntity<String> expected = new ResponseEntity<>("successfully created task with id: " + tc.mockTask.getId().toHexString(), HttpStatus.ACCEPTED);
+				ResponseEntity<String> expected = new ResponseEntity<>("successfully created task with id: " + tc.mockTask.getId(), HttpStatus.ACCEPTED);
 				ResponseEntity<String> actual1 = t.handleCreateNewTask(tc.mockTask);
 				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
 			} catch (HttpClientErrorException e) {

@@ -18,13 +18,13 @@ class TaskCollectionGetQueryTest {
     private final String mockListID = "1";
     final private ObjectId mockObjectID = new ObjectId();
     LocalDateTime mockTime = LocalDateTime.now();
-    private final Task.Taskbody mockBody = new Task.Taskbody("mockTopic", true, "mockDescription");
+    private final Task.Taskbody mockBody = new Task.Taskbody("mockTopic", "", "mockDescription");
     @Test
     void TestTaskCollectionGetQueryConstructor(){
-        Task task1 = new Task(mockUserID, mockListID, mockTeamID, mockTime, mockObjectID, mockBody);
+        Task task1 = new Task(mockUserID, mockListID, mockTeamID, mockTime, "", mockBody);
         List<Task> taskList = new ArrayList<>();
         taskList.add(0, task1);
-        TaskCollectionGetQuery taskCollectionGetQuery = new TaskCollectionGetQuery(mockName, mockTeamID, mockID, mockOwnerID, taskList);
+        TaskCollectionGetQuery taskCollectionGetQuery = new TaskCollectionGetQuery(mockName, mockTeamID, mockID, mockOwnerID, taskList,new ArrayList<>());
         assertEquals(mockName, taskCollectionGetQuery.getName());
         assertEquals(mockID, taskCollectionGetQuery.getId());
         assertEquals(mockTeamID, taskCollectionGetQuery.getTeamID());
@@ -33,10 +33,10 @@ class TaskCollectionGetQueryTest {
     }
     @Test
     void TestTaskCollectionGetQuerySetter(){
-        Task task1 = new Task(mockUserID, mockListID, mockTeamID, mockTime, mockObjectID, mockBody);
+        Task task1 = new Task(mockUserID, mockListID, mockTeamID, mockTime, "", mockBody);
         List<Task> taskList = new ArrayList<>();
         taskList.add(0, task1);
-        TaskCollectionGetQuery taskCollectionGetQuery = new TaskCollectionGetQuery(mockName, mockTeamID, mockID, mockOwnerID, taskList);
+        TaskCollectionGetQuery taskCollectionGetQuery = new TaskCollectionGetQuery(mockName, mockTeamID, mockID, mockOwnerID, taskList,new ArrayList<>());
         taskCollectionGetQuery.setId(mockID);
         taskCollectionGetQuery.setName(mockName);
         taskCollectionGetQuery.setOwnerID(mockOwnerID);

@@ -38,8 +38,8 @@ class TaskCollectionRepositoryImplTest {
     final private TeamManagement mockTeam = new TeamManagement(mockUserID, mockTeamName, mockTeamMemberArray, mockTCTeamID);
     LocalDateTime mockTime = LocalDateTime.now().withHour(3).withMinute(0).withSecond(0).withNano(0);
     String mockListId = mockTCID;
-    ObjectId mockObjectId = new ObjectId();
-    Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
+    String mockObjectId = "";
+    Task.Taskbody mockbody = new Task.Taskbody("mockTopic","true","mockDescription");
     Task mockTask = new Task(mockUserID,mockListId,mockTCTeamID,mockTime,mockObjectId,mockbody);
     List<Task> mockTaskList = Arrays.asList(mockTask, mockTask);
     private static final String CONNECTION_STRING = "mongodb://%s:%d";
@@ -77,7 +77,7 @@ class TaskCollectionRepositoryImplTest {
         ObjectId fakeUserID = new ObjectId();
         Task validTask = new Task(mockUserID,mockListId,mockTCTeamID,mockTime,mockObjectId,mockbody);
         mongoTemplate.save(validTask, "task");
-        Task invalidTask = new Task(mockUserID,fakeTaskCollectionID.toHexString(),mockTCTeamID,mockTime,new ObjectId(),mockbody);
+        Task invalidTask = new Task(mockUserID,fakeTaskCollectionID.toHexString(),mockTCTeamID,mockTime,new ObjectId().toHexString(),mockbody);
         mongoTemplate.save(invalidTask, "task");
         TaskCollection altCollection = new TaskCollection(fakeTaskCollectionID.toHexString(), mockTCName, mockTCTeamID, fakeUserID.toHexString(), mockTeamMember);
         mongoTemplate.save(altCollection, "taskCollection");
@@ -94,7 +94,7 @@ class TaskCollectionRepositoryImplTest {
         ObjectId fakeUserID = new ObjectId();
         Task validTask = new Task(mockUserID,mockListId,mockTCTeamID,mockTime,mockObjectId,mockbody);
         mongoTemplate.save(validTask, "task");
-        Task invalidTask = new Task(mockUserID,fakeTaskCollectionID.toHexString(),mockTCTeamID,mockTime,new ObjectId(),mockbody);
+        Task invalidTask = new Task(mockUserID,fakeTaskCollectionID.toHexString(),mockTCTeamID,mockTime,new ObjectId().toHexString(),mockbody);
         mongoTemplate.save(invalidTask, "task");
         TaskCollection altCollection = new TaskCollection(fakeTaskCollectionID.toHexString(), mockTCName, mockTCTeamID, fakeUserID.toHexString(), mockTeamMember);
         mongoTemplate.save(altCollection, "taskCollection");
@@ -110,7 +110,7 @@ class TaskCollectionRepositoryImplTest {
         ObjectId fakeUserID = new ObjectId();
         Task validTask = new Task(mockUserID,mockListId,mockTCTeamID,mockTime,mockObjectId,mockbody);
         mongoTemplate.save(validTask, "task");
-        Task invalidTask = new Task(mockUserID,fakeTaskCollectionID.toHexString(),mockTCTeamID,mockTime,new ObjectId(),mockbody);
+        Task invalidTask = new Task(mockUserID,fakeTaskCollectionID.toHexString(),mockTCTeamID,mockTime,new ObjectId().toHexString(),mockbody);
         mongoTemplate.save(invalidTask, "task");
         TaskCollection altCollection = new TaskCollection(fakeTaskCollectionID.toHexString(), mockTCName, new ObjectId().toHexString(), fakeUserID.toHexString(), mockTeamMember);
         mongoTemplate.save(altCollection, "taskCollection");
@@ -131,7 +131,7 @@ class TaskCollectionRepositoryImplTest {
         ObjectId fakeUserID = new ObjectId();
         Task validTask = new Task(mockUserID,mockListId,mockTCTeamID,mockTime,mockObjectId,mockbody);
         mongoTemplate.save(validTask, "task");
-        Task invalidTask = new Task(mockUserID,fakeTaskCollectionID.toHexString(),mockTCTeamID,mockTime,new ObjectId(),mockbody);
+        Task invalidTask = new Task(mockUserID,fakeTaskCollectionID.toHexString(),mockTCTeamID,mockTime,new ObjectId().toHexString(),mockbody);
         mongoTemplate.save(invalidTask, "task");
         TaskCollection altCollection = new TaskCollection(fakeTaskCollectionID.toHexString(), mockTCName, new ObjectId().toHexString(), fakeUserID.toHexString(), mockTeamMember);
         mongoTemplate.save(altCollection, "taskCollection");
