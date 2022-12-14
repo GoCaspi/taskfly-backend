@@ -27,8 +27,8 @@ class TaskServiceTest {
 	String mockUserIds = "123";
 	String mockListId = "1";
 	String mockTeam = "team1";
-	String mockObjectId ="1234";
-Task.Taskbody mockbody = new Task.Taskbody("mockTopic","false","mockDescription");
+	String mockObjectId = new ObjectId().toHexString();
+Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
 
 

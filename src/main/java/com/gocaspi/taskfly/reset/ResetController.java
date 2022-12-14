@@ -21,7 +21,6 @@ import java.util.Objects;
  */
 
 @RestController
-@CrossOrigin("*")
 @ResponseBody
 @RequestMapping("/reset")
 public class ResetController {
