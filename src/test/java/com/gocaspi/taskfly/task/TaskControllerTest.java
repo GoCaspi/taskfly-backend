@@ -23,9 +23,9 @@ class TaskControllerTest {
 	String mockTeam = "team1";
 	String mockObjectId = new ObjectId().toHexString();
 
-	Task.Taskbody mockbody = new Task.Taskbody("mockTopic","true","mockDescription");
+	Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 
-	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId.toHexString(),mockbody);
+	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
 	Task[] mockTaskArr = new Task[]{mockTask, mockTask};
 
 
@@ -34,7 +34,7 @@ class TaskControllerTest {
 	 void updateTask() {
 		TaskController t = new TaskController(mockService);
 	//	Task mockUpdate = new Task(mockUserIds, mockListId, mockTopic + "updated", mockTeam + "updated", mockPrio, mockDesc + "updated", mockDeadline, mockObjectId);
-		Task mockUpdate = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId.toHexString(),mockbody);
+		Task mockUpdate = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
 		class Testcase {
 			final String mockId;
 			final boolean idFoundInDb;
