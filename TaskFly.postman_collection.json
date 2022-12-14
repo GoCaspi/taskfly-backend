@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "03bad3c9-6eeb-4ec5-a969-70c38a80f7ec",
-		"name": "TaskFly Copy 2",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"_postman_id": "77b36057-6dd9-4b01-acd7-5cd5ff96aab1",
+		"name": "TaskFly",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21612803"
 	},
 	"item": [
 		{
@@ -52,6 +53,15 @@
 								],
 								"type": "text/javascript"
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
 						}
 					],
 					"request": {
@@ -59,7 +69,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Sahand\",\n    \"lastName\": \"Armin\",\n    \"email\":\"s.armin@gmail.com\",\n    \"password\":\"password\",\n    \"team\":\"Okapi\",\n    \"listId\":\"1\"\n\n}",
+							"raw": "{\n    \"firstName\": \"Sahand\",\n    \"lastName\": \"Armin\",\n    \"email\":\"l.wolckenhauer@gocaspi.de\",\n    \"password\":\"password\",\n    \"team\":\"Okapi\",\n    \"srole\": \"ROLE_READ\"\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -77,7 +87,162 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "CreateUser",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"firstName\": \"Sahand\",\n    \"lastName\": \"Armin\",\n    \"email\":\"s.armin@gmail.com\",\n    \"password\":\"password\",\n    \"team\":\"Okapi\",\n    \"listId\":\"1\"\n\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/user/create",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"user",
+										"create"
+									]
+								}
+							},
+							"status": "Accepted",
+							"code": 202,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "25"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 28 Nov 2022 10:44:51 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "Successfully created User\n"
+						},
+						{
+							"name": "CreateUser",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"firstName\": \"Sahand\",\n    \"lastName\": \"Armin\",\n    \"emmmmmail\":\"s.armin@gmail.com\",\n    \"password\":\"password\",\n    \"team\":\"Okapi\",\n    \"listId\":\"1\"\n\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/user/create",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"user",
+										"create"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 28 Nov 2022 10:47:21 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"local_msg\": \"404 bad payload\",\n    \"error_msg\": \"the requested resource was not found in the database\",\n    \"status_txt\": \"bad payload\"\n}"
+						}
+					]
 				},
 				{
 					"name": "GetallUser",
@@ -205,13 +370,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/user/6376638f3cd43b77f66001a5",
+							"raw": "{{host}}/user/{{taskFlyUserId}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"user",
-								"6376638f3cd43b77f66001a5"
+								"{{taskFlyUserId}}"
 							]
 						}
 					},
@@ -340,13 +505,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/user/637e3065cc9de42ea625f34b",
+							"raw": "{{host}}/user/{{taskFlyUserId}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"user",
-								"637e3065cc9de42ea625f34b"
+								"{{taskFlyUserId}}"
 							]
 						}
 					},
@@ -405,13 +570,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/user/637e3104cc9de42ea625f34c",
+							"raw": "{{host}}/user/{{taskFlyUserId}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"user",
-								"637e3104cc9de42ea625f34c"
+								"{{taskFlyUserId}}"
 							]
 						}
 					},
@@ -484,7 +649,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userId\":\"1\",\n    \"listId\":\"MyDay\",\n    \"team\":\"blue\",\n    \"deadline\":\"11-11-2022\",\n    \"body\":{\n        \"topic\":\"new topic\",\n        \"priority\":\"new priority\",\n        \"description\":\"new description text\"\n    }\n\n}",
+							"raw": "{\n    \"userId\":\"1\",\n    \"listId\":\"MyDay\",\n    \"team\":\"OKAPI\",\n    \"deadline\":\"11-11-2022\",\n    \"body\":{\n        \"topic\":\"new topic\",\n        \"priority\":\"new priority\",\n        \"description\":\"new description text\"\n    }\n\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -492,13 +657,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/task/637e3158cc9de42ea625f34e",
+							"raw": "{{host}}/task/{{taskFlyTaskId}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"task",
-								"637e3158cc9de42ea625f34e"
+								"{{taskFlyTaskId}}"
 							]
 						}
 					},
@@ -561,13 +726,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/task/637e3158cc9de42ea625f34e",
+							"raw": "{{host}}/task/{{taskFlyTaskId}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"task",
-								"637e3158cc9de42ea625f34e"
+								"{{taskFlyTaskId}}"
 							]
 						}
 					},
@@ -632,14 +797,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/task/taskId/637e3158cc9de42ea625f34e",
+							"raw": "{{host}}/task/taskId/{{taskFlyTaskId}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"task",
 								"taskId",
-								"637e3158cc9de42ea625f34e"
+								"{{taskFlyTaskId}}"
 							]
 						}
 					},
@@ -704,14 +869,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/task/userId/1",
+							"raw": "{{host}}/task/userId/{{taskFlyUserId}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"task",
 								"userId",
-								"1"
+								"{{taskFlyUserId}}"
 							]
 						}
 					},
@@ -769,7 +934,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userId\":\"1\",\n    \"listId\":\"MyDay\",\n    \"team\":\"blue\",\n    \"deadline\":\"11-11-2022\",\n    \"body\":{\n        \"topic\":\"new topic\",\n        \"priority\":\"new priority\",\n        \"description\":\"new description text\"\n    }\n\n}",
+							"raw": "{\n    \"userId\":\"63879322dddc7504fcf13cfa\",\n    \"listId\":\"637dfa505f2d35fdfd9acab6\",\n    \"team\":\"blue\",\n    \"deadline\":\"2022-12-19T03:00:00Z\",\n    \"body\":{\n        \"topic\":\"new topic\",\n        \"highPriority\":true,\n        \"description\":\"new description text\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -783,6 +948,218 @@
 							],
 							"path": [
 								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTasksByUserIDandPriority",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status check\", () => {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									" ",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/task/priority/123456\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"User does not exist\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/task/priority/63773343094b4d6d2ec651f9",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"task",
+								"priority",
+								"63773343094b4d6d2ec651f9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSharedTasksByUserID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status check\", () => {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									" ",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/task/shared/123456\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"User does not exist\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/task/shared/6387847448ff8547356bc215",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"task",
+								"shared",
+								"6387847448ff8547356bc215"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPrivateTasksByUserID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status check\", () => {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									" ",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/task/private/123456\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"User does not exist\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/task/private/6387847448ff8547356bc215",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"task",
+								"private",
+								"6387847448ff8547356bc215"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTasksScheduledForOneWeekByUserID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status check\", () => {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									" ",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/task/scheduled/week/123456\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"User does not exist\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/task/scheduled/week/6387847448ff8547356bc215",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"task",
+								"scheduled",
+								"week",
+								"6387847448ff8547356bc215"
 							]
 						}
 					},
@@ -840,7 +1217,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"teamName\": \"Rot\",\n    \"members\": [\"3\",\"4\",\"7\"],\n    \"userID\": \"1\"\n}",
+							"raw": "{\n    \"teamName\": \"ExampleTeam1\",\n    \"members\": [\"3\",\"4\",\"7\"],\n    \"userID\": \"1\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -914,13 +1291,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/teammanagement/637e32dbcc9de42ea625f34f",
+							"raw": "{{host}}/teammanagement/{{taskFlyTeamId}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"teammanagement",
-								"637e32dbcc9de42ea625f34f"
+								"{{taskFlyTeamId}}"
 							]
 						}
 					},
@@ -990,13 +1367,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/teammanagement/637e32dbcc9de42ea625f34f",
+							"raw": "{{host}}/teammanagement/{{taskFlyTeamId}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"teammanagement",
-								"637e32dbcc9de42ea625f34f"
+								"{{taskFlyTeamId}}"
 							]
 						}
 					},
@@ -1077,14 +1454,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/teammanagement/637e3364cc9de42ea625f350/999",
+							"raw": "{{host}}/teammanagement/{{taskFlyTeamId}}/{{taskFlyUserId}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"teammanagement",
-								"637e3364cc9de42ea625f350",
-								"999"
+								"{{taskFlyTeamId}}",
+								"{{taskFlyUserId}}"
 							]
 						}
 					},
@@ -1148,14 +1525,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/teammanagement/637e3364cc9de42ea625f350/999",
+							"raw": "{{host}}/teammanagement/{{taskFlyTeamId}}/{{taskFlyUserId}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"teammanagement",
-								"637e3364cc9de42ea625f350",
-								"999"
+								"{{taskFlyTeamId}}",
+								"{{taskFlyUserId}}"
 							]
 						}
 					},
@@ -1403,13 +1780,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}/tc/user/12346544",
+							"raw": "{{host}}/tc/owner/12346544",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"tc",
-								"user",
+								"owner",
 								"12346544"
 							]
 						}
@@ -1503,8 +1880,669 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "GetTaskCollectionByUserID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful Request\", () => {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/tc/id/123\",",
+									"    method: \"GET\"",
+									"}, (err, res) => {",
+									"    pm.test(\"Not existing User\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/tc/user/6388d67706eacb717a7079bc",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"tc",
+								"user",
+								"6388d67706eacb717a7079bc"
+							]
+						}
+					},
+					"response": []
 				}
 			]
+		},
+		{
+			"name": "ResetPassword",
+			"item": [
+				{
+					"name": "UnSetPassword",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"UnSetPassword\", function(){",
+									"    pm.response.to.have.status(202)",
+									"})",
+									"",
+									"var body2 = JSON.stringify([{",
+									"    \"lastName\":\"Armin\",",
+									"    \"email\":\"s.@gmail.com\"",
+									"}])",
+									"",
+									"pm.sendRequest({",
+									"    url:pm.environment.get(\"host\")+\"/reset\",",
+									"    method: \"POST\",",
+									"    body: body2,",
+									"}, (err, res) => {",
+									"    pm.test(\"Body error\", function(){",
+									"        pm.expect(res).to.have.status(500)",
+									"       ",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"POST\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"lastName\":\"Armin\",\n    \"email\":\"l.wolckenhauer@gocaspi.de\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/reset",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"reset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "setNewPassword",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"setNewPassword\", function(){",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"var body2 = JSON.stringify([{",
+									"    \"userId\":\"1\",",
+									"    \"pwd\": \"asdfasdfasdf\"",
+									"}])",
+									"",
+									"pm.sendRequest({",
+									"    url:pm.environment.get(\"host\")+\"/reset/setNew\",",
+									"    method: \"POST\",",
+									"    body: body2,",
+									"}, (err, res) => {",
+									"    pm.test(\"Body error\", function(){",
+									"        pm.expect(res).to.have.status(500)",
+									"       ",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"POST\",",
+									"    body: body2,",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/reeset/\",",
+									"    method: \"POST\",",
+									"    body: body2",
+									"}, (err, res) => {",
+									"    pm.test(\"The path is missing setNow\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\":\"6388d67706eacb717a7079bc\",\n    \"pwd\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/reset/setNew",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"reset",
+								"setNew"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Login Check\", function(){",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"let email = \"test\"",
+									"let password = \"test\"",
+									"let testauth = \"Basic \" + btoa(email +\":\"+ password)",
+									"let headers_object = {\"Authorization\":testauth}",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"POST\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/user/\",",
+									"    method: \"POST\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"The path is missing /login\", () => {",
+									"        pm.expect(res).to.have.status(405)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/user/userinfo?email=s.armin@gmail.com\",",
+									"    method: \"GET\",",
+									"    header: headers_object,responseType:\"text\"",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong email or wrong password\", () => {",
+									"        pm.expect(res).to.have.status(401)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "s.armin@gmail.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/user/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "login-Invalid",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/user/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"login"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "WWW-Authenticate",
+									"value": "Basic realm=\"Realm\""
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 28 Nov 2022 12:04:05 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"timestamp\": \"2022-11-28T12:04:05.462+00:00\",\n    \"status\": 401,\n    \"error\": \"Unauthorized\",\n    \"path\": \"/user/login\"\n}"
+						},
+						{
+							"name": "login-Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/user/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "JSESSIONID=75A5E789907A1A51BC24ACCFC87C8F25; Path=/; HttpOnly"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "46"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 28 Nov 2022 11:15:08 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "Successfully logged in by user :Test@gmail.com"
+						}
+					]
+				},
+				{
+					"name": "UserRoles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Role Check\", function(){",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/user/getUserRoles?email=s.armin@gmail.co\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong email\", () => {",
+									"        pm.expect(res).to.have.status(500)",
+									"    })",
+									"})  ",
+									"    ",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/user/getUserRoles\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Please enter an email (?email=s.armin@gmail.com)\", () => {",
+									"        pm.expect(res).to.have.status(400)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "s@gmail.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/user/getUserRoles?email=s.armin@gmail.com",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user",
+								"getUserRoles"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "s.armin@gmail.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UserInfo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Role Check\", function(){",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"let email = \"test\"",
+									"let password = \"test\"",
+									"let testauth = \"Basic \" + btoa(email +\":\"+ password)",
+									"let headers_object = {\"Authorization\":testauth}",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/\",",
+									"    method: \"GET\",",
+									"   ",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong path\", () => {",
+									"        pm.expect(res).to.have.status(404)",
+									"    })",
+									"})",
+									"",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"host\") + \"/user/userinfo?email=s.armin@gmail.com\",",
+									"    method: \"GET\",",
+									"    header: headers_object,responseType:\"text\"",
+									"}, (err, res) => {",
+									"    pm.test(\"Wrong email or wrong password\", () => {",
+									"        pm.expect(res).to.have.status(401)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "s.armin@gmail.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/user/userInfo?email=s.armin@gmail.com",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user",
+								"userInfo"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "s.armin@gmail.com"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Task 2",
+			"item": []
 		}
 	],
 	"event": [
@@ -1532,6 +2570,10 @@
 			"key": "host",
 			"value": "http://localhost:8080",
 			"type": "string"
+		},
+		{
+			"key": "taskFlyTaskId",
+			"value": "6389c44cedc28b063e3678fb"
 		}
 	]
 }

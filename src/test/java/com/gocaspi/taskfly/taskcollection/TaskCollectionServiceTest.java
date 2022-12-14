@@ -12,6 +12,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +34,8 @@ class TaskCollectionServiceTest {
     final private String mockTeam = "team1";
     LocalDateTime mockTime = LocalDateTime.now();
 
-    final private ObjectId mockObjectId = new ObjectId();
-    final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic",true,"mockDescription");
+    final private String mockObjectId = "123";
+    final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic","true","mockDescription");
 
     @Test
     void createTaskCollectionTest(){
@@ -62,7 +63,7 @@ class TaskCollectionServiceTest {
         TaskCollectionService s = new TaskCollectionService(mockRepo);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList,new ArrayList<>());
         class Testcase {
             final TaskCollectionGetQuery mockTaskCollection;
             final String mockID;
@@ -93,7 +94,7 @@ class TaskCollectionServiceTest {
         TaskCollectionService s = new TaskCollectionService(mockRepo);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList,new ArrayList<>());
         List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
         List<TaskCollectionGetQuery> emptyList = Arrays.asList();
 
@@ -114,7 +115,41 @@ class TaskCollectionServiceTest {
         for (Testcase tc : testcases) {
             try {
                 when(mockRepo.findByOwnerID(tc.mockID)).thenReturn(tc.mockTaskCollection);
-                List<TaskCollectionGetQuery> actual = s.getTaskCollectionsByUser(tc.mockID);
+                List<TaskCollectionGetQuery> actual = s.getTaskCollectionsByOwnerID(tc.mockID);
+                assertEquals(actual, tc.mockTaskCollection);
+            } catch (Exception e) {
+
+            }
+
+        }
+    }
+    @Test
+    void getTaskCollectionByUserIDTest(){
+        TaskCollectionService s = new TaskCollectionService(mockRepo);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
+        List<Task> taskList = Arrays.asList(task);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList,new ArrayList<>());
+        List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
+        List<TaskCollectionGetQuery> emptyList = Arrays.asList();
+
+        class Testcase {
+            final List<TaskCollectionGetQuery> mockTaskCollection;
+            final String mockID;
+
+            public Testcase(List<TaskCollectionGetQuery> taskCollection, String mockID) {
+                this.mockTaskCollection = taskCollection;
+                this.mockID = mockID;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(getQueries, mockTCID),
+                new Testcase(emptyList, mockTCID)
+        };
+        for (Testcase tc : testcases) {
+            try {
+                when(mockRepo.findByUserID(tc.mockID)).thenReturn(tc.mockTaskCollection);
+                List<TaskCollectionGetQuery> actual = s.getTaskCollectionsByUserID(tc.mockID);
                 assertEquals(actual, tc.mockTaskCollection);
             } catch (Exception e) {
 
@@ -127,7 +162,7 @@ class TaskCollectionServiceTest {
         TaskCollectionService s = new TaskCollectionService(mockRepo);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList,new ArrayList<>());
         List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
         List<TaskCollectionGetQuery> emptyList = Arrays.asList();
 

@@ -41,8 +41,8 @@ class TaskCollectionControllerTest {
     final private String mockTeam = "team1";
 
     final private String mockDeadline = "11-11-2022";
-    final private ObjectId mockObjectId = new ObjectId();
-    final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic", true, "mockDescription");
+    final private String mockObjectId = "123";
+    final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic", "", "mockDescription");
 
 
     @Test
@@ -77,11 +77,11 @@ class TaskCollectionControllerTest {
 
     }
     @Test
-    void getTaskCollectionByUserID() {
+    void getTaskCollectionByOwnerID() {
         TaskCollectionController t = new TaskCollectionController(mockService);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList,new ArrayList<String>());
         List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
 
         class Testcase {
@@ -102,14 +102,57 @@ class TaskCollectionControllerTest {
         };
         for (Testcase tc : testcases) {
             if (tc.notFound) {
-                when(mockService.getTaskCollectionsByUser(tc.mockUserID)).thenThrow(httpNotFoundError);
+                when(mockService.getTaskCollectionsByOwnerID(tc.mockUserID)).thenThrow(httpNotFoundError);
             } else {
-                when(mockService.getTaskCollectionsByUser(tc.mockUserID)).thenReturn(tc.mockTaskCollection);
+                when(mockService.getTaskCollectionsByOwnerID(tc.mockUserID)).thenReturn(tc.mockTaskCollection);
             }
 
             try {
                 ResponseEntity<List<TaskCollectionGetQuery>> expected = new ResponseEntity<>(HttpStatus.OK);
-                ResponseEntity<List<TaskCollectionGetQuery>> actual1 = t.getTaskCollectionsByUserID(tc.mockUserID);
+                ResponseEntity<List<TaskCollectionGetQuery>> actual1 = t.getTaskCollectionsByOwnerID(tc.mockUserID);
+                assertEquals(actual1.getStatusCode(), expected.getStatusCode());
+            } catch (HttpClientErrorException e) {
+                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
+                assertEquals(e.getClass(), expectedException.getClass());
+            }
+        }
+
+    }
+
+    @Test
+    void getTaskCollectionByUserID() {
+        TaskCollectionController t = new TaskCollectionController(mockService);
+        Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
+        List<Task> taskList = Arrays.asList(task);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList,new ArrayList<>());
+        List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
+
+        class Testcase {
+            final List<TaskCollectionGetQuery> mockTaskCollection;
+            final String mockUserID;
+            final Boolean notFound;
+
+            public Testcase(List<TaskCollectionGetQuery> taskCollection, String mockUserID, Boolean notFound) {
+                this.mockTaskCollection = taskCollection;
+                this.mockUserID = mockUserID;
+                this.notFound = notFound;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(getQueries, mockUserIds, false),
+                new Testcase(getQueries, mockUserIds, true)
+        };
+        for (Testcase tc : testcases) {
+            if (tc.notFound) {
+                when(mockService.getTaskCollectionsByUserID(tc.mockUserID)).thenThrow(httpNotFoundError);
+            } else {
+                when(mockService.getTaskCollectionsByUserID(tc.mockUserID)).thenReturn(tc.mockTaskCollection);
+            }
+
+            try {
+                ResponseEntity<List<TaskCollectionGetQuery>> expected = new ResponseEntity<>(HttpStatus.OK);
+                ResponseEntity<List<TaskCollectionGetQuery>> actual1 = t.getTaskCollectionByUserID(tc.mockUserID);
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
                 HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
@@ -123,7 +166,7 @@ class TaskCollectionControllerTest {
         TaskCollectionController t = new TaskCollectionController(mockService);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList,new ArrayList<>());
         List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
 
         class Testcase {
@@ -165,7 +208,7 @@ class TaskCollectionControllerTest {
         TaskCollectionController t = new TaskCollectionController(mockService);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList);
+        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList,new ArrayList<>());
 
         class Testcase {
             final TaskCollectionGetQuery mockTaskCollection;

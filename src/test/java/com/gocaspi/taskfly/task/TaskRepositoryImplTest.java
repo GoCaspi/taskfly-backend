@@ -35,8 +35,8 @@ class TaskRepositoryImplTest {
     String mockListId = mockTCID;
     String mockTeam = "team1";
     ObjectId mockObjectId = new ObjectId();
-    Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
-    Task mockTask = new Task(mockUserID,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
+    Task.Taskbody mockbody = new Task.Taskbody("mockTopic","true","mockDescription");
+    Task mockTask = new Task(mockUserID,mockListId,mockTeam,mockTime,mockObjectId.toHexString(),mockbody);
     List<Task> mockTaskList = Arrays.asList(mockTask, mockTask);
     private static final String CONNECTION_STRING = "mongodb://%s:%d";
     private MongodExecutable mongodExecutable;
@@ -90,13 +90,13 @@ class TaskRepositoryImplTest {
         assertEquals(correctList.get(0).getListId(), taskList.get(0).getListId());
     }
     @Test
-    void findSharedTasksByUserIDTest(){
+    void findSharedTasksByOwnerIDTest(){
         TaskRepositoryImpl tri = new TaskRepositoryImpl(mongoTemplate);
         ObjectId privateTCObjectID = new ObjectId();
         TaskCollection privateTC = new TaskCollection(privateTCObjectID.toHexString(), mockTCName, "", mockUserID, new ArrayList<>());
         mongoTemplate.save(privateTC,"taskCollection");
         mongoTemplate.save(mockTC, "taskCollection");
-        Task privateTask = new Task(mockUserID,privateTCObjectID.toHexString(),mockTeam,mockTime,mockObjectId,mockbody);
+        Task privateTask = new Task(mockUserID,privateTCObjectID.toHexString(),mockTeam,mockTime,mockObjectId.toHexString(),mockbody);
         privateTask.setListId(privateTCObjectID.toHexString());
         mongoTemplate.save(privateTask,"task");
         mongoTemplate.save(mockTask, "task");
@@ -111,4 +111,6 @@ class TaskRepositoryImplTest {
         assertEquals(correctList.get(0).getUserId(), taskList.get(0).getUserId());
         assertEquals(correctList.get(0).getListId(), taskList.get(0).getListId());
     }
+
+
 }

@@ -1,4 +1,5 @@
 package com.gocaspi.taskfly.user;
+import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +10,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import org.springframework.web.client.HttpClientErrorException;
+
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 @RestController
 @ResponseBody
-@CrossOrigin("*")
 @RequestMapping("/user")
 
 public class UserController {
@@ -143,4 +145,12 @@ public class UserController {
         var msg = "Successfully update User with id :" + id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
+
+    public String hashStr(String str) {
+        return Hashing.sha256()
+                .hashString(str, StandardCharsets.UTF_8)
+                .toString();
+
+    }
+
 }

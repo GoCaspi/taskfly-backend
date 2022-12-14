@@ -17,20 +17,20 @@ public class Task {
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalDateTime deadline;
     @Id
-    private ObjectId id;
+    private String id;
     private Taskbody body;
    public static class Taskbody {
         private String topic;
-        private Boolean highPriority;
+        private String highPriority;
         private String description;
 
-        public Taskbody(String topic, Boolean highPriority,String description){
+        public Taskbody(String topic, String highPriority,String description){
             this.topic = topic;
             this.highPriority = highPriority;
             this.description = description;
         }
 
-        public void setHighPriority(Boolean str){
+        public void setHighPriority(String str){
             this.highPriority = str;
         }
         public void setDescription(String str){
@@ -46,7 +46,7 @@ public class Task {
         public String getDescription(){
             return this.description;
         }
-        public Boolean getHighPriority(){
+        public String getHighPriority(){
             return this.highPriority;
         }
 
@@ -56,7 +56,7 @@ public class Task {
 
 
 
-    public Task(String userId, String listId, String team, LocalDateTime deadline, ObjectId id, Taskbody body){
+    public Task(String userId, String listId, String team, LocalDateTime deadline, String id, Taskbody body){
         this.userId = userId;
         this.listId = listId;
         this.team = team;
@@ -92,11 +92,11 @@ public class Task {
      */
     public String getUserId(){ return this.userId; }
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
