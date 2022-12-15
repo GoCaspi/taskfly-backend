@@ -124,5 +124,10 @@ jobs:
                     "name": "PORT",
                     "value": "80",
                     "slotSetting": false
+                },
+                {
+                    "name": "FRONTEND_URL",
+                    "value": "${{ secrets.FRONTEND_URL }}",
+                    "slotSetting": false
                 }
             ]
