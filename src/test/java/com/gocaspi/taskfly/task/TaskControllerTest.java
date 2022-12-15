@@ -21,7 +21,7 @@ class TaskControllerTest {
 	String mockUserIds = "1";
 	String mockListId = "1";
 	String mockTeam = "team1";
-	ObjectId mockObjectId = new ObjectId();
+	String mockObjectId = new ObjectId().toHexString();
 
 	Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 
@@ -139,7 +139,7 @@ class TaskControllerTest {
 		for (Testcase tc : testcases) {
 			when(mockRepo.insert(tc.mockTask)).thenReturn(mockTask);
 			try {
-				ResponseEntity<String> expected = new ResponseEntity<>("successfully created task with id: " + tc.mockTask.getId().toHexString(), HttpStatus.ACCEPTED);
+				ResponseEntity<String> expected = new ResponseEntity<>("successfully created task with id: " + tc.mockTask.getId(), HttpStatus.ACCEPTED);
 				ResponseEntity<String> actual1 = t.handleCreateNewTask(tc.mockTask);
 				assertEquals(actual1.getStatusCode(), expected.getStatusCode());
 			} catch (HttpClientErrorException e) {

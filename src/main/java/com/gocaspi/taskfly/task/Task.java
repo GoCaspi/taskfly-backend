@@ -1,7 +1,6 @@
 package com.gocaspi.taskfly.task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -17,7 +16,7 @@ public class Task {
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalDateTime deadline;
     @Id
-    private ObjectId id;
+    private String id;
     private Taskbody body;
    public static class Taskbody {
         private String topic;
@@ -56,7 +55,7 @@ public class Task {
 
 
 
-    public Task(String userId, String listId, String team, LocalDateTime deadline, ObjectId id, Taskbody body){
+    public Task(String userId, String listId, String team, LocalDateTime deadline, String id, Taskbody body){
         this.userId = userId;
         this.listId = listId;
         this.team = team;
@@ -92,11 +91,11 @@ public class Task {
      */
     public String getUserId(){ return this.userId; }
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 

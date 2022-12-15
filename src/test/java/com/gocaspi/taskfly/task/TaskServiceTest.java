@@ -27,7 +27,7 @@ class TaskServiceTest {
 	String mockUserIds = "123";
 	String mockListId = "1";
 	String mockTeam = "team1";
-	ObjectId mockObjectId = new ObjectId();
+	String mockObjectId = new ObjectId().toHexString();
 Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
 
@@ -114,9 +114,9 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		}
 
 		Testcase[] testcases = new Testcase[]{
-				new Testcase(emptyTask, mockObjectId.toHexString(), true),
-				new Testcase(mockTask, mockObjectId.toHexString(), true),
-				new Testcase(mockTask, mockObjectId.toHexString(), false)
+				new Testcase(emptyTask, mockObjectId, true),
+				new Testcase(mockTask, mockObjectId, true),
+				new Testcase(mockTask, mockObjectId, false)
 		};
 		for (Testcase tc : testcases) {
 			try {
@@ -149,8 +149,8 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		}
 
 		Testcase[] testcases = new Testcase[]{
-				new Testcase(mockList, mockObjectId.toHexString()),
-				new Testcase(new ArrayList<>(), mockObjectId.toHexString())
+				new Testcase(mockList, mockObjectId),
+				new Testcase(new ArrayList<>(), mockObjectId)
 		};
 		for (Testcase tc : testcases) {
 			try {
@@ -180,8 +180,8 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		}
 
 		Testcase[] testcases = new Testcase[]{
-				new Testcase(mockList, mockObjectId.toHexString()),
-				new Testcase(new ArrayList<>(), mockObjectId.toHexString())
+				new Testcase(mockList, mockObjectId),
+				new Testcase(new ArrayList<>(), mockObjectId)
 		};
 		for (Testcase tc : testcases) {
 			try {
@@ -211,8 +211,8 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		}
 
 		Testcase[] testcases = new Testcase[]{
-				new Testcase(mockList, mockObjectId.toHexString()),
-				new Testcase(new ArrayList<>(), mockObjectId.toHexString())
+				new Testcase(mockList, mockObjectId),
+				new Testcase(new ArrayList<>(), mockObjectId)
 		};
 		for (Testcase tc : testcases) {
 			try {
@@ -240,8 +240,8 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		}
 
 		Testcase[] testcases = new Testcase[]{
-				new Testcase(mockObjectId.toHexString(), true),
-				new Testcase(mockObjectId.toHexString(), false),
+				new Testcase(mockObjectId, true),
+				new Testcase(mockObjectId, false),
 
 		};
 		for (Testcase tc : testcases) {
@@ -270,8 +270,8 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 		}
 
 		Testcase[] testcases = new Testcase[]{
-				new Testcase(mockList, mockObjectId.toHexString()),
-				new Testcase(new ArrayList<>(), mockObjectId.toHexString())
+				new Testcase(mockList, mockObjectId),
+				new Testcase(new ArrayList<>(), mockObjectId)
 		};
 		for (Testcase tc : testcases) {
 			try {

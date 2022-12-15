@@ -128,11 +128,11 @@ public class UserService {
         return usersToId;
     }
     public User getDetails(String email){
-        return repo.findByEmail(email);
+        return repo.findByEmail(hashStr(email));
     }
     public String getUserRoles(String email){
 
-        return repo.findByEmail(email).getSrole();
+        return repo.findByEmail(hashStr(email)).getSrole();
     }
             /**
              * throws an error if not all necessary fields of the provided user are assigned. If all fields are validated the
@@ -146,6 +146,7 @@ public class UserService {
         }
         getRepo().insert(t);
     }
+
 
 
 

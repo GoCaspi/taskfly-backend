@@ -4,6 +4,9 @@ package com.gocaspi.taskfly.taskcollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -25,9 +28,9 @@ public class TaskCollectionController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @GetMapping("/user/{userID}")
-    public ResponseEntity<List<TaskCollectionGetQuery>> getTaskCollectionsByUserID(@PathVariable String userID){
-        List<TaskCollectionGetQuery> tc = service.getTaskCollectionsByUser(userID);
+    @GetMapping("/owner/{ownerID}")
+    public ResponseEntity<List<TaskCollectionGetQuery>> getTaskCollectionsByOwnerID(@PathVariable String ownerID){
+        List<TaskCollectionGetQuery> tc = service.getTaskCollectionsByOwnerID(ownerID);
         return new ResponseEntity<>(tc, HttpStatus.OK);
     }
     @GetMapping("/id/{id}")
@@ -42,6 +45,12 @@ public class TaskCollectionController {
         return new ResponseEntity<>(tc, HttpStatus.OK);
     }
 
+    @GetMapping("/user/{userID}")
+    public ResponseEntity<List<TaskCollectionGetQuery>> getTaskCollectionByUserID(@PathVariable String userID){
+        List<TaskCollectionGetQuery> tc = service.getTaskCollectionsByUserID(userID);
+        return new ResponseEntity<>(tc, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTaskCollectionByID(@PathVariable String id){
         service.deleteTaskCollectionByID(id);
@@ -53,4 +62,11 @@ public class TaskCollectionController {
         service.updateTaskCollectionByID(id, tc);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+    @MessageMapping("/collection/broker/{collectionID}")
+    @SendTo("/collection/{collectionID}")
+    public String sendTaskCollectionMessage(Message<String> message){
+        return message.getPayload();
+    }
+
+
 }
