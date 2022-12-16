@@ -74,12 +74,13 @@ public class ResetService {
     /**
      * takes a hashed email-string and a lastName. If no user was found to the hashed mail in the database it returns NotFound exception. If the lastName is not filled, then
      * Status 400 BadRequest is Returned. Eslse the method sets the reseted field of the user to that email to true
-     * @param hashMail, String hashed email address
+     * @param mail, String hashed email address
      * @param lastName, String
      * @return User
      * @throws HttpClientErrorException, Status Code
      */
-    public List<User> getUserByEmail(String hashMail, String lastName) throws HttpClientErrorException{
+    public List<User> getUserByEmail(String mail, String lastName) throws HttpClientErrorException{
+        String hashMail = hashStr(mail);
         List<User> users = getRepo().findUserByEmail(hashMail);
         if (users.isEmpty()){
             throw this.exceptionNotFound;

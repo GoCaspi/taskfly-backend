@@ -51,7 +51,8 @@ import static org.mockito.Mockito.when;
 		Testcase[] testcases = new Testcase[]{
 			new Testcase(mockList,mockList,false,false),
 				new Testcase(mockList,mockList,true,false),
-				new Testcase(mockList,mockList,false,true)
+				new Testcase(mockList,mockList,false,true),
+				new Testcase(mockList,mockList,true,true),
 		};
 
 		for(Testcase tc: testcases){
