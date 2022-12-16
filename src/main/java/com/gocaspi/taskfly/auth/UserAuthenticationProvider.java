@@ -5,6 +5,7 @@ import com.gocaspi.taskfly.user.UserRepository;
 import com.google.common.hash.Hashing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +25,12 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     Logger logger = LoggerFactory.getLogger(UserAuthenticationProvider.class);
     private UserRepository repository;
     private PasswordEncoder encoder;
+    @Value("${spring.security.user.name}")
+    private String defaultUsername;
+    @Value("${spring.security.user.password}")
+    private String defaultPassword;
+    @Value("${spring.security.user.roles}")
+    private String defaultRole;
  public UserAuthenticationProvider(UserRepository repository,PasswordEncoder encoder){
      this.encoder = encoder;
      this.repository = repository;
@@ -40,8 +47,14 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         if (authentication.getCredentials() == null){
             throw new BadCredentialsException("Details not found");
         }
+
+        if (authentication.getName().equals(defaultUsername) && authentication.getCredentials().toString().equals(defaultPassword)){
+            return new UsernamePasswordAuthenticationToken(defaultUsername,defaultPassword, getUserRoles(defaultRole));
+        }
+
         String email = hashStr(authentication.getName());
         String password = authentication.getCredentials().toString();
+
 
         User user = repository.findByEmail(email);
         if (user == null){

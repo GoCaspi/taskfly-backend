@@ -36,10 +36,7 @@ public class SecurityConfiguration {
                 .antMatchers("/user/getUserRoles").hasAuthority("ROLE_WRITE")
                 .antMatchers("/task/**").permitAll()
                 .antMatchers("/tc/**").permitAll()
-                .antMatchers("/actuator/**")
-                .authenticated()
-                .and()
-                .httpBasic();
+                .antMatchers("/actuator/**").hasAuthority("ADMIN").and().httpBasic();
 
         return http.build();
     }
