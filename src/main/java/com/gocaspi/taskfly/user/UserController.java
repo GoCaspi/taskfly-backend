@@ -8,11 +8,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import com.google.gson.Gson;
 import org.springframework.web.client.HttpClientErrorException;
-
+import javax.validation.Valid;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
+/**
+ * Class for UserController
+ */
 @RestController
 @ResponseBody
 @RequestMapping("/user")
@@ -34,12 +37,12 @@ public class UserController {
     }
     /**
      * Any user can access this API - No Authentication required
-     * @param body
+     * @param user
      * @return
      */
     @PostMapping("/create")
-    public ResponseEntity<String> handlerCreateUser(@RequestBody String body) throws HttpClientErrorException.BadRequest {
-        var user = jsonToUser(body);
+    public ResponseEntity<String> handlerCreateUser(@Valid @RequestBody User user) throws HttpClientErrorException.BadRequest {
+      //  var user = jsonToUser(user);
         user.setEmail(service.hashStr(user.getEmail()));
         user.setPassword(encoder.encode(user.getPassword()));
         user.setSrole(user.getSrole());
@@ -77,9 +80,9 @@ public class UserController {
         return service.getUserRoles(email);
     }
 
-    public User jsonToUser(String jsonPayload) {
+    /*public User jsonToUser(String jsonPayload) {
         return new Gson().fromJson(jsonPayload, User.class);
-    }
+    }*/
 
     /**
      * calls the service to fetch the user of the provided id. If the service does not throw an exception (no user to the provided id was found)
@@ -134,14 +137,14 @@ public class UserController {
      * else the exception from the service is thrown.
      *
      * @param id id of the user that should be updated
-     * @param body update of the user to the provided id
+     * @param user update of the user to the provided id
      * @return ResponseEntity containing success message and updated user id and the http status code
      * @throws HttpClientErrorException.NotFound Exception if no user to the id was found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<String> handleUpdateUser(@PathVariable String id, @RequestBody String body) throws HttpClientErrorException.NotFound {
-        var update = jsonToUser(body);
-        getService().updateService(id, update);
+    public ResponseEntity<String> handleUpdateUser(@PathVariable String id, @RequestBody User user) throws HttpClientErrorException.NotFound {
+       // var update = jsonToUser(body);
+        getService().updateService(id, user);
         var msg = "Successfully update User with id :" + id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }

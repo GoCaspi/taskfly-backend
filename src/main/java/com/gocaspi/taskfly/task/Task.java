@@ -49,11 +49,7 @@ public class Task {
             return this.highPriority;
         }
 
-
-
     }
-
-
 
     public Task(String userId, String listId, String team, LocalDateTime deadline, String id, Taskbody body){
         this.userId = userId;

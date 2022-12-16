@@ -2,7 +2,6 @@ package com.gocaspi.taskfly.user;
 
 
 import com.google.gson.Gson;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -112,7 +111,7 @@ import static org.mockito.Mockito.*;
             if (tc.expectSuccess) {
                 ResponseEntity<String> expected = new ResponseEntity<>("Successfully update User with id :" + tc.mockId, HttpStatus.ACCEPTED);
                 try {
-                    ResponseEntity<String> actual = t.handleUpdateUser(tc.mockId, new Gson().toJson(tc.updateForUser));
+                    ResponseEntity<String> actual = t.handleUpdateUser(tc.mockId, mockUser);
                     assertEquals(expected, actual);
                 } catch (HttpClientErrorException e) {
                     throw new RuntimeException(e);
@@ -120,7 +119,7 @@ import static org.mockito.Mockito.*;
 
             } else {
                 try {
-                    t.handleUpdateUser(tc.mockId, new Gson().toJson(tc.updateForUser));
+                    t.handleUpdateUser(tc.mockId, mockUser);
                 } catch (HttpClientErrorException e) {
                     HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
                     assertEquals(e.getClass(), expectedException.getClass());
@@ -206,7 +205,7 @@ import static org.mockito.Mockito.*;
 
         try {
             ResponseEntity<String> expected = new ResponseEntity<>("successfully created User" , HttpStatus.ACCEPTED);
-            ResponseEntity<String> actual1 = t.handlerCreateUser(tc.mockPayload);
+            ResponseEntity<String> actual1 = t.handlerCreateUser(mockUser);
             assertEquals(actual1.getStatusCode(), expected.getStatusCode());
         } catch (HttpClientErrorException e) {
             HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
