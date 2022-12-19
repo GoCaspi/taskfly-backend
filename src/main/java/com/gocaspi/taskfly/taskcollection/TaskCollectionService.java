@@ -15,15 +15,23 @@ import java.util.Optional;
 public class TaskCollectionService {
     @Autowired
     private TaskCollectionRepository repo;
-    @Autowired
-    private UserService userService;
 
     private final HttpClientErrorException httpNotFoundError = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
 
+    /**
+     * the constructor for the SaskCollectionService Class.
+     * @param repo The TaskCollectionRepository
+     */
     public TaskCollectionService(TaskCollectionRepository repo){
         this.repo = repo;
     }
 
+    /**
+     *
+     * @param body
+     * @return
+     * @throws HttpClientErrorException
+     */
     public TaskCollection createTaskCollection(TaskCollection body) throws HttpClientErrorException {
         repo.insert(body);
         return body;

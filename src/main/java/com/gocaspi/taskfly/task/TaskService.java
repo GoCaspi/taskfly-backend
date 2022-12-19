@@ -41,6 +41,13 @@ public class TaskService {
         return taskList;
     }
 
+    /**
+     * returns the task which have the same id which is supplied to the endpoint.
+     *
+     * @param id
+     * @return The Task with the matching id
+     * @throws HttpClientErrorException.NotFound
+     */
     public Task getServiceTaskById(String id) throws HttpClientErrorException.NotFound {
         var task = repo.findById(id);
         if (task.isEmpty()){
@@ -49,11 +56,24 @@ public class TaskService {
         return task.get();
     }
 
+    /**
+     * deletes the task with the matching id.
+     *
+     * @param id
+     * @throws HttpClientErrorException
+     */
     public void deleteService(String id) throws HttpClientErrorException {
         if(!repo.existsById(id)){ throw exceptionNotFound; }
         repo.deleteById(id);
     }
 
+    /**
+     * updates the task with the corresponding id within the database with the supplied changes.
+     *
+     * @param id id of the task which is to be updated
+     * @param update task object with all changes
+     * @throws HttpClientErrorException
+     */
     public void updateService(String id,Task update) throws HttpClientErrorException {
         var task =  repo.findById(id);
 
@@ -81,6 +101,11 @@ public class TaskService {
         });
     }
 
+    /**
+     * returns all tasks of an user from the database, where the highPriority field is set to true
+      * @param userid
+     * @return a list with all tasks where priority is set to true
+     */
     public List<Task> getTasksByHighPriorityService(String userid) {
         var taskList = repo.getTaskByUserIdAndBodyHighPriority(userid, true);
         if(taskList.isEmpty()){
@@ -89,6 +114,10 @@ public class TaskService {
         return taskList;
     }
 
+    /**
+     * @param userid
+     * @return a list of all tasks which are only visible to the supplied user.
+     */
     public List<Task> getPrivateTasks(String userid){
         var taskList = repo.findPrivateTasksByUserID(userid);
         if(taskList.isEmpty()){
@@ -97,6 +126,11 @@ public class TaskService {
         return taskList;
     }
 
+    /**
+     *
+     * @param userid
+     * @return a list of tasks from a user which are visible to other users
+     */
     public List<Task> getSharedTasks(String userid){
         var taskList = repo.findSharedTasksByUserID(userid);
         if(taskList.isEmpty()){
@@ -105,6 +139,11 @@ public class TaskService {
         return taskList;
     }
 
+    /**
+     *
+     * @param userid
+     * @return a list of tasks from a user whose tasks are scheduled for one week.
+     */
     public List<Task> getTasksScheduledForOneWeek(String userid) {
         var taskList = repo.findTasksScheduledForOneWeekByUserID(userid);
         if (taskList.isEmpty()) {
