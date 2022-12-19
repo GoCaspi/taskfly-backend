@@ -4,8 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.google.gson.Gson;
 import org.springframework.web.client.HttpClientErrorException;
+
+import javax.validation.Valid;
 
 
 /**
@@ -43,14 +44,14 @@ public class TeamManagementController {
      * given a request body this endpoint converts the body to a Team and validates the input Data against set criteria (see method below)
      * If criteria are matched returns HttpStatus:202, else throws an exception.
      *
-     * @param body json of the team that should be created
+     * @param teamManagement json of the team that should be created
      * @return ResponseEntity containing a success message along with the http status code
      * @throws HttpClientErrorException.BadRequest Exception if the provided requestbody is missing fields
      */
     @PostMapping
-    public ResponseEntity<String> createTeam(@RequestBody String body) throws HttpClientErrorException.BadRequest {
-        var insert = jsonToTeamManagement(body);
-        getService().insertService(insert);
+    public ResponseEntity<String> createTeam(@Valid @RequestBody TeamManagement teamManagement) throws HttpClientErrorException.BadRequest {
+      //  var insert = jsonToTeamManagement(body);
+        getService().insertService(teamManagement);
         var msg = "successfully created Team";
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
@@ -97,14 +98,14 @@ public class TeamManagementController {
      * else the exception from the service is thrown.
      *
      * @param id id of the team that should be updated
-     * @param body update of the team to the provided id
+     * @param teamManagement update of the team to the provided id
      * @return ResponseEntity containing success message and updated team id and the http status code
      * @throws HttpClientErrorException.NotFound Exception if no team to the id was found
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<String> updateTeam(@PathVariable String id,@RequestBody String body) throws HttpClientErrorException.NotFound {
-        var update = jsonToTeamManagement(body);
-        getService().updateService(id,update);
+    public ResponseEntity<String> updateTeam(@PathVariable String id,@RequestBody TeamManagement teamManagement) throws HttpClientErrorException.NotFound {
+     //   var update = jsonToTeamManagement(teamManagement);
+        getService().updateService(id,teamManagement);
         var msg = "successfully updated Team";
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
@@ -127,8 +128,8 @@ public class TeamManagementController {
      * @param jsonPayload String
      * @return team fetched from the jsonPayload
      */
-    public TeamManagement jsonToTeamManagement(String jsonPayload){
+   /* public TeamManagement jsonToTeamManagement(String jsonPayload){
         return new Gson().fromJson(jsonPayload, TeamManagement.class);
-    }
+    }*/
 
 }

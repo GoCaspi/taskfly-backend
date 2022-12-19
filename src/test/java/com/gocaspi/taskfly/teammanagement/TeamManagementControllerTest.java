@@ -59,7 +59,7 @@ class TeamManagementControllerTest {
             if (tc.expectSuccess) {
                 ResponseEntity<String> expected = new ResponseEntity<>("successfully updated Team", HttpStatus.ACCEPTED);
                 try {
-                    ResponseEntity<String> actual = t.updateTeam(tc.mockId, new Gson().toJson(tc.updateForTeam));
+                    ResponseEntity<String> actual = t.updateTeam(tc.mockId,mockTeamManagement);
                     assertEquals(expected, actual);
                 } catch (HttpClientErrorException e) {
                     throw new RuntimeException(e);
@@ -67,7 +67,7 @@ class TeamManagementControllerTest {
 
             } else {
                 try {
-                    t.updateTeam(tc.mockId, new Gson().toJson(tc.updateForTeam));
+                    t.updateTeam(tc.mockId, mockTeamManagement);
                 } catch (HttpClientErrorException e) {
                     HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
                     assertEquals(e.getClass(), expectedException.getClass());
@@ -108,7 +108,7 @@ class TeamManagementControllerTest {
 
             try {
                 ResponseEntity<String> expected = new ResponseEntity<>("successfully created Team", HttpStatus.ACCEPTED);
-                ResponseEntity<String> actual1 = t.createTeam(tc.mockPayload);
+                ResponseEntity<String> actual1 = t.createTeam(tc.mockTeam);
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {
                 HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
