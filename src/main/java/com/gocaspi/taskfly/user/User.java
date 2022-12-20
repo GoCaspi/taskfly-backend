@@ -1,27 +1,32 @@
 package com.gocaspi.taskfly.user;
-
-
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.validation.constraints.NotBlank;
+
 
 
 @Document
 public class User {
     private Userbody body;
+    @NotBlank
     private String firstName;
+    @NotBlank
     private String lastName;
+    @NotBlank
     private String email;
+    @NotBlank
     private String password;
     private String srole;
     private boolean reseted;
 @Id
     private String id;
 
-public static class Userbody implements java.io.Serializable{
+public static class Userbody  implements java.io.Serializable{
     private String team;
 
-     public Userbody(String team){
+     public Userbody(@JsonProperty("team")String team){
          this.team = team;
      }
 
@@ -39,7 +44,7 @@ public static class Userbody implements java.io.Serializable{
      * @param body body for the user
      * @param reseted reseted for the user
      */
-    public User(String firstName, String lastName, String email, String password ,String srole,Userbody body,Boolean reseted) {
+    public User (@JsonProperty("firstName")String firstName,@JsonProperty("lastName") String lastName, @JsonProperty("email")String email, @JsonProperty("password")String password , @JsonProperty("srole")String srole, @JsonProperty("body")Userbody body, @JsonProperty("reseted")Boolean reseted) {
 
         this.firstName = firstName;
         this.lastName = lastName;
