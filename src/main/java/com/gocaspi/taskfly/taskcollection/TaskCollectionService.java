@@ -1,6 +1,5 @@
 package com.gocaspi.taskfly.taskcollection;
 
-import com.gocaspi.taskfly.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,7 @@ public class TaskCollectionService {
     private final HttpClientErrorException httpNotFoundError = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
 
     /**
-     * the constructor for the SaskCollectionService Class.
+     * the constructor for the TaskCollectionService Class.
      * @param repo The TaskCollectionRepository
      */
     public TaskCollectionService(TaskCollectionRepository repo){
@@ -27,9 +26,10 @@ public class TaskCollectionService {
     }
 
     /**
-     *
-     * @param body
-     * @return
+     * This service passes an TaskCollection Object to the Repository which stores it in the MongoDB.
+     * The Return is the entire TaskCollection Object including the assigned ID.
+     * @param body the TaskCollection Object that is to be stored in the DB.
+     * @return the stored TaskCollection Object with the new ID.
      * @throws HttpClientErrorException
      */
     public TaskCollection createTaskCollection(TaskCollection body) throws HttpClientErrorException {
@@ -37,6 +37,12 @@ public class TaskCollectionService {
         return body;
     }
 
+    /**
+     * This service calls the findByOwnerID repository function which gets all TaskCollections
+     * where the user is assigned as the Owner of an TaskCollection from the db
+     * @param userID the userID of the user who could be an owner of a taskCollection
+     * @return List<TaskCollectionGetQuery>
+     */
     public List<TaskCollectionGetQuery> getTaskCollectionsByOwnerID(String userID) {
         List<TaskCollectionGetQuery> tc = repo.findByOwnerID(userID);
         if(tc.isEmpty()){
@@ -44,6 +50,12 @@ public class TaskCollectionService {
         }
         return tc;    }
 
+    /**
+     * This service calls the findByID repository function which returns the
+     * TaskCollection with the corresponding ID from the db.
+     * @param collID
+     * @return TaskCollectionGetQuery
+     */
     public TaskCollectionGetQuery getTaskCollectionByID(String collID){
         TaskCollectionGetQuery tc = repo.findByID(collID);
         if(Objects.isNull(tc)){
@@ -52,6 +64,12 @@ public class TaskCollectionService {
         return tc;
     }
 
+    /**
+     * This service calls the findByTeamID repository function which gets all TaskCollections
+     * where the supplied TeamID is set.
+     * @param teamID the ID of the Team
+     * @return List<TaskCollectionGetQuery>
+     */
     public List<TaskCollectionGetQuery> getTaskCollectionByTeamID(String teamID){
         List<TaskCollectionGetQuery> tc = repo.findByTeamID(teamID);
         if(tc.isEmpty()){
@@ -60,6 +78,13 @@ public class TaskCollectionService {
         return tc;
     }
 
+    /**
+     * This service calls the findByUserID repository function which gets all TaskCollections where
+     * the supplied User has access to. e.g. the user is listed within the members or part of the team the
+     * taskCollection is assigned to
+     * @param userid
+     * @return List<TaskCollectionGetQuery>
+     */
     public List<TaskCollectionGetQuery> getTaskCollectionsByUserID(String userid){
         List<TaskCollectionGetQuery> tc = repo.findByUserID(userid);
         if(tc.isEmpty()){
@@ -69,7 +94,11 @@ public class TaskCollectionService {
     }
 
 
-
+    /**
+     * This service first checks if the supplied id matches a taskCollection that exists within the database and when it does,
+     * the taskCollection gets deleted.
+     * @param id
+     */
     public void deleteTaskCollectionByID(String id){
         if (!repo.existsById(id)){
             throw httpNotFoundError;
@@ -77,6 +106,12 @@ public class TaskCollectionService {
         repo.deleteById(id);
     }
 
+    /**
+     * This service first checks if the supplied id matches a TaskCollection that exists within the database, and when it does,
+     * the supplied fields get updated
+     * @param id the taskCollection which should be updated
+     * @param update the taskCollection Object which contains the new fields
+     */
     public void updateTaskCollectionByID(String id, TaskCollection update){
         String[] emptyArr = new String[0];
         Optional<TaskCollection> task = repo.findById(id);
@@ -88,9 +123,6 @@ public class TaskCollectionService {
             if(!Objects.equals(update.getMembers(), emptyArr)){t.setMembers(update.getMembers());}
             repo.save(t);
         });
-    }
-    public Boolean checkIfUserHasAccess(String userid, String collectionID){
-        return repo.hasAccessToCollection(userid, collectionID);
     }
 
 

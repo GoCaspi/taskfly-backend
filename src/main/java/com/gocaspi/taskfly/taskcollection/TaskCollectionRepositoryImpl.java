@@ -40,7 +40,7 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
     private AggregationOperation addConvertedIDandTeamIDFields(){
         return aggregationOperation ->
             new Document(ADD_FIELDS_KEY,
-                    new Document("tcIDObj",
+                    new Document(OBJECTID,
                             new Document(TO_STRING_KEY, "$_id"))
                             .append(TEAM_ID_OBJ,
                                     new Document(COND, Arrays.asList(new Document("$ifNull", Arrays.asList(TEAM_ID, REMOVE_KEY)),
@@ -75,7 +75,7 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
                 .localField(OBJECTID)
                 .foreignField(LISTID)
                 .as(LOOKUPFIELD);
-        var aggregation = Aggregation.newAggregation(match, addConvertedIDField(), lookupOperation);
+        var aggregation = Aggregation.newAggregation(addConvertedIDField(), match, lookupOperation);
         return mongoTemplate.aggregate(aggregation, COLLECTIONNAME, TaskCollectionGetQuery.class).getMappedResults();
     }
 
@@ -94,7 +94,7 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
                 .localField(OBJECTID)
                 .foreignField(LISTID)
                 .as(LOOKUPFIELD);
-        var aggregation = Aggregation.newAggregation(match, addConvertedIDField(), lookupOperation);
+        var aggregation = Aggregation.newAggregation( addConvertedIDField(), match, lookupOperation);
         return mongoTemplate.aggregate(aggregation, COLLECTIONNAME, TaskCollectionGetQuery.class).getUniqueMappedResult();
     }
 
@@ -117,7 +117,7 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
     }
 
     /**
-     * a mongo aggregation pipeline that searches all tasks which matches to the userid and returns all matching taskcollections
+     * a mongo aggregation pipeline that searches all tasks which matches to the userid and returns all matching taskCollections
      * @param userID the userid to look for
      * @return a list of all task collections that have been assigned to the user
      */
@@ -130,7 +130,7 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
                 .as(TEAM_RESULT);
         var taskLookup = LookupOperation.newLookup()
                 .from(FOREIGNCOLLECTION)
-                .localField("listIdObj")
+                .localField(OBJECTID)
                 .foreignField(LISTID)
                 .as(LOOKUPFIELD);
         var matchOperation = Aggregation.match(
@@ -160,7 +160,7 @@ public class TaskCollectionRepositoryImpl implements TaskCollectionRepositoryCus
      * @return true if the user is allowed the access the task collection and false if not.
      */
     public Boolean hasAccessToCollection(String userID, String collectionID){
-        MatchOperation matchTCID = Aggregation.match(new Criteria("tcIDObj").is(collectionID));
+        MatchOperation matchTCID = Aggregation.match(new Criteria(OBJECTID).is(collectionID));
         var lookupOperation = LookupOperation.newLookup()
                 .from("teamManagement")
                 .localField(TEAM_ID_OBJ)

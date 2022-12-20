@@ -37,7 +37,7 @@ public class TaskCollectionController {
     /**
      * takes an userid as an input and returns all taskcollections where this user is assigned as the owner
      * @param ownerID the userid of the corresponding user
-     * @return a list of all task collections where the ownerid field matches with the supplied userid
+     * @return a list of TaskCollections where the user is assigned as the owner
      */
     @GetMapping("/owner/{ownerID}")
     public ResponseEntity<List<TaskCollectionGetQuery>> getTaskCollectionsByOwnerID(@PathVariable String ownerID){
@@ -47,8 +47,8 @@ public class TaskCollectionController {
 
     /**
      * returns the task collection that has the same id as supplied as a param.
-     * @param id the id of the taskcollection
-     * @return the task collection which matches with the supplied id
+     * @param id the id of the TaskCollection
+     * @return a TaskCollection that have been identified by the supplied id.
      */
     @GetMapping("/id/{id}")
     public ResponseEntity<TaskCollectionGetQuery> getTaskCollectionByID(@PathVariable String id){
@@ -57,9 +57,9 @@ public class TaskCollectionController {
     }
 
     /**
-     * takes a teamid as an input and returns all tasks collections which have been shared to the team.
+     * takes a teamID as an input and returns all tasks collections which have been shared to the team.
      * @param teamID the teamid of the corresponding team
-     * @return a list of task collections which have been assigned to the supplied teamid
+     * @return a list of TaskCollectionsGetQuery where the supplied teamID matches
      */
     @GetMapping("/team/{teamID}")
     public ResponseEntity<List<TaskCollectionGetQuery>> getTaskCollectionsByTeamID(@PathVariable String teamID){
@@ -70,7 +70,7 @@ public class TaskCollectionController {
     /**
      * takes a userID as an input and returns all task collections which have been assigned to the user
      * @param userID the userid of the corresponding user
-     * @return a list of task collections which have been assigned to the supplied userid.
+     * @return a list of TaskCollectionsGetQuery which have been assigned to the user
      */
     @GetMapping("/user/{userID}")
     public ResponseEntity<List<TaskCollectionGetQuery>> getTaskCollectionByUserID(@PathVariable String userID){
@@ -93,7 +93,7 @@ public class TaskCollectionController {
      * updates a taskcollection by supplying the taskcollection id and a taskcollection body
      * @param id the id of the to be updated taskcollection
      * @param tc the body of an taskcollection with the to be changed fields
-     * @return
+     * @return status code 202 if the taskCollection have been updated successfully
      */
     @PatchMapping
     public ResponseEntity<TaskCollection> patchTaskCollectionByID(@RequestParam("id") String id, @RequestBody TaskCollection tc){
@@ -105,7 +105,7 @@ public class TaskCollectionController {
      * handles stomp messages which are being sent to task collections. all messages sent to MessageMapping are being relayed
      * to the sendTo Annotation
      * @param message the recieved websocket message
-     * @return returns the payload of the original message, as it contains the to be redirected data.
+     * @return the payload of the original message, as it contains the to be redirected data.
      */
     @MessageMapping("/collection/broker/{collectionID}")
     @SendTo("/collection/{collectionID}")
