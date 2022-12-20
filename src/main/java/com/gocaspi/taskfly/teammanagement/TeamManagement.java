@@ -1,14 +1,21 @@
 package com.gocaspi.taskfly.teammanagement;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * Class for TeamManagement
  */
-public class TeamManagement {
-
+@Document
+public class TeamManagement{
+@NotBlank
     private String teamName;
-    private String[] members;
-    private String userID;
+@NotNull(message = "Please enter your Team Members")
+private String[] members;
+@NotBlank
+private String userID;
     @Id
     private String id;
     /**
@@ -19,7 +26,7 @@ public class TeamManagement {
      * @param members members of the teamManagement
      * @param id id of the teamManagement
      */
-    public TeamManagement(String userID, String teamName, String[] members, String id){
+    public  TeamManagement(String userID, String teamName, String[] members, String id) {
         this.userID = userID;
         this.teamName = teamName;
         this.members = members;

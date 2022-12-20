@@ -8,38 +8,65 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import com.google.gson.Gson;
 import org.springframework.web.client.HttpClientErrorException;
-
+import javax.validation.Valid;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
+/**
+ * Class for UserController
+ */
 @RestController
 @ResponseBody
 @RequestMapping("/user")
+
 
 public class UserController {
     @Autowired
     private PasswordEncoder encoder;
     @Autowired
     private final UserService service;
+
     /**
      * Constractor for UserController
      *
      * @param userService variable for the interface userRepository
      */
+
     public UserController(UserService userService) {
         super();
         this.service = userService;
         this.encoder = new BCryptPasswordEncoder();
     }
-    /**
-     * Any user can access this API - No Authentication required
-     * @param body
-     * @return
-     */
+
+    public static class UserRequest{
+        private User.Userbody body;
+        private String firstName;
+        private String lastName;
+        private String email;
+        private String password;
+        private String srole;
+        private boolean reseted;
+        /**
+         * Any user can access this API - No Authentication required
+         * @param
+         * @return
+         */
+        public UserRequest (String firstName, String lastName, String email,String password ,String srole, User.Userbody body,Boolean reseted) {
+
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+            this.password = password;
+            this.srole = srole;
+            this.body = body;
+            this.reseted = reseted;
+        }
+    }
+
     @PostMapping("/create")
-    public ResponseEntity<String> handlerCreateUser(@RequestBody String body) throws HttpClientErrorException.BadRequest {
-        var user = jsonToUser(body);
+    public ResponseEntity<String> handlerCreateUser(@Valid @RequestBody UserRequest userRequest) throws HttpClientErrorException.BadRequest {
+        User user =  new User(userRequest.firstName,userRequest.lastName,userRequest.email,userRequest.password,userRequest.srole,userRequest.body,userRequest.reseted);
         user.setEmail(service.hashStr(user.getEmail()));
         user.setPassword(encoder.encode(user.getPassword()));
         user.setSrole(user.getSrole());
@@ -77,9 +104,6 @@ public class UserController {
         return service.getUserRoles(email);
     }
 
-    public User jsonToUser(String jsonPayload) {
-        return new Gson().fromJson(jsonPayload, User.class);
-    }
 
     /**
      * calls the service to fetch the user of the provided id. If the service does not throw an exception (no user to the provided id was found)
@@ -134,14 +158,14 @@ public class UserController {
      * else the exception from the service is thrown.
      *
      * @param id id of the user that should be updated
-     * @param body update of the user to the provided id
+     * @param userRequest update of the user to the provided id
      * @return ResponseEntity containing success message and updated user id and the http status code
      * @throws HttpClientErrorException.NotFound Exception if no user to the id was found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<String> handleUpdateUser(@PathVariable String id, @RequestBody String body) throws HttpClientErrorException.NotFound {
-        var update = jsonToUser(body);
-        getService().updateService(id, update);
+    public ResponseEntity<String> handleUpdateUser(@PathVariable String id, @RequestBody UserRequest userRequest) throws HttpClientErrorException.NotFound {
+        User user =  new User(userRequest.firstName,userRequest.lastName,userRequest.email,userRequest.password,userRequest.srole,userRequest.body,userRequest.reseted);
+        getService().updateService(id, user);
         var msg = "Successfully update User with id :" + id;
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }

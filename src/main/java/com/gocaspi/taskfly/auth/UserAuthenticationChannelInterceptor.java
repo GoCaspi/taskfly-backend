@@ -20,9 +20,24 @@ public class UserAuthenticationChannelInterceptor implements ChannelInterceptor 
     @Autowired
     public AuthenticationProvider authManager;
 
+    /**
+     * the constructor takes an authenticationProvider as an input which is required to log a user in using springs auth system.
+     *
+     * @param authManager the authenticationProvider used in this spring project.
+     */
+
     public UserAuthenticationChannelInterceptor(AuthenticationProvider authManager){
         this.authManager = authManager;
     }
+
+    /**
+     * this interceptor intercepts all connect messages and extracts a username and password
+     * from the stomp headers and authenticates the connection. otherwise the request gets rejected.
+     *
+     * @param message the websocket message from the client.
+     * @param channel the websocket channel which can be used to send messages back to the client
+     * @return the original message with the user object appended to it for later authentication
+     */
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
@@ -39,6 +54,11 @@ public class UserAuthenticationChannelInterceptor implements ChannelInterceptor 
         return message;
     }
 
+    /**
+     * securely extracts the username from the stomp headers
+     * @param accessor the stomp headers accessor created from the message
+     * @return the extracted username
+     */
     String extractUsername(StompHeaderAccessor accessor){
         if(Objects.isNull(accessor.getNativeHeader("username"))){
             throw new MessagingException("username is not defined");
@@ -49,7 +69,11 @@ public class UserAuthenticationChannelInterceptor implements ChannelInterceptor 
         }
         return usernameList;
     }
-
+    /**
+     * securely extracts the password from the stomp headers
+     * @param accessor the stomp headers accessor created from the message
+     * @return the extracted password
+     */
     String extractPassword(StompHeaderAccessor accessor){
         if(Objects.isNull(accessor.getNativeHeader("password"))){
             throw new MessagingException("password is not defined");

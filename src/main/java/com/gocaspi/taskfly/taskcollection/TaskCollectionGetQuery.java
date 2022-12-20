@@ -3,68 +3,45 @@ package com.gocaspi.taskfly.taskcollection;
 import com.gocaspi.taskfly.task.Task;
 
 import java.util.List;
-public class TaskCollectionGetQuery {
-    private String name;
-    private String teamID;
-    private String id;
-    private String ownerID;
+
+/**
+ * This Class is used to construct the return of an MongoDB Lookup Operation since it contains a list of tasks
+ */
+public class TaskCollectionGetQuery extends TaskCollection {
     private List<Task> tasks;
-    private List<String> members;
 
 
-
+    /**
+     * A fully featured constructor for the TaskCollectionGetQuery Class
+     * @param name to give the TaskCollection a name
+     * @param teamID a foreign identifier of an TeamManagement Object to assign this TaskCollection to a Team
+     * @param id identifier for the TaskCollection
+     * @param ownerID a foreign identifier of a User Object, who then can manage the collection
+     * @param tasks a list of tasks that have been added due to the MongoDB Lookup Operation
+     */
     public TaskCollectionGetQuery(String name, String teamID, String id, String ownerID, List<Task> tasks, List<String> members) {
-        this.id = id;
-        this.name = name;
-        this.teamID = teamID;
-        this.ownerID = ownerID;
+        this.setId(id);
+        this.setName(name);
+        this.setTeamID(teamID);
+        this.setOwnerID(ownerID);
+        this.setMembers(members);
         this.tasks = tasks;
-        this.members = members;
     }
-    public List<String> getMembers() {
-        return members;
-    }
-    public void setMembers(List<String> tasks) {
-        this.members = tasks;
-    }
+
+    /**
+     * This method returns all tasks of the TaskCollectionGetQuery Object
+     * @return tasks of the TaskCollectionGetQuery
+     */
     public List<Task> getTasks() {
         return tasks;
     }
 
+    /**
+     * This method sets all tasks of the TaskCollectionGetQuery Object
+     * @param tasks that should be set
+     */
+
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTeamID() {
-        return teamID;
-    }
-
-    public void setTeamID(String teamID) {
-        this.teamID = teamID;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getOwnerID() {
-        return ownerID;
-    }
-
-    public void setOwnerID(String ownerID) {
-        this.ownerID = ownerID;
-    }
-
 }
