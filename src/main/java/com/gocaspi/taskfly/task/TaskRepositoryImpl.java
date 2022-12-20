@@ -9,6 +9,9 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * this class defines the functions defined on TaskRepositoryCustom. You can mainly find mongo aggregation pipelines here for more complex queries.
+ */
 public class TaskRepositoryImpl implements TaskRepositoryCustom {
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -20,12 +23,19 @@ public class TaskRepositoryImpl implements TaskRepositoryCustom {
     private static final String RESULT_MEMBERS = "result.members";
     private static final String USER_ID = "userId";
 
-
+    /**
+     * the constructor takes an mongoTemplate as an input which contains the mongodb database connection
+     * @param mongoTemplate
+     */
     @Autowired
     public TaskRepositoryImpl(MongoTemplate mongoTemplate){
         this.mongoTemplate = mongoTemplate;
     }
 
+    /**
+     * this function returns a mongo aggregation which converts listId fields into Object ID's for later use
+     * @return a addFields MongoDB aggregation
+     */
     private AggregationOperation addConvertedIDField(){
         return aggregationOperation -> {
             var toString = new Document("$toObjectId", "$listId");
@@ -34,6 +44,10 @@ public class TaskRepositoryImpl implements TaskRepositoryCustom {
         };
     }
 
+    /**
+     * this function returns a mongo aggregation which gets the size of a members array and to evaluate it later
+     * @return a addFields MongoDB aggregation
+     */
     private AggregationOperation addSizeField(){
         return aggregationOperation ->     new Document(ADDFIELDSKEY,
                 new Document("count",
@@ -47,10 +61,18 @@ public class TaskRepositoryImpl implements TaskRepositoryCustom {
 
     }
 
+    /**
+     * this function returns a mongo aggregation which unwinds the result Object from the Lookup Pipeline, to access the data later within the aggregation pipeline
+     * @return a unwind MongoDB aggregation
+     */
     private AggregationOperation unwindResult(){
         return aggregationOperation -> new Document("$unwind", "$result");
     }
 
+    /**
+     * this function returns a mongo aggregation which calculates the difference between two dates and writes the result into a new field
+     * @return a addFields MongoDB aggregation
+     */
     private AggregationOperation addDateDifferenceFields(){
         return aggregationOperation -> new Document(ADDFIELDSKEY,
                 new Document(DEADLINEDIFF,
@@ -61,6 +83,13 @@ public class TaskRepositoryImpl implements TaskRepositoryCustom {
                         .append("currentDate", "$$NOW"));
     }
 
+    /**
+     * this function executes a mongodb aggregation pipeline which returns all tasks which aren't shared to the user in any way.
+     * - the task is located within a list, but the list have no members and also no assigned team
+     * - the userID of the task matches the userid which is being passed to the function
+     * @param userid the identifier of the user of interest
+     * @return a list of Tasks which aren't visible to anyone else.
+     */
     @Override
     public List<Task> findPrivateTasksByUserID(String userid){
         var lookupOperation = LookupOperation.newLookup()
@@ -86,6 +115,15 @@ public class TaskRepositoryImpl implements TaskRepositoryCustom {
         return mongoTemplate.aggregate(aggregation, "task", Task.class).getMappedResults();
     }
 
+    /**
+     * this function executes a mongodb aggregation pipeline which returns all tasks which are shared and visible to the
+     * requested user.
+     * - the owner is another user than the requested user, and the user saved within the members.
+     * - the task is located within a taskCollection where other users are listed within the member array or is the owner of the taskCollection
+     * - the taskCollection is shared to a team where the user is a member of
+     * @param userid returns all tasks the user have been assigned to
+     * @return a list of tasks which are assigned to the user and are visible to other users
+     */
     @Override
     public List<Task> findSharedTasksByUserID(String userid){
         var lookupOperation = LookupOperation.newLookup()
@@ -111,6 +149,12 @@ public class TaskRepositoryImpl implements TaskRepositoryCustom {
         return mongoTemplate.aggregate(aggregation, "task", Task.class).getMappedResults();
     }
 
+    /**
+     * this function executes a mongo aggregation pipeline which returns all tasks that are assigned to an user and the deadline is due
+     * within the next week starting from the current date.
+     * @param userid assigned tasks for this user
+     * @return a list of tasks which have been scheduled within the next 7 days.
+     */
     @Override
     public List<Task> findTasksScheduledForOneWeekByUserID(String userid){
         var matchOperation1 = Aggregation.match(new Criteria(USER_ID).is(userid));

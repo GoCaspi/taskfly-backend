@@ -19,9 +19,23 @@ public class TaskCollectionChannelInterceptor implements ChannelInterceptor {
     @Autowired
     TaskCollectionRepository repo;
 
+    /**
+     * the constructor takes a TaskCollectionRepository as an input. the repo is needed for checking user access right on a taskcollection.
+     * @param repo
+     */
     public TaskCollectionChannelInterceptor(TaskCollectionRepository repo){
         this.repo = repo;
     }
+
+    /**
+     * overrides preSend from the implemented ChannelInterceptor.
+     * this function is being called when a client message is being received and before its handled by the controller.
+     * in this function it is being checked if a user is allowed to subscribe to the requested task collection.
+     *
+     * @param message the websocket message from the client.
+     * @param channel the websocket channel which can be used to send messages back to the client
+     * @return the newly formed message
+     */
     @Override
     public Message<?> preSend (Message<?> message, MessageChannel channel){
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);

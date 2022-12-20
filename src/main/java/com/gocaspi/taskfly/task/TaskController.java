@@ -72,6 +72,13 @@ public class TaskController {
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
+    /**
+     * calls the getTasksByHighPriorityService to fetch all high prioritized tasks of the provided user. if no user have been found or there
+     * are no tasks with an high priority, http status code 404 will be returned. Otherwise, a list of tasks and status code 200 will be returned.
+     * @param userid from the user
+     * @return a list of tasks which are marked with a high priority
+     * @throws HttpClientErrorException.NotFound
+     */
     @GetMapping("/priority/{userid}")
     public ResponseEntity<List<Task>> handleGetTaskByUserIDandPriority(@PathVariable String userid) throws HttpClientErrorException.NotFound{
         var taskList = service.getTasksByHighPriorityService(userid);
@@ -79,9 +86,10 @@ public class TaskController {
     }
 
     /**
-     *
-     * @param userid
-     * @return
+     * calls the getPrivateTasks service to fetch all private tasks of the provided user. if no user have been found or there
+     * are no private tasks, http status code 404 will be returned. Otherwise, a list of tasks and status 200 will be returned.
+     * @param userid from the user
+     * @return a list of tasks which are private and not visible to other users.
      * @throws HttpClientErrorException.NotFound
      */
     @GetMapping("/private/{userid}")
