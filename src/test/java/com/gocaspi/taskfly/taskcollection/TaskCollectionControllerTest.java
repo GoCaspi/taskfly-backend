@@ -21,20 +21,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-
-import org.springframework.messaging.Message;
-import org.springframework.messaging.simp.stomp.StompCommand;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.HttpClientErrorException;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -151,6 +144,179 @@ class TaskCollectionControllerTest {
 
 
     }
+
+    @Test
+    void TestGetTaskCollectionByID() throws Exception{
+        TaskCollectionGetQuery workingTaskCollection = new TaskCollectionGetQuery(mockTC);
+        List<Task> mockTaskList = List.of(mockTask);
+        workingTaskCollection.setTasks(mockTaskList);
+        mongoTemplate.save(mockTask, "task");
+        mongoTemplate.save(mockTC, "taskCollection");
+
+        class Testcase {
+            final String tcID;
+            final String responseBody;
+            final Integer statusCode;
+
+            Testcase(String tcID, String responseBody, Integer statusCode){
+                this.tcID = tcID;
+                this.responseBody = responseBody;
+                this.statusCode = statusCode;
+            }
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(mockTCID, objectMapper.writeValueAsString(workingTaskCollection), HttpStatus.OK.value()),
+                new Testcase(new ObjectId().toHexString(), "", HttpStatus.NOT_FOUND.value())
+        };
+
+        for (Testcase tc: testcases){
+            if(tc.statusCode > 299){
+                mockMvc.perform(get("/tc/id/" + tc.tcID))
+                        .andExpect(status().is(tc.statusCode));
+            } else {
+                mockMvc.perform(get("/tc/id/" + tc.tcID))
+                        .andExpect(content().string(tc.responseBody))
+                        .andExpect(status().is(tc.statusCode));
+            }
+
+        }
+
+    }
+
+    @Test
+    void TestGetTaskCollectionsByTeamID() throws Exception{
+        TaskCollectionGetQuery workingTaskCollection = new TaskCollectionGetQuery(mockTC);
+        List<Task> mockTaskList = List.of(mockTask);
+        workingTaskCollection.setTasks(mockTaskList);
+        List<TaskCollectionGetQuery> taskCollectionGetQueryList = List.of(workingTaskCollection);
+
+        mongoTemplate.save(mockTask, "task");
+        mongoTemplate.save(mockTC, "taskCollection");
+
+        class Testcase {
+            final String tcID;
+            final String responseBody;
+            final Integer statusCode;
+
+            Testcase(String tcID, String responseBody, Integer statusCode){
+                this.tcID = tcID;
+                this.responseBody = responseBody;
+                this.statusCode = statusCode;
+            }
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(mockTCTeamID, objectMapper.writeValueAsString(taskCollectionGetQueryList), HttpStatus.OK.value()),
+                new Testcase(new ObjectId().toHexString(), "", HttpStatus.NOT_FOUND.value())
+        };
+
+        for (Testcase tc: testcases){
+            if(tc.statusCode > 299){
+                mockMvc.perform(get("/tc/team/" + tc.tcID))
+                        .andExpect(status().is(tc.statusCode));
+            } else {
+                mockMvc.perform(get("/tc/team/" + tc.tcID))
+                        .andExpect(content().string(tc.responseBody))
+                        .andExpect(status().is(tc.statusCode));
+            }
+
+        }
+    }
+    @Test
+    void TestGetTaskCollectionByUserID() throws Exception {
+        TaskCollectionGetQuery workingTaskCollection = new TaskCollectionGetQuery(mockTC);
+        List<Task> mockTaskList = List.of(mockTask);
+        workingTaskCollection.setTasks(mockTaskList);
+        List<TaskCollectionGetQuery> taskCollectionGetQueryList = List.of(workingTaskCollection);
+
+        mongoTemplate.save(mockTask, "task");
+        mongoTemplate.save(mockTC, "taskCollection");
+
+        class Testcase {
+            final String tcID;
+            final String responseBody;
+            final Integer statusCode;
+
+            Testcase(String tcID, String responseBody, Integer statusCode){
+                this.tcID = tcID;
+                this.responseBody = responseBody;
+                this.statusCode = statusCode;
+            }
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(mockTCOwnerID, objectMapper.writeValueAsString(taskCollectionGetQueryList), HttpStatus.OK.value()),
+                new Testcase(new ObjectId().toHexString(), "", HttpStatus.NOT_FOUND.value())
+        };
+
+        for (Testcase tc: testcases){
+            if(tc.statusCode > 299){
+                mockMvc.perform(get("/tc/user/" + tc.tcID))
+                        .andExpect(status().is(tc.statusCode));
+            } else {
+                mockMvc.perform(get("/tc/user/" + tc.tcID))
+                        .andExpect(content().string(tc.responseBody))
+                        .andExpect(status().is(tc.statusCode));
+            }
+
+        }
+    }
+
+    @Test
+    void TestDeleteTaskCollectionByID() throws Exception {
+        mongoTemplate.save(mockTC, "taskCollection");
+
+        class Testcases{
+            String tcID;
+            Integer statusCode;
+
+            Testcases(String tcID, Integer statusCode){
+                this.tcID = tcID;
+                this.statusCode = statusCode;
+            }
+        }
+
+        Testcases[] testcases = new Testcases[]{
+                new Testcases(mockTCID, HttpStatus.ACCEPTED.value()),
+                new Testcases(new ObjectId().toHexString(), HttpStatus.NOT_FOUND.value())
+        };
+
+        for (Testcases tc: testcases){
+            mockMvc.perform(
+                    delete("/tc/" + tc.tcID))
+                    .andExpect(status().is(tc.statusCode));
+        }
+
+
+    }
+
+    @Test
+    void TestPatchTaskCollectionByID() throws Exception{
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+        class Testcases {
+            final String requestBody;
+            final String tcID;
+            final Integer statusCode;
+
+            Testcases(String requestBody, String tcID, Integer statusCode){
+                this.requestBody = requestBody;
+                this.tcID = tcID;
+                this.statusCode = statusCode;
+            }
+
+
+        }
+        Testcases[] testcases = new Testcases[]{
+                new Testcases(objectMapper.writeValueAsString(mockTC), mockTCID, HttpStatus.)
+        }
+    }
+
+
 
 
 }
