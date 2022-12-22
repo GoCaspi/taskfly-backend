@@ -27,14 +27,6 @@ public class ResetController {
     private final ResetService service;
     @Autowired
     private JavaMailSender emailSender;
-    @Value("${mail.username}")
-    private String emailUsername;
-    @Value("${mail.password}")
-    private String emailPassword;
-    @Value("${mail.host}")
-    private String emailHost;
-    @Value("${mail.port}")
-    private int emailPort;
     /**
      * Construtor for the reset controller with a injected UserRepository
      *

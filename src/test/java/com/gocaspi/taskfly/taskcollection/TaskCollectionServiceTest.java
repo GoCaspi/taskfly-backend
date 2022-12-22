@@ -64,8 +64,9 @@ class TaskCollectionServiceTest {
     void getTaskCollectionByIDTest(){
         TaskCollectionService s = new TaskCollectionService(mockRepo);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
-        List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList, mockMember);
+        List<Task> taskList = List.of(task);
+        TaskCollectionGetQuery getQuery = (TaskCollectionGetQuery) mockTC;
+        getQuery.setTasks(taskList);
         class Testcase {
             final TaskCollectionGetQuery mockTaskCollection;
             final String mockID;
@@ -96,8 +97,9 @@ class TaskCollectionServiceTest {
         TaskCollectionService s = new TaskCollectionService(mockRepo);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList, mockMember);
-        List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
+        TaskCollectionGetQuery getQuery = (TaskCollectionGetQuery) mockTC;
+        getQuery.setTasks(taskList);
+        List<TaskCollectionGetQuery> getQueries = List.of(getQuery);
         List<TaskCollectionGetQuery> emptyList = Arrays.asList();
 
         class Testcase {
@@ -130,8 +132,9 @@ class TaskCollectionServiceTest {
         TaskCollectionService s = new TaskCollectionService(mockRepo);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList, mockMember);
-        List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
+        TaskCollectionGetQuery getQuery = (TaskCollectionGetQuery) mockTC;
+        getQuery.setTasks(taskList);
+        List<TaskCollectionGetQuery> getQueries = List.of(getQuery);
         List<TaskCollectionGetQuery> emptyList = Arrays.asList();
 
         class Testcase {
@@ -164,8 +167,9 @@ class TaskCollectionServiceTest {
         TaskCollectionService s = new TaskCollectionService(mockRepo);
         Task task = new Task(mockUserIds, mockListId, mockTeam, mockTime, mockObjectId, mockBody);
         List<Task> taskList = Arrays.asList(task);
-        TaskCollectionGetQuery getQuery = new TaskCollectionGetQuery(mockTCName, mockTCTeamID, mockTCID, mockTCOwnerID, taskList, mockMember);
-        List<TaskCollectionGetQuery> getQueries = Arrays.asList(getQuery);
+        TaskCollectionGetQuery getQuery = (TaskCollectionGetQuery) mockTC;
+        getQuery.setTasks(taskList);
+        List<TaskCollectionGetQuery> getQueries = List.of(getQuery);
         List<TaskCollectionGetQuery> emptyList = Arrays.asList();
 
         class Testcase {
