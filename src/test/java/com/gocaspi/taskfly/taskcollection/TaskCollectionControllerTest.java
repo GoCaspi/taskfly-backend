@@ -4,6 +4,8 @@ package com.gocaspi.taskfly.taskcollection;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gocaspi.taskfly.task.Task;
 
+import com.gocaspi.taskfly.task.TaskService;
+import com.google.api.client.http.HttpStatusCodes;
 import com.google.gson.*;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,12 +23,17 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.simp.stomp.StompCommand;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.HttpClientErrorException;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -91,7 +98,7 @@ class TaskCollectionControllerTest {
         }
         Testcase[] testcases = new Testcase[]{
                 new Testcase(taskCollectionRequest, taskCollectionRequest, HttpStatus.CREATED.value()),
-                new Testcase(emptyTaskCollectionRequest, "", HttpStatus.BAD_REQUEST.value())
+                new Testcase(emptyTaskCollectionRequest, "", HttpStatus.BAD_REQUEST.value()),
         };
 
         for(Testcase tc: testcases){
@@ -113,12 +120,12 @@ class TaskCollectionControllerTest {
         mongoTemplate.save(mockTC, "taskCollection");
 
         class Testcase {
-            final String tcID;
+            final String url;
             final String responseBody;
             final Integer statusCode;
 
-            Testcase(String tcID, String responseBody, Integer statusCode){
-                this.tcID = tcID;
+            Testcase(String url, String responseBody, Integer statusCode){
+                this.url = url;
                 this.responseBody = responseBody;
                 this.statusCode = statusCode;
             }
@@ -126,16 +133,17 @@ class TaskCollectionControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         Testcase[] testcases = new Testcase[]{
-                new Testcase(mockTCOwnerID, objectMapper.writeValueAsString(taskCollectionGetQueryList), HttpStatus.OK.value()),
-                new Testcase(new ObjectId().toHexString(), "", HttpStatus.NOT_FOUND.value())
+                new Testcase("/tc/owner/" + mockTCOwnerID, objectMapper.writeValueAsString(taskCollectionGetQueryList), HttpStatus.OK.value()),
+                new Testcase("/tc/owner/" + new ObjectId().toHexString(), "", HttpStatus.NOT_FOUND.value()),
+                new Testcase("/tc/owner", "", 405)
         };
 
         for (Testcase tc: testcases){
             if(tc.statusCode > 299){
-                mockMvc.perform(get("/tc/owner/" + tc.tcID))
+                mockMvc.perform(get(tc.url))
                         .andExpect(status().is(tc.statusCode));
             } else {
-                mockMvc.perform(get("/tc/owner/" + tc.tcID))
+                mockMvc.perform(get(tc.url))
                         .andExpect(content().string(tc.responseBody))
                         .andExpect(status().is(tc.statusCode));
             }
@@ -154,12 +162,12 @@ class TaskCollectionControllerTest {
         mongoTemplate.save(mockTC, "taskCollection");
 
         class Testcase {
-            final String tcID;
+            final String url;
             final String responseBody;
             final Integer statusCode;
 
-            Testcase(String tcID, String responseBody, Integer statusCode){
-                this.tcID = tcID;
+            Testcase(String url, String responseBody, Integer statusCode){
+                this.url = url;
                 this.responseBody = responseBody;
                 this.statusCode = statusCode;
             }
@@ -167,16 +175,17 @@ class TaskCollectionControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         Testcase[] testcases = new Testcase[]{
-                new Testcase(mockTCID, objectMapper.writeValueAsString(workingTaskCollection), HttpStatus.OK.value()),
-                new Testcase(new ObjectId().toHexString(), "", HttpStatus.NOT_FOUND.value())
+                new Testcase("/tc/id/" + mockTCID, objectMapper.writeValueAsString(workingTaskCollection), HttpStatus.OK.value()),
+                new Testcase("/tc/id/" + new ObjectId().toHexString(), "", HttpStatus.NOT_FOUND.value()),
+                new Testcase("/tc/id", "", 405)
         };
 
         for (Testcase tc: testcases){
             if(tc.statusCode > 299){
-                mockMvc.perform(get("/tc/id/" + tc.tcID))
+                mockMvc.perform(get(tc.url))
                         .andExpect(status().is(tc.statusCode));
             } else {
-                mockMvc.perform(get("/tc/id/" + tc.tcID))
+                mockMvc.perform(get(tc.url))
                         .andExpect(content().string(tc.responseBody))
                         .andExpect(status().is(tc.statusCode));
             }
@@ -196,12 +205,12 @@ class TaskCollectionControllerTest {
         mongoTemplate.save(mockTC, "taskCollection");
 
         class Testcase {
-            final String tcID;
+            final String url;
             final String responseBody;
             final Integer statusCode;
 
-            Testcase(String tcID, String responseBody, Integer statusCode){
-                this.tcID = tcID;
+            Testcase(String url, String responseBody, Integer statusCode){
+                this.url = url;
                 this.responseBody = responseBody;
                 this.statusCode = statusCode;
             }
@@ -209,16 +218,17 @@ class TaskCollectionControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         Testcase[] testcases = new Testcase[]{
-                new Testcase(mockTCTeamID, objectMapper.writeValueAsString(taskCollectionGetQueryList), HttpStatus.OK.value()),
-                new Testcase(new ObjectId().toHexString(), "", HttpStatus.NOT_FOUND.value())
+                new Testcase("/tc/team/" + mockTCTeamID, objectMapper.writeValueAsString(taskCollectionGetQueryList), HttpStatus.OK.value()),
+                new Testcase("/tc/team/" + new ObjectId().toHexString(), "", HttpStatus.NOT_FOUND.value()),
+                new Testcase("/tc/team", "", 405)
         };
 
         for (Testcase tc: testcases){
             if(tc.statusCode > 299){
-                mockMvc.perform(get("/tc/team/" + tc.tcID))
+                mockMvc.perform(get(tc.url))
                         .andExpect(status().is(tc.statusCode));
             } else {
-                mockMvc.perform(get("/tc/team/" + tc.tcID))
+                mockMvc.perform(get(tc.url))
                         .andExpect(content().string(tc.responseBody))
                         .andExpect(status().is(tc.statusCode));
             }
@@ -236,12 +246,12 @@ class TaskCollectionControllerTest {
         mongoTemplate.save(mockTC, "taskCollection");
 
         class Testcase {
-            final String tcID;
+            final String url;
             final String responseBody;
             final Integer statusCode;
 
-            Testcase(String tcID, String responseBody, Integer statusCode){
-                this.tcID = tcID;
+            Testcase(String url, String responseBody, Integer statusCode){
+                this.url = url;
                 this.responseBody = responseBody;
                 this.statusCode = statusCode;
             }
@@ -249,16 +259,17 @@ class TaskCollectionControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         Testcase[] testcases = new Testcase[]{
-                new Testcase(mockTCOwnerID, objectMapper.writeValueAsString(taskCollectionGetQueryList), HttpStatus.OK.value()),
-                new Testcase(new ObjectId().toHexString(), "", HttpStatus.NOT_FOUND.value())
+                new Testcase("/tc/user/" + mockTCOwnerID, objectMapper.writeValueAsString(taskCollectionGetQueryList), HttpStatus.OK.value()),
+                new Testcase("/tc/user/" + new ObjectId().toHexString(), "", HttpStatus.NOT_FOUND.value()),
+                new Testcase("/tc/user", "", 405)
         };
 
         for (Testcase tc: testcases){
             if(tc.statusCode > 299){
-                mockMvc.perform(get("/tc/user/" + tc.tcID))
+                mockMvc.perform(get(tc.url))
                         .andExpect(status().is(tc.statusCode));
             } else {
-                mockMvc.perform(get("/tc/user/" + tc.tcID))
+                mockMvc.perform(get(tc.url))
                         .andExpect(content().string(tc.responseBody))
                         .andExpect(status().is(tc.statusCode));
             }
@@ -296,6 +307,7 @@ class TaskCollectionControllerTest {
 
     @Test
     void TestPatchTaskCollectionByID() throws Exception{
+        mongoTemplate.save(mockTC, "taskCollection");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         class Testcases {
@@ -312,8 +324,34 @@ class TaskCollectionControllerTest {
 
         }
         Testcases[] testcases = new Testcases[]{
-                new Testcases(objectMapper.writeValueAsString(mockTC), mockTCID, HttpStatus.)
+                new Testcases(objectMapper.writeValueAsString(mockTC), mockTCID, HttpStatusCodes.STATUS_CODE_ACCEPTED),
+                new Testcases(objectMapper.writeValueAsString(mockTC), new ObjectId().toHexString(), HttpStatus.NOT_FOUND.value())
+        };
+
+        for (Testcases tc: testcases){
+            mockMvc.perform(
+                    patch("/tc?id=" + tc.tcID)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(tc.requestBody))
+                    .andExpect(status().is(tc.statusCode));
         }
+    }
+
+    @Test
+    void sendTaskCollectionMessageTest(){
+        String testMessage = "Test123";
+        TaskCollectionService s = mock(TaskCollectionService.class);
+        TaskCollectionController t = new TaskCollectionController(s);
+        String actual = t.sendTaskCollectionMessage(createMessage("123", testMessage));
+        assertEquals(testMessage, actual);
+    }
+
+    Message<String> createMessage(String collectionID, String payload){
+        StompHeaderAccessor fakeSubscriptionHeader = StompHeaderAccessor.create(StompCommand.SEND);
+        fakeSubscriptionHeader.setHeader("simpDestination", "/collection/" + collectionID);
+        MessageBuilder<String> fakeSubscriptionMessage = MessageBuilder.withPayload(payload);
+        fakeSubscriptionMessage.setHeaders(fakeSubscriptionHeader);
+        return fakeSubscriptionMessage.build();
     }
 
 
