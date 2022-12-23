@@ -81,7 +81,6 @@ class TaskCollectionControllerTest {
 
     @Test
     void TestCreateTaskCollectionEndpoint() throws Exception{
-        mongoTemplate.dropCollection("taskCollection");
         var taskCollectionRequest = new Gson().toJson(mockTC);
         TaskCollection emptyTaskCollection = new TaskCollection(new ObjectId().toHexString(), "", mockTCTeamID, mockTCOwnerID, mockTeamMember);
         var emptyTaskCollectionRequest = new Gson().toJson(emptyTaskCollection);
