@@ -70,13 +70,13 @@ public class UserService {
                 t.setTeam(update.getTeam());
             }
             if (update.getEmail() != null) {
-                t.setEmail(update.getEmail());
+                t.setEmail(hashStr(update.getEmail()));
             }
             if (update.getSrole() != null) {
                 t.setSrole(update.getSrole());
             }
             if (update.getPassword() != null) {
-                t.setPassword(update.getPassword());
+                t.setPassword(hashStr(update.getPassword()));
             }
             if (update.getFirstName() != null) {
                 t.setFirstName(update.getFirstName());
