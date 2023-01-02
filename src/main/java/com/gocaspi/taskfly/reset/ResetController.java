@@ -9,9 +9,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,6 +42,8 @@ public class ResetController {
     private String emailHost;
     @Value("${mail.port}")
     private int emailPort;
+    @Autowired
+    private SpringTemplateEngine templateEngine;
     /**
      * Construtor for the reset controller with a injected UserRepository
      *
@@ -133,8 +142,7 @@ public class ResetController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity<List<User>> handleReset(@RequestBody String body) {
-        Reset resetRequest = jsonToReset(body);
+    public ResponseEntity<List<User>> handleReset(@RequestBody Reset resetRequest) throws MessagingException{
         String hashMail = resetRequest.hashStr(resetRequest.getEmail());
         List<User> emptyList = new ArrayList<>();
         if (Objects.equals(resetRequest.getLastName(), "")) {
@@ -149,7 +157,11 @@ public class ResetController {
         else{
             String userId = users.get(0).getId();
             //  For testing: send email to host: taskfly.info@gmail.com
-            this.sendResetMail(resetRequest.getEmail(), "!Password reset for TaskFly!", "Your Password has been reseted. Please copy your userId : " + userId + " and follow the link: to assign a new password. ");
+            Context context = new Context();
+            String greetingMessage = "Hallo, " + users.get(0).getFirstName();
+            context.setVariable("greetingMessage", greetingMessage);
+            var htmlBody = templateEngine.process("resetMail.html", context);
+            this.sendResetMail(resetRequest.getEmail(), "!Password reset for TaskFly!", htmlBody);
 
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -163,13 +175,14 @@ public class ResetController {
      * @param subject String, topic of the message
      * @param text String, text of the message
      */
-    public void sendResetMail(String to, String subject, String text){
-        SimpleMailMessage message = new SimpleMailMessage();
+    public void sendResetMail(String to, String subject, String text) throws MessagingException {
+        MimeMessage mimeMessage = this.emailSender.createMimeMessage();
+        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
         message.setFrom("wok.gocaspi@gmail.com");
         message.setTo(to);
         message.setSubject(subject);
-        message.setText(text);
-        emailSender.send(message);
+        message.setText(text, true);
+        this.emailSender.send(mimeMessage);
     }
 
     /**
