@@ -1,5 +1,7 @@
 package com.gocaspi.taskfly.reset;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.gocaspi.taskfly.user.User;
 import com.gocaspi.taskfly.user.UserRepository;
 import com.google.gson.Gson;
@@ -31,17 +33,12 @@ import java.util.Objects;
 @ResponseBody
 @RequestMapping("/reset")
 public class ResetController {
-    private final ResetService service;
+    @Autowired
+    private ResetService service;
     @Autowired
     private JavaMailSender emailSender;
-    @Value("${mail.username}")
-    private String emailUsername;
-    @Value("${mail.password}")
-    private String emailPassword;
-    @Value("${mail.host}")
-    private String emailHost;
-    @Value("${mail.port}")
-    private int emailPort;
+    @Value("${crossorigin.url}")
+    private String frontendUrl;
     @Autowired
     private SpringTemplateEngine templateEngine;
     /**
@@ -67,18 +64,18 @@ public class ResetController {
     /**
      * Helper class UIdAndPwdBody contains the userId and password of a userinput to /reset.
      */
-    public class UIdAndPwdBody{
+    public static class TokenAndPwdBody{
         private String pwd;
-        private String userId;
+        private String token;
 
         /**
          * Constructor for UIdAndPwdBody
          *
          * @param pwd String, password input
-         * @param userId String, userId input
+         * @param token String, userId input
          */
-        public UIdAndPwdBody(String pwd, String userId){
-            this.userId = userId;
+        public TokenAndPwdBody(String pwd, String token){
+            this.token = token;
             this.pwd = pwd;
         }
 
@@ -105,8 +102,8 @@ public class ResetController {
          *
          * @param userId String
          */
-        public void setUserId(String userId) {
-            this.userId = userId;
+        public void setToken(String userId) {
+            this.token = userId;
         }
 
         /**
@@ -114,10 +111,12 @@ public class ResetController {
          *
          * @return
          */
-        public String getUserId() {
-            return userId;
+        public String getToken() {
+            return token;
         }
     }
+
+
 
     /**
      * setNew endpoint returns a ResponseEntity with the StatusCode of the response to the reset request of the user.
@@ -125,11 +124,9 @@ public class ResetController {
      * @return ResponseEntity
      */
     @PostMapping("/setNew")
-    public ResponseEntity<String> handleSetNewUserPwd(@RequestBody String body){
+    public ResponseEntity<String> handleSetNewUserPwd(@RequestBody TokenAndPwdBody body){
 
-        UIdAndPwdBody jsonPayload = new Gson().fromJson(body, UIdAndPwdBody.class);
-
-        getService().resetPwdOfUser(jsonPayload.getUserId(), jsonPayload.getPwd());
+        getService().resetPwdOfUser(body.getToken(), body.getPwd());
         return new ResponseEntity<>("healthy",HttpStatus.OK);
     }
 
@@ -138,7 +135,7 @@ public class ResetController {
      * the hashed mail address and the lastName. The endpoint returns a responseEntity containing the StatusCode of the request. If the input data is empty (one of the fields)
      * Status 400, BadRequest is retuned. If no exsisting user to the provide credentials can be found in the database then Status 404, NotFound is returned. Else Status will be
      * 202,
-     * @param body String of Reset
+     * @param resetRequest String of Reset
      * @return ResponseEntity
      */
     @PostMapping
@@ -156,10 +153,13 @@ public class ResetController {
         if(users.size() !=1){ return new ResponseEntity<>(emptyList, HttpStatus.NOT_FOUND); }
         else{
             String userId = users.get(0).getId();
-            //  For testing: send email to host: taskfly.info@gmail.com
+
+            String token = service.generateResetUserToken(userId);
+            String resetUrl = frontendUrl + "/reset?token=" + token;
             Context context = new Context();
             String greetingMessage = "Hallo, " + users.get(0).getFirstName();
             context.setVariable("greetingMessage", greetingMessage);
+            context.setVariable("resetUrl", resetUrl);
             var htmlBody = templateEngine.process("resetMail.html", context);
             this.sendResetMail(resetRequest.getEmail(), "!Password reset for TaskFly!", htmlBody);
 
@@ -167,6 +167,15 @@ public class ResetController {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }
 
+    }
+
+    @GetMapping("/valid/{token}")
+    public Object checkTokenValidity(@PathVariable String token){
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode rootNode = mapper.createObjectNode();
+        Boolean isValid = service.checkTokenValidityService(token);
+        rootNode.put("isValid", isValid);
+        return rootNode;
     }
 
     /**
