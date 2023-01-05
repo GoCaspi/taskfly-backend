@@ -11,15 +11,12 @@ public class TaskCollectionGetQuery extends TaskCollection {
     private List<Task> tasks;
 
 
+
     /**
      * A fully featured constructor for the TaskCollectionGetQuery Class
-     * @param name to give the TaskCollection a name
-     * @param teamID a foreign identifier of an TeamManagement Object to assign this TaskCollection to a Team
-     * @param id identifier for the TaskCollection
-     * @param ownerID a foreign identifier of a User Object, who then can manage the collection
      * @param tasks a list of tasks that have been added due to the MongoDB Lookup Operation
      */
-    public TaskCollectionGetQuery(String name, String teamID, String id, String ownerID, List<Task> tasks, List<String> members) {
+    public TaskCollectionGetQuery(String id, String name, String teamID, String ownerID, List<String> members, List<Task> tasks){
         this.setId(id);
         this.setName(name);
         this.setTeamID(teamID);
@@ -27,6 +24,18 @@ public class TaskCollectionGetQuery extends TaskCollection {
         this.setMembers(members);
         this.tasks = tasks;
     }
+    public TaskCollectionGetQuery(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+    public TaskCollectionGetQuery(TaskCollection tc){
+        super(tc);
+    }
+
+    public TaskCollectionGetQuery(){
+
+    }
+
+
 
     /**
      * This method returns all tasks of the TaskCollectionGetQuery Object

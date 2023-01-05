@@ -37,6 +37,14 @@ public class TaskCollection {
         this.members = members;
     }
 
+    protected TaskCollection(TaskCollection tc){
+        this.id = tc.id;
+        this.name = tc.name;
+        this.teamID = tc.teamID;
+        this.ownerID = tc.ownerID;
+        this.members = tc.members;
+    }
+
     /**
      * Empty Constructor for the TaskCollection Class
      */

@@ -71,6 +71,14 @@ public class Task {
     public Taskbody getBody(){
         return this.body;
     }
+
+    public void setPriority(Boolean priority){
+       this.body.highPriority = priority;
+    }
+
+    public Boolean getPriority(){
+       return this.body.highPriority;
+    }
     /**
      * sets the userIDs array of a task to the provided String-array (newUserIds)
      *
