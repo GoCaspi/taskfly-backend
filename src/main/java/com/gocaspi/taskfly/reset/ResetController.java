@@ -62,72 +62,15 @@ public class ResetController {
     }
 
     /**
-     * Helper class UIdAndPwdBody contains the userId and password of a userinput to /reset.
-     */
-    public static class TokenAndPwdBody{
-        private String pwd;
-        private String token;
-
-        /**
-         * Constructor for UIdAndPwdBody
-         *
-         * @param pwd String, password input
-         * @param token String, userId input
-         */
-        public TokenAndPwdBody(String pwd, String token){
-            this.token = token;
-            this.pwd = pwd;
-        }
-
-        /**
-         * Sets the field pwd of the UIdAndPwdBody class to the input value
-         *
-         * @param pwd String, password input
-         */
-        public void setPwd(String pwd) {
-            this.pwd = pwd;
-        }
-
-        /**
-         * Returns the value of the field pwd of the UIdAndPwdBody class
-         *
-         * @return password String
-         */
-        public String getPwd() {
-            return pwd;
-        }
-
-        /**
-         * Sets the field userId of the UIdAndPwdBody class to the input value
-         *
-         * @param userId String
-         */
-        public void setToken(String userId) {
-            this.token = userId;
-        }
-
-        /**
-         * Returns the value of the field userId of the UIdAndPwdBody class
-         *
-         * @return
-         */
-        public String getToken() {
-            return token;
-        }
-    }
-
-
-
-    /**
      * setNew endpoint returns a ResponseEntity with the StatusCode of the response to the reset request of the user.
      * @param body String of UIdAndPwdBody
      * @return ResponseEntity
      */
     @PostMapping("/setNew")
-    public ResponseEntity<String> handleSetNewUserPwd(@RequestBody TokenAndPwdBody body){
+    public ResponseEntity<String> handleSetNewUserPwd(@RequestBody ResetNewPassword body){
 
         getService().resetPwdOfUser(body.getToken(), body.getPwd());
-        return new ResponseEntity<>("healthy",HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
