@@ -2,6 +2,7 @@ package com.gocaspi.taskfly.reset;
 
 import com.google.common.hash.Hashing;
 
+import javax.validation.constraints.NotBlank;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -9,8 +10,9 @@ import java.nio.charset.StandardCharsets;
  */
 public class Reset {
 
-
+    @NotBlank
     private String lastName;
+    @NotBlank
     private String email;
 
     /**

@@ -10,11 +10,15 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
@@ -35,13 +39,17 @@ public class ResetService {
     private PasswordEncoder encoder;
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
+    @Autowired
+    private JavaMailSender emailSender;
 
     /**
      * Constructor for the ResetService, it takes an UserRepository
      * @param repo UserRpository
      */
-    public ResetService (UserRepository repo){
+    public ResetService (UserRepository repo, JavaMailSender javaMailSender, RedisTemplate<String, String> redisTemplate){
         this.repo = repo;
+        this.emailSender = javaMailSender;
+        this.redisTemplate = redisTemplate;
         this.encoder = new BCryptPasswordEncoder();
         this.exceptionNotFound = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "not found", new HttpHeaders(), "".getBytes(),null);
         this.exceptionBadRequest = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, "bad payload", new HttpHeaders(), "".getBytes(), null);
@@ -151,6 +159,22 @@ public class ResetService {
     public Boolean checkTokenValidityService(String token){
         String userID = redisTemplate.opsForValue().get(token);
         return !Objects.isNull(userID);
+    }
+
+    /**
+     * takes three Strings  as input and uses the injected emailSender to send a email from the taskFly gmail account
+     * @param to String, reciever email address
+     * @param subject String, topic of the message
+     * @param text String, text of the message
+     */
+    public void sendResetMail(String to, String subject, String text) throws MessagingException {
+        MimeMessage mimeMessage = this.emailSender.createMimeMessage();
+        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
+        message.setFrom("wok.gocaspi@gmail.com");
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text, true);
+        this.emailSender.send(mimeMessage);
     }
 
 

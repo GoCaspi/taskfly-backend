@@ -20,6 +20,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +36,7 @@ import java.util.Objects;
 public class ResetController {
     @Autowired
     private ResetService service;
-    @Autowired
-    private JavaMailSender emailSender;
+
     @Value("${crossorigin.url}")
     private String frontendUrl;
     @Autowired
@@ -46,20 +46,7 @@ public class ResetController {
      *
      * @param repository UserRepository
      */
-    public ResetController (UserRepository repository, JavaMailSender javaMailSender){
-        super();
-        this.service = new ResetService(repository);
-        this.emailSender = javaMailSender;
-    }
 
-    /**
-     * returns the service  of type ResetService
-     *
-     * @return ResetService that is injected in the Controller
-     */
-    public ResetService getService() {
-        return this.service;
-    }
 
     /**
      * setNew endpoint returns a ResponseEntity with the StatusCode of the response to the reset request of the user.
@@ -69,7 +56,7 @@ public class ResetController {
     @PostMapping("/setNew")
     public ResponseEntity<String> handleSetNewUserPwd(@RequestBody ResetNewPassword body){
 
-        getService().resetPwdOfUser(body.getToken(), body.getPwd());
+        service.resetPwdOfUser(body.getToken(), body.getPwd());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -82,15 +69,12 @@ public class ResetController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity<List<User>> handleReset(@RequestBody Reset resetRequest) throws MessagingException{
+    public ResponseEntity<List<User>> handleReset(@Valid @RequestBody Reset resetRequest) throws MessagingException{
         String hashMail = resetRequest.hashStr(resetRequest.getEmail());
         List<User> emptyList = new ArrayList<>();
-        if (Objects.equals(resetRequest.getLastName(), "")) {
-            return new ResponseEntity<>(emptyList, HttpStatus.BAD_REQUEST);
-        }
         List<User> users = new ArrayList<>();
         try {
-            users = getService().getUserByEmail(hashMail, resetRequest.getLastName());
+            users = service.getUserByEmail(hashMail, resetRequest.getLastName());
         }
         catch (HttpClientErrorException ex) { return new ResponseEntity<>(emptyList, ex.getStatusCode()); }
         if(users.size() !=1){ return new ResponseEntity<>(emptyList, HttpStatus.NOT_FOUND); }
@@ -104,14 +88,18 @@ public class ResetController {
             context.setVariable("greetingMessage", greetingMessage);
             context.setVariable("resetUrl", resetUrl);
             var htmlBody = templateEngine.process("resetMail.html", context);
-            this.sendResetMail(resetRequest.getEmail(), "!Password reset for TaskFly!", htmlBody);
-
-
+            service.sendResetMail(resetRequest.getEmail(), "!Password reset for TaskFly!", htmlBody);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }
 
     }
 
+    /**
+     * this service takes a token as an input and checks within the redis db if it's valid.
+     * when its valid true is returned otherwise false will be returned
+     * @param token the token which is going to be checked
+     * @return returns a boolean whether true when its valid or false if not.
+     */
     @GetMapping("/valid/{token}")
     public Object checkTokenValidity(@PathVariable String token){
         ObjectMapper mapper = new ObjectMapper();
@@ -121,27 +109,4 @@ public class ResetController {
         return rootNode;
     }
 
-    /**
-     * takes three Strings  as input and uses the injected emailSender to send a email from the taskFly gmail account
-     * @param to String, reciever email address
-     * @param subject String, topic of the message
-     * @param text String, text of the message
-     */
-    public void sendResetMail(String to, String subject, String text) throws MessagingException {
-        MimeMessage mimeMessage = this.emailSender.createMimeMessage();
-        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
-        message.setFrom("wok.gocaspi@gmail.com");
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(text, true);
-        this.emailSender.send(mimeMessage);
-    }
-
-    /**
-     * returns a Reset(body) from a Json
-     *
-     * @param jsonPayload String
-     * @return Task fetched from the jsonPayload
-     */
-    public Reset jsonToReset(String jsonPayload){ return new Gson().fromJson(jsonPayload, Reset.class);}
 }
