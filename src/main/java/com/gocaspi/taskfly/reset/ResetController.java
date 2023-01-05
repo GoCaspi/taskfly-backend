@@ -1,5 +1,7 @@
 package com.gocaspi.taskfly.reset;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.gocaspi.taskfly.user.User;
 import com.gocaspi.taskfly.user.UserRepository;
 import com.google.gson.Gson;
@@ -9,9 +11,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,9 +33,14 @@ import java.util.Objects;
 @ResponseBody
 @RequestMapping("/reset")
 public class ResetController {
-    private final ResetService service;
+    @Autowired
+    private ResetService service;
     @Autowired
     private JavaMailSender emailSender;
+    @Value("${crossorigin.url}")
+    private String frontendUrl;
+    @Autowired
+    private SpringTemplateEngine templateEngine;
     /**
      * Construtor for the reset controller with a injected UserRepository
      *
@@ -50,18 +64,18 @@ public class ResetController {
     /**
      * Helper class UIdAndPwdBody contains the userId and password of a userinput to /reset.
      */
-    public class UIdAndPwdBody{
+    public static class TokenAndPwdBody{
         private String pwd;
-        private String userId;
+        private String token;
 
         /**
          * Constructor for UIdAndPwdBody
          *
          * @param pwd String, password input
-         * @param userId String, userId input
+         * @param token String, userId input
          */
-        public UIdAndPwdBody(String pwd, String userId){
-            this.userId = userId;
+        public TokenAndPwdBody(String pwd, String token){
+            this.token = token;
             this.pwd = pwd;
         }
 
@@ -88,8 +102,8 @@ public class ResetController {
          *
          * @param userId String
          */
-        public void setUserId(String userId) {
-            this.userId = userId;
+        public void setToken(String userId) {
+            this.token = userId;
         }
 
         /**
@@ -97,10 +111,12 @@ public class ResetController {
          *
          * @return
          */
-        public String getUserId() {
-            return userId;
+        public String getToken() {
+            return token;
         }
     }
+
+
 
     /**
      * setNew endpoint returns a ResponseEntity with the StatusCode of the response to the reset request of the user.
@@ -108,11 +124,9 @@ public class ResetController {
      * @return ResponseEntity
      */
     @PostMapping("/setNew")
-    public ResponseEntity<String> handleSetNewUserPwd(@RequestBody String body){
+    public ResponseEntity<String> handleSetNewUserPwd(@RequestBody TokenAndPwdBody body){
 
-        UIdAndPwdBody jsonPayload = new Gson().fromJson(body, UIdAndPwdBody.class);
-
-        getService().resetPwdOfUser(jsonPayload.getUserId(), jsonPayload.getPwd());
+        getService().resetPwdOfUser(body.getToken(), body.getPwd());
         return new ResponseEntity<>("healthy",HttpStatus.OK);
     }
 
@@ -121,12 +135,11 @@ public class ResetController {
      * the hashed mail address and the lastName. The endpoint returns a responseEntity containing the StatusCode of the request. If the input data is empty (one of the fields)
      * Status 400, BadRequest is retuned. If no exsisting user to the provide credentials can be found in the database then Status 404, NotFound is returned. Else Status will be
      * 202,
-     * @param body String of Reset
+     * @param resetRequest String of Reset
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity<List<User>> handleReset(@RequestBody String body) {
-        Reset resetRequest = jsonToReset(body);
+    public ResponseEntity<List<User>> handleReset(@RequestBody Reset resetRequest) throws MessagingException{
         String hashMail = resetRequest.hashStr(resetRequest.getEmail());
         List<User> emptyList = new ArrayList<>();
         if (Objects.equals(resetRequest.getLastName(), "")) {
@@ -140,13 +153,29 @@ public class ResetController {
         if(users.size() !=1){ return new ResponseEntity<>(emptyList, HttpStatus.NOT_FOUND); }
         else{
             String userId = users.get(0).getId();
-            //  For testing: send email to host: taskfly.info@gmail.com
-            this.sendResetMail(resetRequest.getEmail(), "!Password reset for TaskFly!", "Your Password has been reseted. Please copy your userId : " + userId + " and follow the link: to assign a new password. ");
+
+            String token = service.generateResetUserToken(userId);
+            String resetUrl = frontendUrl + "/reset?token=" + token;
+            Context context = new Context();
+            String greetingMessage = "Hallo, " + users.get(0).getFirstName();
+            context.setVariable("greetingMessage", greetingMessage);
+            context.setVariable("resetUrl", resetUrl);
+            var htmlBody = templateEngine.process("resetMail.html", context);
+            this.sendResetMail(resetRequest.getEmail(), "!Password reset for TaskFly!", htmlBody);
 
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }
 
+    }
+
+    @GetMapping("/valid/{token}")
+    public Object checkTokenValidity(@PathVariable String token){
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode rootNode = mapper.createObjectNode();
+        Boolean isValid = service.checkTokenValidityService(token);
+        rootNode.put("isValid", isValid);
+        return rootNode;
     }
 
     /**
@@ -155,13 +184,14 @@ public class ResetController {
      * @param subject String, topic of the message
      * @param text String, text of the message
      */
-    public void sendResetMail(String to, String subject, String text){
-        SimpleMailMessage message = new SimpleMailMessage();
+    public void sendResetMail(String to, String subject, String text) throws MessagingException {
+        MimeMessage mimeMessage = this.emailSender.createMimeMessage();
+        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
         message.setFrom("wok.gocaspi@gmail.com");
         message.setTo(to);
         message.setSubject(subject);
-        message.setText(text);
-        emailSender.send(message);
+        message.setText(text, true);
+        this.emailSender.send(mimeMessage);
     }
 
     /**

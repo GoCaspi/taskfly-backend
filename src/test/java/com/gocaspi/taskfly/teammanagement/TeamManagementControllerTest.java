@@ -108,7 +108,7 @@ class TeamManagementControllerTest {
             }
 
             try {
-                ResponseEntity<String> expected = new ResponseEntity<>("successfully created Team", HttpStatus.ACCEPTED);
+                ResponseEntity<String> expected = new ResponseEntity<>(HttpStatus.ACCEPTED);
                 ResponseEntity<String> actual1 = t.createTeam(mockTeamRequest);
                 assertEquals(actual1.getStatusCode(), expected.getStatusCode());
             } catch (HttpClientErrorException e) {

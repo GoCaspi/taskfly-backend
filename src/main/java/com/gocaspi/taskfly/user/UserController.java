@@ -71,8 +71,7 @@ public class UserController {
         user.setPassword(encoder.encode(user.getPassword()));
         user.setSrole(user.getSrole());
         getService().postService(user);
-        var msg = "Successfully created User";
-        return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
     /**
      * User who has logged in successfully can access this API
@@ -166,8 +165,7 @@ public class UserController {
     public ResponseEntity<String> handleUpdateUser(@PathVariable String id, @RequestBody UserRequest userRequest) throws HttpClientErrorException.NotFound {
         User user =  new User(userRequest.firstName,userRequest.lastName,userRequest.email,userRequest.password,userRequest.srole,userRequest.body,userRequest.reseted);
         getService().updateService(id, user);
-        var msg = "Successfully update User with id :" + id;
-        return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     public String hashStr(String str) {

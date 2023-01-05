@@ -110,7 +110,7 @@ import static org.mockito.Mockito.*;
             }
 
             if (tc.expectSuccess) {
-                ResponseEntity<String> expected = new ResponseEntity<>("Successfully update User with id :" + tc.mockId, HttpStatus.ACCEPTED);
+                ResponseEntity<String> expected = new ResponseEntity<>(HttpStatus.ACCEPTED);
                 try {
                     ResponseEntity<String> actual = t.handleUpdateUser(tc.mockId, mockuserRequest);
                     assertEquals(expected, actual);
