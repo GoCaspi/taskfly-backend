@@ -16,18 +16,19 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.messaging.MessagingException;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import org.bson.types.ObjectId;
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,6 +55,7 @@ public class ResetServiceTest {
 	@Test
 	 void getUserByEmail() {
 		ResetService r = resetService; // TODO Replace default value.
+		mockUser.setId("1");
 		mockList.add(mockUser);
 
 		class Testcase {
@@ -71,6 +73,8 @@ public class ResetServiceTest {
 		}
 		Testcase[] testcases = new Testcase[]{
 			new Testcase(mockList,mockList,false,false),
+				new Testcase(Arrays.asList(),Arrays.asList(),true,false),
+
 				new Testcase(mockList,mockList,true,false),
 				new Testcase(mockList,mockList,false,true)
 		};
@@ -80,14 +84,13 @@ public class ResetServiceTest {
 			if(!tc.badRequest & !tc.notFound){
 				String mockHashMail = hashStr(reset.getEmail());
 				when(repo.findUserByEmail(mockHashMail)).thenReturn(tc.dbReturn);
+				when(repo.findById(any())).thenReturn(Optional.ofNullable(mockUser));
 				List<User> actual = resetService.getUserByEmail(mockHashMail,reset.getLastName());
-				doNothing().when(resetService).enablePwdReset(any(), any());
 				assertEquals(actual,tc.expected);
 			}
 			if(tc.notFound){
 				String mockHashMail = hashStr(reset.getEmail());
 				when(repo.findUserByEmail(mockHashMail)).thenReturn(tc.dbReturn);
-				doNothing().when(resetService).enablePwdReset(any(), any());
 
 				try {
 					List<User> actual = resetService.getUserByEmail(mockHashMail,reset.getLastName());
@@ -100,7 +103,6 @@ public class ResetServiceTest {
 			}
 
 			if(tc.badRequest){
-				doNothing().when(resetService).enablePwdReset(any(), any());
 
 				String mockHashMail = hashStr(reset.getEmail());
 				mockList.get(0).setLastName("changed");
@@ -166,6 +168,7 @@ public class ResetServiceTest {
 
 	@Test
 	 void EnablePwdResetOfUser(){
+		mockUser.setId("1");
 		class Testcase{
 			private final User dbReturn;
 			private final boolean notFound;
@@ -186,7 +189,6 @@ public class ResetServiceTest {
 		for(Testcase tc : testcases){
 			if(!tc.notFound){
 				when(repo.findById(tc.dbReturn.getId())).thenReturn(Optional.ofNullable(mockUser));
-				when(repo.existsById(tc.dbReturn.getId())).thenReturn(true);
 				try {
 					 resetService.enablePwdReset(tc.dbReturn.getId(),true);
 					resetService.enablePwdReset(tc.dbReturn.getId(),false);
@@ -194,8 +196,7 @@ public class ResetServiceTest {
 				catch (HttpClientErrorException e){}
 			}
 			else {
-				when(repo.findById(tc.dbReturn.getId())).thenReturn(null);
-				when(repo.existsById(tc.dbReturn.getId())).thenReturn(false);
+				when(repo.findById(tc.dbReturn.getId())).thenReturn(Optional.ofNullable(null));
 				try {
 					resetService.enablePwdReset(tc.dbReturn.getId(),true);
 				}
@@ -217,4 +218,61 @@ public class ResetServiceTest {
 		return  sha256hex;
 
 	}
+
+	@Test
+	void sendResetMail() throws Exception {
+		when(mockMailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
+		String to = "toMock"; // TODO Replace default value.
+		String subject = "subjectMock"; // TODO Replace default value.
+		String text = "textMock"; // TODO Replace default value.
+		resetService.sendResetMail(to, subject, text);
+		atLeast(1);
+		assertEquals(true,verifySendInfo(to,subject,text));
+	}
+
+	@Test
+	void TestGenerateResetUserToken(){
+		String userId = new ObjectId().toHexString();
+		Mockito.when(redisTemplate.opsForValue()).thenReturn(valueOperations);
+		doNothing().when(valueOperations).set(any(), any(), any());
+		String actual = resetService.generateResetUserToken(userId);
+		assertNotNull(actual);
+	}
+
+	@Test
+	void TestCheckTokenValidityService(){
+		class Testcase {
+			String UserID;
+			String UUID;
+			Boolean result;
+
+			Testcase(String userID, String uuid, Boolean result){
+				this.UserID = userID;
+				this.UUID = uuid;
+				this.result = result;
+			}
+		}
+
+		Testcase[] testcases = new Testcase[]{
+				new Testcase(new ObjectId().toHexString(), UUID.randomUUID().toString(), true),
+				new Testcase(null, UUID.randomUUID().toString(), false)
+		};
+
+		for (Testcase tc: testcases){
+			when(redisTemplate.opsForValue()).thenReturn(valueOperations);
+			when(valueOperations.get(tc.UUID)).thenReturn(tc.UserID);
+
+			Boolean actual = resetService.checkTokenValidityService(tc.UUID);
+			assertEquals(tc.result, actual);
+
+		}
+
+
+
+	}
+
+	public boolean verifySendInfo(String to,String sub, String text){
+		return (to == "toMock" && sub == "subjectMock" && text == "textMock");
+	}
+
 }

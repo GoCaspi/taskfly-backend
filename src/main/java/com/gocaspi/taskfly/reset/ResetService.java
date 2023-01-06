@@ -121,8 +121,8 @@ public class ResetService {
     public void enablePwdReset(String id, Boolean status) throws HttpClientErrorException {
         Optional<User> user = getRepo().findById(id);
 
-        if (!getRepo().existsById(id)) {
-            throw this.exceptionNotFound;
+        if (user.isEmpty()){
+            throw exceptionNotFound;
         }
         user.ifPresent(t -> {
 
@@ -137,17 +137,7 @@ public class ResetService {
         });
 
     }
-    /**
-     * Hashes a string with the SHA256 algorithm
-     *
-     * @param str String that should get hashed by SHA256
-     * @return hashed String of the input String
-     */
-    public String hashStr(String str)  {
-        return Hashing.sha256()
-                .hashString(str, StandardCharsets.UTF_8)
-                .toString();
-    }
+
 
     public String generateResetUserToken(String userID){
         String token = UUID.randomUUID().toString();
