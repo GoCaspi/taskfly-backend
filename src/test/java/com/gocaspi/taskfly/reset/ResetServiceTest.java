@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ResetServiceTest {
+class ResetServiceTest {
 	 @Mock
 	UserRepository repo;
 	@Mock
@@ -271,7 +271,7 @@ public class ResetServiceTest {
 
 	}
 
-	public boolean verifySendInfo(String to,String sub, String text){
+	boolean verifySendInfo(String to,String sub, String text){
 		return (to == "toMock" && sub == "subjectMock" && text == "textMock");
 	}
 

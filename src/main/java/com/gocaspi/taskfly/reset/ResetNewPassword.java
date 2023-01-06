@@ -15,6 +15,8 @@ public class ResetNewPassword {
         this.pwd = pwd;
     }
 
+    public ResetNewPassword(){}
+
     /**
      * Sets the field pwd of the UIdAndPwdBody class to the input value
      *
