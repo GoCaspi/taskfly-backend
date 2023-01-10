@@ -1,6 +1,7 @@
 package com.gocaspi.taskfly.user;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
@@ -15,6 +16,7 @@ public class User {
     @NotBlank
     private String lastName;
     @NotBlank
+    @Indexed(unique = true)
     private String email;
     @NotBlank
     private String password;
