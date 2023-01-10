@@ -87,7 +87,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 		String actual = hashStr(r.getEmail());
 		assertEquals(expected,actual);
 	}
-	public String hashStr(String str) {
+	String hashStr(String str) {
 		String sha256hex = Hashing.sha256()
 				.hashString(str, StandardCharsets.UTF_8)
 				.toString();

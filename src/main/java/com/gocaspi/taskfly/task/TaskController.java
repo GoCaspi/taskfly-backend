@@ -39,8 +39,7 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<String> handleCreateNewTask(@Valid @RequestBody Task task) throws HttpClientErrorException.BadRequest {
         service.postService(task);
-        String msg = "successfully created task with id: " + task.getId();
-        return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     /**
