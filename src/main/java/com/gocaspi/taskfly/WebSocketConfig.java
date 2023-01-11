@@ -5,6 +5,7 @@ import com.gocaspi.taskfly.taskcollection.TaskCollectionChannelInterceptor;
 import com.gocaspi.taskfly.taskcollection.TaskCollectionRepository;
 import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -35,10 +36,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private AuthenticationProvider authManager;
     @Autowired
     private TaskCollectionRepository repository;
+    @Value("${crossorigin.url}")
+    private String frontendURL;
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/tcChannel");
-        registry.addEndpoint("/tcChannel").withSockJS();
+        registry.addEndpoint("/tcChannel").setAllowedOrigins(frontendURL);
+        registry.addEndpoint("/tcChannel").setAllowedOrigins(frontendURL).withSockJS();
     }
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config){
