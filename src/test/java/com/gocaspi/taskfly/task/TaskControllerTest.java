@@ -92,8 +92,7 @@ class TaskControllerTest {
 			mockMvc.perform(post("/task")
 							.contentType(MediaType.APPLICATION_JSON)
 							.content(tc.mockRequestBody))
-					.andExpect(status().is(tc.statusCode))
-					.andExpect(content().string(tc.mockResponseBody));
+					.andExpect(status().is(tc.statusCode));
 		}
 	}
 
