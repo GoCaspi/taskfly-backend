@@ -69,8 +69,7 @@ public class TeamManagementController {
     public ResponseEntity<String> createTeam(@Valid @RequestBody TeamRequest teamRequest) throws HttpClientErrorException.BadRequest {
         TeamManagement teamManagement =  new TeamManagement(teamRequest.userID,teamRequest.teamName,teamRequest.members,teamRequest.id);
         getService().insertService(teamManagement);
-        var msg = "successfully created Team";
-        return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     /**
