@@ -37,9 +37,9 @@ public class TaskController {
      * @throws HttpClientErrorException.BadRequest Exception if the provided requestbody is missing fields
      */
     @PostMapping
-    public ResponseEntity<String> handleCreateNewTask(@Valid @RequestBody Task task) throws HttpClientErrorException.BadRequest {
+    public ResponseEntity<Task> handleCreateNewTask(@Valid @RequestBody Task task) throws HttpClientErrorException.BadRequest {
         service.postService(task);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(task, HttpStatus.ACCEPTED);
     }
 
     /**
