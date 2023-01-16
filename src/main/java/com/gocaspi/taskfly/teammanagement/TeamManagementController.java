@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import javax.validation.Valid;
-
+import java.util.List;
 
 
 /**
@@ -145,5 +145,15 @@ public class TeamManagementController {
      * @return team fetched from the jsonPayload
      */
 
+    @GetMapping("/user/{userID}")
+    public ResponseEntity<List<TeamManagement>> getOwnTeamByUserId(@PathVariable String userID) throws HttpClientErrorException.NotFound {
+        var team = getService().getOwnTeamByUserId(userID);
+        return new ResponseEntity<>(team, HttpStatus.OK);
+    }
 
+    @GetMapping("/members/{members}")
+    public ResponseEntity<List<TeamManagement>> getTeamsByUserId(@PathVariable String[] members) throws HttpClientErrorException.NotFound {
+        var team = getService().getTeamByUserId(members);
+        return new ResponseEntity<>(team, HttpStatus.OK);
+    }
 }

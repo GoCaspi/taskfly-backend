@@ -1,5 +1,6 @@
 package com.gocaspi.taskfly.teammanagement;
 
+import com.gocaspi.taskfly.user.UserRepository;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -170,5 +171,23 @@ public class TeamManagementService {
      */
     public TeamManagement jsonToTeamManagement(String jsonPayload){
         return new Gson().fromJson(jsonPayload, TeamManagement.class);
+    }
+
+    public List <TeamManagement> getOwnTeamByUserId(String id) throws  HttpClientErrorException.NotFound{
+        if(!getRepository().existsByUserID(id)){ throw exceptionNotFound;}
+        var team = getRepository().findByUserID(id);
+        if(team.isEmpty()){
+            throw exceptionNotFound;
+        }
+        return team;
+    }
+
+    public List <TeamManagement> getTeamByUserId(String[] id) throws  HttpClientErrorException.NotFound{
+        if(!getRepository().existsByMembers(id)){ throw exceptionNotFound;}
+        var team = getRepository().findByMembers(id);
+        if(team.isEmpty()){
+            throw exceptionNotFound;
+        }
+        return team;
     }
 }
