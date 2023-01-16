@@ -421,7 +421,7 @@ class TaskControllerTest {
 
 		for (Testcase tc: testcases){
 
-			if(tc.statusCode > 299){
+			if(tc.statusCode > 399){
 				mockMvc.perform(get(tc.url))
 						.andExpect(status().is(tc.statusCode));
 			} else {
