@@ -388,6 +388,52 @@ class TaskControllerTest {
 		}
 	}
 
+	@Test
+	void TestHandleToggleTaskStatus() throws Exception{
+		Task.Taskbody mockbody_completionStatus_true = new Task.Taskbody("mockTopic",true,"mockDescription",true);
+		Task mockTask_completionStatus_true = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody_completionStatus_true);
+
+		Task.Taskbody mockbody_completionStatus_false = new Task.Taskbody("mockTopic",true,"mockDescription",false);
+		Task mockTask_completionStatus_false = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody_completionStatus_false);
+
+		mongoTemplate.save(mockTask_completionStatus_true);
+		mongoTemplate.save(mockTask_completionStatus_false);
+
+
+		class Testcase {
+			final String url;
+			final String responseBody;
+			final Integer statusCode;
+
+			Testcase(String url, String responseBody, Integer statusCode){
+				this.url = url;
+				this.responseBody = responseBody;
+				this.statusCode = statusCode;
+			}
+		}
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.findAndRegisterModules();
+		Testcase[] testcases = new Testcase[]{
+				new Testcase("/task/toggleStatus/" + mockObjectId, objectMapper.writeValueAsString(mockTask_completionStatus_true), HttpStatus.ACCEPTED.value()),
+				new Testcase("/task/toggleStatus/" + mockObjectId, objectMapper.writeValueAsString(mockTask_completionStatus_false), HttpStatus.ACCEPTED.value()),
+				new Testcase("/task/toggleStatus/" + new ObjectId().toHexString(), "", HttpStatus.NOT_FOUND.value()),
+				new Testcase("/task/toggleStatus", "", 405)
+		};
+
+		for (Testcase tc: testcases){
+
+			if(tc.statusCode > 299){
+				mockMvc.perform(get(tc.url))
+						.andExpect(status().is(tc.statusCode));
+			} else {
+				mockMvc.perform(get(tc.url))
+						.andExpect(content().string(tc.responseBody))
+						.andExpect(status().is(tc.statusCode));
+			}
+
+		}
+	}
+
 
 
 
