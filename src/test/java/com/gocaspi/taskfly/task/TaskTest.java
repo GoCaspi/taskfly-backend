@@ -191,4 +191,34 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,m
 		 Task.Taskbody actual = t.getBody();
 		 assertEquals(actual,mockbody);
 	 }
+
+	 @Test
+	void setAndGetCompletionStatus_onTaskBody(){
+		  class Testcase {
+			  final boolean currentStatus;
+			  final boolean expectedStatus;
+
+			  public Testcase(boolean currentStatus, boolean expectedStatus){
+				  this.currentStatus = currentStatus;
+				  this.expectedStatus = expectedStatus;
+			  }
+
+		 }
+
+		 Testcase[] testcases = new Testcase[]{
+				 new Testcase(false,true),
+				 new Testcase(true,false)
+		 };
+
+		  for(Testcase tc : testcases){
+			  Task.Taskbody mockBody = new Task.Taskbody("mockTopic",true,"mockDescription",false);; // completionStatus is false
+			  assertEquals(mockBody.getCompletionStatus(),false);
+
+			  mockBody.setCompletionStatus(tc.currentStatus);
+			  assertEquals(mockBody.getCompletionStatus(),tc.currentStatus);
+
+			  mockBody.setCompletionStatus(!tc.currentStatus);
+			  assertEquals(mockBody.getCompletionStatus(),tc.expectedStatus);
+		  }
+	 }
 }
