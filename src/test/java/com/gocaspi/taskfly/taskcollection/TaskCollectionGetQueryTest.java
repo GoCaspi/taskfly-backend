@@ -21,7 +21,7 @@ class TaskCollectionGetQueryTest {
     final private List<String> mockMember = Arrays.asList("123", "456", "789");
     LocalDateTime mockTime = LocalDateTime.now();
 
-    private final Task.Taskbody mockBody = new Task.Taskbody("mockTopic", true, "mockDescription");
+    private final Task.Taskbody mockBody = new Task.Taskbody("mockTopic", true, "mockDescription",false);
     Task task1 = new Task(mockUserID, mockListID, mockTeamID, mockTime, mockObjectID, mockBody);
     List<Task> mockTasks = Arrays.asList(task1);
     @Test

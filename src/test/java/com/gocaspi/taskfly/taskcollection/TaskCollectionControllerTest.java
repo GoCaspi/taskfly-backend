@@ -69,7 +69,7 @@ class TaskCollectionControllerTest {
     final private List<String> mockMember = Arrays.asList("123", "456", "789");
 
     private TaskCollection mockTC = new TaskCollection(mockTCID, mockTCName, mockTCTeamID, mockTCOwnerID, mockMember);
-    final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic", true, "mockDescription");
+    final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic", true, "mockDescription",false);
     final private String mockTaskID = new ObjectId().toHexString();
     final private Task mockTask = new Task(mockTCOwnerID, mockTCID, mockTCTeamID, mockTime, mockTaskID, mockBody);
 

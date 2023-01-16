@@ -55,7 +55,7 @@ class TaskControllerTest {
 	final private String mockTeam = mockTCTeamID;
 	final private String mockObjectId = new ObjectId().toHexString();
 
-	final private Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
+	final private Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription",false);
 
 	final private Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
 	final private Task[] mockTaskArr = new Task[]{mockTask, mockTask};
@@ -173,7 +173,7 @@ class TaskControllerTest {
 		mongoTemplate.save(mockTask);
 		List<Task> validList = List.of(mockTask);
 
-		Task.Taskbody invalidTaskBody = new Task.Taskbody("test", false, "test");
+		Task.Taskbody invalidTaskBody = new Task.Taskbody("test", false, "test",false);
 		Task invalidTask = new Task(mockUserIds, new ObjectId().toHexString(), mockTeam, mockTime, new ObjectId().toHexString(), invalidTaskBody);
 		mongoTemplate.save(invalidTask);
 		class Testcase {

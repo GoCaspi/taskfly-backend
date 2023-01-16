@@ -12,7 +12,7 @@ class TaskTest {
 	String mockUserIds = "1"; String mockListId = ""; String mockTopic = ""; String mockTeam = "";
 	String mockPrio = ""; String mockDesc = ""; String mockDeadline = ""; String mockObjectId = new ObjectId().toHexString();
 //	Task mockTask = new Task(mockUserIds, mockListId, mockTopic, mockTeam, mockPrio, mockDesc, mockDeadline, mockObjectId);
-Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
+Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription",false);
 Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
 
 	class Testcase_setString{
@@ -186,7 +186,7 @@ Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,m
 	 @Test
 	 void setBody() {
 		 Task t = mockTask;
-		 Task.Taskbody mockbody =  new Task.Taskbody("mockTopic",true,"mockDescription");
+		 Task.Taskbody mockbody =  new Task.Taskbody("mockTopic",true,"mockDescription",false);
 		 t.setBody(mockbody);
 		 Task.Taskbody actual = t.getBody();
 		 assertEquals(actual,mockbody);

@@ -37,7 +37,7 @@ class TaskCollectionServiceTest {
     LocalDateTime mockTime = LocalDateTime.now();
 
     final private String mockObjectId = new ObjectId().toHexString();
-    final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic",true,"mockDescription");
+    final private Task.Taskbody mockBody = new Task.Taskbody("mockTopic",true,"mockDescription",false);
 
     @Test
     void createTaskCollectionTest(){

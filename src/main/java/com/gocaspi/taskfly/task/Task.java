@@ -21,13 +21,14 @@ public class Task {
    public static class Taskbody {
         private String topic;
         private Boolean highPriority;
-
         private String description;
+        private Boolean completionStatus;
 
-        public Taskbody(String topic, Boolean highPriority,String description){
+        public Taskbody(String topic, Boolean highPriority,String description, Boolean completionStatus){
             this.topic = topic;
             this.highPriority = highPriority;
             this.description = description;
+            this.completionStatus = completionStatus;
         }
 
         public void setHighPriority(Boolean str){
@@ -39,6 +40,7 @@ public class Task {
         public void setTopic(String str){
             this.topic = str;
         }
+        public void setCompletionStatus(Boolean status) { this.completionStatus = status; }
 
         public String getTopic(){
             return this.topic;
@@ -49,6 +51,7 @@ public class Task {
         public Boolean getHighPriority(){
             return this.highPriority;
         }
+        public Boolean getCompletionStatus() { return this.completionStatus; }
 
     }
 

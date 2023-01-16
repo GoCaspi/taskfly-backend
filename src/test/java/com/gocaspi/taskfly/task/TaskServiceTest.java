@@ -28,7 +28,7 @@ class TaskServiceTest {
 	String mockListId = "1";
 	String mockTeam = "team1";
 	String mockObjectId = new ObjectId().toHexString();
-Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
+Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription",false);
 	Task mockTask = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody);
 
 
@@ -99,7 +99,7 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 	@Test
 	void updateServiceTest(){
 		TaskService s = new TaskService(mockRepo);
-		var emptyBody = new Task.Taskbody("",null,"");
+		var emptyBody = new Task.Taskbody("",null,"",false);
 		var emptyTask = new Task("", "", "", null, mockObjectId, emptyBody);
 		class Testcase {
 			final Task mockTask;

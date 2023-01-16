@@ -39,7 +39,7 @@ class TaskCollectionRepositoryImplTest {
     LocalDateTime mockTime = LocalDateTime.now().withHour(3).withMinute(0).withSecond(0).withNano(0);
     String mockListId = mockTCID;
     String mockObjectId = new ObjectId().toHexString();
-    Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
+    Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription",false);
     Task mockTask = new Task(mockUserID,mockListId,mockTCTeamID,mockTime,mockObjectId,mockbody);
     List<Task> mockTaskList = Arrays.asList(mockTask, mockTask);
     private static final String CONNECTION_STRING = "mongodb://%s:%d";
