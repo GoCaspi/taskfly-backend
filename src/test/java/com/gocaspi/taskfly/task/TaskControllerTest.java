@@ -396,7 +396,6 @@ class TaskControllerTest {
 		Task.Taskbody mockbody_completionStatus_false = new Task.Taskbody("mockTopic",true,"mockDescription",false);
 		Task mockTask_completionStatus_false = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody_completionStatus_false);
 
-		mongoTemplate.save(mockTask_completionStatus_true);
 		mongoTemplate.save(mockTask_completionStatus_false);
 
 
