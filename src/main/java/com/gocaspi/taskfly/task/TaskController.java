@@ -155,7 +155,7 @@ public class TaskController {
 
     /**
      * The endpoint takes a TaskID as a path variable and calls the ToggleTaskStatus service. If the given TaskID is assigned to a task in the database,
-     * this task will be returned after processing by the service. Otherwise an HttpException.NotFound is returned.
+     * this task will be returned after processing by the service along with a status of 202 Accepted. Otherwise an HttpException.NotFound is returned.
      *
      * @param taskId String, id of the task thats completionStatus should be changed
      * @return ResponseEntity containing the updated task and the http status code
