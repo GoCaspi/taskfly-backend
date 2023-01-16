@@ -182,9 +182,9 @@ public class TeamManagementService {
         return team;
     }
 
-    public List <TeamManagement> getTeamByUserId(String[] id) throws  HttpClientErrorException.NotFound{
+    public List <TeamManagement> getTeamByUserId(String id) throws  HttpClientErrorException.NotFound{
         if(!getRepository().existsByMembers(id)){ throw exceptionNotFound;}
-        var team = getRepository().findByMembers(id);
+        var team = getRepository().findByMembersContaining(id);
         if(team.isEmpty()){
             throw exceptionNotFound;
         }

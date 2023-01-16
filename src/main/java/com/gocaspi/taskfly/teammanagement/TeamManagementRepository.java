@@ -9,8 +9,7 @@ import java.util.List;
  */
 public interface TeamManagementRepository extends MongoRepository<TeamManagement, String> {
     List<TeamManagement> findByUserID(String s);
-    List<TeamManagement> findByMembers(String[] s);
+    List<TeamManagement> findByMembersContaining(String s);
     boolean existsByUserID(String userID);
-
-    boolean existsByMembers(String[] members);
+    boolean existsByMembers(String members);
 }

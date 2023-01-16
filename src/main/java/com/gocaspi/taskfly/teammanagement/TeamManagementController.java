@@ -152,7 +152,7 @@ public class TeamManagementController {
     }
 
     @GetMapping("/members/{members}")
-    public ResponseEntity<List<TeamManagement>> getTeamsByUserId(@PathVariable String[] members) throws HttpClientErrorException.NotFound {
+    public ResponseEntity<List<TeamManagement>> getTeamsByUserId(@PathVariable String members) throws HttpClientErrorException.NotFound {
         var team = getService().getTeamByUserId(members);
         return new ResponseEntity<>(team, HttpStatus.OK);
     }
