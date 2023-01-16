@@ -254,4 +254,66 @@ class TeamManagementServiceTest {
 
         }
     }
+
+    @Test
+    void getTeamByUserId(){
+        TeamManagementService s = new TeamManagementService(mockRepository);
+        class Testcase {
+            final String mockId;
+            final boolean expected;
+
+            public Testcase(String mockId, boolean expected) {
+                this.mockId = mockId;
+                this.expected = expected;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(mockUserID, true),
+                new Testcase(mockUserID, false)
+        };
+
+        for (Testcase tc : testcases) {
+
+            try {
+                when(mockRepository.existsByMembers(tc.mockId)).thenReturn(tc.expected);
+                s.getTeamByUserId(tc.mockId);
+                verify(mockRepository, times(1)).existsByMembers(tc.mockId);
+            } catch (Exception e) {
+
+            }
+
+        }
+    }
+
+    @Test
+    void getOwnTeamByUserId(){
+        TeamManagementService s = new TeamManagementService(mockRepository);
+        class Testcase {
+            final String mockId;
+            final boolean expected;
+
+            public Testcase(String mockId, boolean expected) {
+                this.mockId = mockId;
+                this.expected = expected;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase(mockUserID, true),
+                new Testcase(null, false)
+        };
+
+        for (Testcase tc : testcases) {
+
+            try {
+                when(mockRepository.existsByUserID(tc.mockId)).thenReturn(tc.expected);
+                s.getOwnTeamByUserId(tc.mockId);
+                verify(mockRepository, times(1)).existsByUserID(tc.mockId);
+            } catch (Exception e) {
+
+            }
+
+        }
+    }
 }

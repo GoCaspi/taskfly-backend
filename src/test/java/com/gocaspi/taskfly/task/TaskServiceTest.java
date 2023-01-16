@@ -63,7 +63,6 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 
 		}
 	}
-
 	@Test
 	void getServiceTaskByIdTest() {
 		TaskService t = new TaskService(mockRepo);
@@ -95,7 +94,6 @@ Task.Taskbody mockbody = new Task.Taskbody("mockTopic",true,"mockDescription");
 
 		}
 	}
-
 	@Test
 	void updateServiceTest(){
 		TaskService s = new TaskService(mockRepo);

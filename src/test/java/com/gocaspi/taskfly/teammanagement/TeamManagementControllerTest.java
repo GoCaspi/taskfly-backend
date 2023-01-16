@@ -1,11 +1,13 @@
 package com.gocaspi.taskfly.teammanagement;
 
+import com.gocaspi.taskfly.user.User;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -274,6 +276,95 @@ class TeamManagementControllerTest {
         }
 
 
+    }
+
+    @Test
+    void getOwnTeamByUserId(){
+        TeamManagementController t = new TeamManagementController(mockRepository, mockService);
+
+        class Testcase {
+            final String userId;
+            final boolean dbReturnSize0;
+            final TeamManagement mockTeam;
+            final String expectedOutput;
+
+            public Testcase(String userId, boolean dbReturnSize0, TeamManagement mockTeam, String expectedOutput) {
+                this.userId = userId;
+                this.dbReturnSize0 = dbReturnSize0;
+                this.mockTeam = mockTeam;
+                this.expectedOutput = expectedOutput;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase("1", false, mockTeamManagement, ""),
+                new Testcase("1", true, mockTeamManagement, "no user were found to the provided id"),
+                new Testcase(null, true, mockTeamManagement, "no user were found to the provided id"),
+                new Testcase("", true, mockTeamManagement, "no user were found to the provided id"),
+                new Testcase(null, false, mockTeamManagement, "no user were found to the provided id")
+        };
+
+        for (Testcase tc : testcases) {
+            if (tc.dbReturnSize0) {
+                when(mockRepository.existsByUserID(tc.userId)).thenReturn(false);
+            } else {
+                when(mockRepository.existsByUserID(tc.userId)).thenReturn(true);
+                when(mockRepository.findById(tc.userId)).thenReturn(Optional.ofNullable(mockTeamManagement));
+            }
+
+            try{
+                ResponseEntity<TeamManagement> expected = new ResponseEntity<>(tc.mockTeam, HttpStatus.OK);
+                ResponseEntity<List<TeamManagement>> actual1 = t.getOwnTeamByUserId(tc.userId);
+                assertEquals(actual1.getStatusCode(), expected.getStatusCode());
+            }catch(HttpClientErrorException e){
+                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
+                assertEquals(e.getClass(), expectedException.getClass());
+            }
+        }
+    }
+    @Test
+    void getTeamsByUserId(){
+        TeamManagementController t = new TeamManagementController(mockRepository, mockService);
+
+        class Testcase {
+            final String userId;
+            final boolean dbReturnSize0;
+            final TeamManagement mockTeam;
+            final String expectedOutput;
+
+            public Testcase(String userId, boolean dbReturnSize0, TeamManagement mockTeam, String expectedOutput) {
+                this.userId = userId;
+                this.dbReturnSize0 = dbReturnSize0;
+                this.mockTeam = mockTeam;
+                this.expectedOutput = expectedOutput;
+            }
+        }
+
+        Testcase[] testcases = new Testcase[]{
+                new Testcase("1", false, mockTeamManagement, ""),
+                new Testcase("1", true, mockTeamManagement, "no user were found to the provided id"),
+                new Testcase(null, true, mockTeamManagement, "no user were found to the provided id"),
+                new Testcase("", true, mockTeamManagement, "no user were found to the provided id"),
+                new Testcase(null, false, mockTeamManagement, "no user were found to the provided id")
+        };
+
+        for (Testcase tc : testcases) {
+            if (tc.dbReturnSize0) {
+                when(mockRepository.existsByUserID(tc.userId)).thenReturn(false);
+            } else {
+                when(mockRepository.existsByUserID(tc.userId)).thenReturn(true);
+                when(mockRepository.findById(tc.userId)).thenReturn(Optional.ofNullable(mockTeamManagement));
+            }
+
+            try{
+                ResponseEntity<TeamManagement> expected = new ResponseEntity<>(tc.mockTeam, HttpStatus.OK);
+                ResponseEntity<List<TeamManagement>> actual1 = t.getTeamsByUserId(tc.userId);
+                assertEquals(actual1.getStatusCode(), expected.getStatusCode());
+            }catch(HttpClientErrorException e){
+                HttpClientErrorException expectedException = HttpClientErrorException.create(HttpStatus.NOT_FOUND, "bad payload", null, null, null);
+                assertEquals(e.getClass(), expectedException.getClass());
+            }
+        }
     }
 }
 
