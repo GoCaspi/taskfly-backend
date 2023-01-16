@@ -153,4 +153,10 @@ public class TaskController {
         return new ResponseEntity<>(msg, HttpStatus.ACCEPTED);
     }
 
+    @GetMapping("/toggleStatus/{taskId}")
+    public ResponseEntity<Task> handleToggleTaskStatus(@PathVariable String taskId) throws HttpClientErrorException.NotFound{
+        var task = service.toggleTaskStatus(taskId);
+        return new ResponseEntity<Task>(task,HttpStatus.ACCEPTED) ;
+    }
+
 }

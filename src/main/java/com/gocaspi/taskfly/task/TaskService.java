@@ -155,6 +155,16 @@ public class TaskService {
         return taskList;
     }
 
+    public Task toggleTaskStatus(String taskId){
+        var task =  repo.findById(taskId);
+        if(task.isEmpty()){ throw exceptionNotFound; }
+        task.ifPresent( t->{
+            var currentStatus = t.getBody().getCompletionStatus();
+            t.getBody().setCompletionStatus(!currentStatus);
+            repo.save(t);
+        });
+        return task.get();
+    }
 
 }
 
