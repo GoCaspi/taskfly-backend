@@ -155,6 +155,13 @@ public class TaskService {
         return taskList;
     }
 
+    /**
+     * The method takes a TaskID as a parameter and calls the repository's findById method. If the given TaskID is assigned to a task in the database,
+     * the completionStatus in the body of the task is changed to the complementary value and stored in the database. Otherwise an httpException.NotFound is thrown.
+     *
+     * @param taskId String, id of the task thats completionStatus should be changed
+     * @return task with updated completionStatus
+     */
     public Task toggleTaskStatus(String taskId){
         var task =  repo.findById(taskId);
         if(task.isEmpty()){ throw exceptionNotFound; }
