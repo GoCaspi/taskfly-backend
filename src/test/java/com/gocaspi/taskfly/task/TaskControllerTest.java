@@ -396,9 +396,9 @@ class TaskControllerTest {
 		Task.Taskbody mockbody_completionStatus_false = new Task.Taskbody("mockTopic",true,"mockDescription",false);
 		Task mockTask_completionStatus_false = new Task(mockUserIds,mockListId,mockTeam,mockTime,mockObjectId,mockbody_completionStatus_false);
 
+// the initial completionStatus of the mock in the db will be false. Such that the first call of the mockMVC
+// to /toggleStatus/mockId will modify the 	completionStatus of the body to true (such that: mongoTemplate.findById(mockObjectId) == mockTask_completionStatus_true  holds true)
 		mongoTemplate.save(mockTask_completionStatus_false);
-
-
 		class Testcase {
 			final String url;
 			final String responseBody;
