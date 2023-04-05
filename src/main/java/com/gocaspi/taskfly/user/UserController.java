@@ -39,39 +39,16 @@ public class UserController {
         this.encoder = new BCryptPasswordEncoder();
     }
 
-    public static class UserRequest{
-        private User.Userbody body;
-        private String firstName;
-        private String lastName;
-        private String email;
-        private String password;
-        private String srole;
-        private boolean reseted;
-        /**
-         * Any user can access this API - No Authentication required
-         * @param
-         * @return
-         */
-        public UserRequest (String firstName, String lastName, String email,String password ,String srole, User.Userbody body,Boolean reseted) {
-
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.email = email;
-            this.password = password;
-            this.srole = srole;
-            this.body = body;
-            this.reseted = reseted;
-        }
-    }
-
     @PostMapping("/create")
-    public ResponseEntity<String> handlerCreateUser(@Valid @RequestBody UserRequest userRequest) throws HttpClientErrorException.BadRequest {
-        User user =  new User(userRequest.firstName,userRequest.lastName,userRequest.email,userRequest.password,userRequest.srole,userRequest.body,userRequest.reseted);
-        user.setEmail(service.hashStr(user.getEmail()));
-        user.setPassword(encoder.encode(user.getPassword()));
-        user.setSrole(user.getSrole());
-        getService().postService(user);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    public ResponseEntity<User> handlerCreateUser(@Valid @RequestBody User userRequest) throws HttpClientErrorException.BadRequest {
+        userRequest.setEmail(service.hashStr(userRequest.getEmail()));
+        userRequest.setPassword(encoder.encode(userRequest.getPassword()));
+        userRequest.setSrole("user");
+
+        User result = getService().postService(userRequest);
+        result.setPassword("*censored*");
+        result.setEmail("*censored*");
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
     /**
      * User who has logged in successfully can access this API
@@ -162,9 +139,8 @@ public class UserController {
      * @throws HttpClientErrorException.NotFound Exception if no user to the id was found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<String> handleUpdateUser(@PathVariable String id, @RequestBody UserRequest userRequest) throws HttpClientErrorException.NotFound {
-        User user =  new User(userRequest.firstName,userRequest.lastName,userRequest.email,userRequest.password,userRequest.srole,userRequest.body,userRequest.reseted);
-        getService().updateService(id, user);
+    public ResponseEntity<String> handleUpdateUser(@PathVariable String id, @RequestBody User userRequest) throws HttpClientErrorException.NotFound {
+        getService().updateService(id, userRequest);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 

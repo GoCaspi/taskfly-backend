@@ -26,7 +26,6 @@ import static org.mockito.Mockito.*;
     String mockPassword = "11-11-2022";
     String mocksrole ="ADMIN";
     User.Userbody mockbody =new User.Userbody("mockTeam");
-     UserController.UserRequest mockuserRequest = new UserController.UserRequest(mockFistName, mockLastName, mockEmail, mockPassword,mocksrole,mockbody,false);
     User mockUser = new User(mockFistName, mockLastName, mockEmail, mockPassword,mocksrole,mockbody,false);
     PasswordEncoder mockencoder = mock(PasswordEncoder.class);
     User[] mockUseArr = new User[]{mockUser,mockUser};
@@ -110,9 +109,9 @@ import static org.mockito.Mockito.*;
             }
 
             if (tc.expectSuccess) {
-                ResponseEntity<String> expected = new ResponseEntity<>(HttpStatus.ACCEPTED);
+                ResponseEntity<User> expected = new ResponseEntity<>(HttpStatus.ACCEPTED);
                 try {
-                    ResponseEntity<String> actual = t.handleUpdateUser(tc.mockId, mockuserRequest);
+                    ResponseEntity<User> actual = t.handleUpdateUser(tc.mockId, mockuserRequest);
                     assertEquals(expected, actual);
                 } catch (HttpClientErrorException e) {
                     throw new RuntimeException(e);

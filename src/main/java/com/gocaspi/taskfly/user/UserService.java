@@ -140,11 +140,9 @@ public class UserService {
              * @param t user to get validated and saved
              * @throws RuntimeException Exception if not all fields are filled
              */
-    public void postService(User t) throws HttpClientErrorException {
-        if(!validateTaskFields(new Gson().toJson(t))){
-            throw exceptionbadRequest;
-        }
+    public User postService(User t) throws HttpClientErrorException {
         getRepo().insert(t);
+        return t;
     }
 
 

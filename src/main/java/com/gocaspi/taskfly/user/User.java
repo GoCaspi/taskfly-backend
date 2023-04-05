@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
-
+import java.util.Objects;
 
 
 @Document
@@ -25,13 +25,16 @@ public class User {
 @Id
     private String id;
 
-public static class Userbody  implements java.io.Serializable{
+public static class Userbody{
     private String team;
 
-     public Userbody(@JsonProperty("team")String team){
+     public Userbody(String team){
          this.team = team;
      }
 
+    public Userbody(){
+        this.team = "";
+    }
     public void setTeam(String str){ this.team = str;}
     public String getTeam(){ return this.team;}
 
@@ -46,15 +49,15 @@ public static class Userbody  implements java.io.Serializable{
      * @param body body for the user
      * @param reseted reseted for the user
      */
-    public User (@JsonProperty("firstName")String firstName,@JsonProperty("lastName") String lastName, @JsonProperty("email")String email, @JsonProperty("password")String password , @JsonProperty("srole")String srole, @JsonProperty("body")Userbody body, @JsonProperty("reseted")Boolean reseted) {
+    public User (String firstName, String lastName, String email, String password, String srole, Userbody body, Boolean reseted) {
 
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.srole = srole;
-        this.body = body;
-        this.reseted = reseted;
+        this.body = Objects.requireNonNullElse(body, new Userbody());
+        this.reseted = Objects.requireNonNullElse(reseted, false);
     }
 public void setBody(Userbody body){
     this.body=body;
