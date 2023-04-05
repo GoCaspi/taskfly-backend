@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "77b36057-6dd9-4b01-acd7-5cd5ff96aab1",
+		"_postman_id": "4443d6ed-9285-43ef-943e-4e95aca701ec",
 		"name": "TaskFly",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21612803"
@@ -64,12 +64,15 @@
 							}
 						}
 					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Sahand\",\n    \"lastName\": \"Armin\",\n    \"email\":\"l.wolckenhauer@gocaspi.de\",\n    \"password\":\"password\",\n    \"team\":\"Okapi\",\n    \"srole\": \"ROLE_READ\"\n}\n",
+							"raw": "{\n    \"firstName\": \"Sahand\",\n    \"lastName\": \"Armin\",\n    \"email\":\"l.wolckenhauer@gocaspi.de\",\n    \"password\":\"password\",\n    \"body\": {\n        \"team\": \"ON4T\"\n    },\n    \"reseted\": false,\n    \"srole\": \"abc\"\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -797,14 +800,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/task/taskId/{{taskFlyTaskId}}",
+							"raw": "{{host}}/task/taskId/{{taskID}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"task",
 								"taskId",
-								"{{taskFlyTaskId}}"
+								"{{taskID}}"
 							]
 						}
 					},
@@ -893,6 +896,8 @@
 									"    pm.response.to.have.status(202)",
 									"})",
 									"",
+									"pm.collectionVariables.set(\"taskID\", pm.response.json().id)",
+									"",
 									"var body2 = JSON.stringify([{",
 									"    \"userId\":\"1\",",
 									"    \"listId\":\"MyDay\",",
@@ -934,7 +939,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userId\":\"63879322dddc7504fcf13cfa\",\n    \"listId\":\"637dfa505f2d35fdfd9acab6\",\n    \"team\":\"blue\",\n    \"deadline\":\"2022-12-19T03:00:00Z\",\n    \"body\":{\n        \"topic\":\"new topic\",\n        \"highPriority\":true,\n        \"description\":\"new description text\"\n    }\n}",
+							"raw": "{\n    \"userId\":\"63879322dddc7504fcf13cfa\",\n    \"listId\":\"637dfa505f2d35fdfd9acab6\",\n    \"team\":\"blue\",\n    \"deadline\":\"2022-02-02 16:00:00\",\n    \"body\":{\n        \"topic\":\"new topic\",\n        \"highPriority\":true,\n        \"description\":\"new description text\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2574,6 +2579,10 @@
 		{
 			"key": "taskFlyTaskId",
 			"value": "6389c44cedc28b063e3678fb"
+		},
+		{
+			"key": "taskID",
+			"value": ""
 		}
 	]
 }
